@@ -110,6 +110,11 @@ int main{
 **Örnek:**
 ```CPP
 int a[10] = {1,5,7};
+- int a'nın türü = int[10]
+- a'nın adresi olan tür = int (*)[10]
+- a ifadesi array decay ile dizinin ilk elemaının adresine dönüştürülüyor. 
+- Yani burada a = &a[0]
+- Burada 2 ifadenin türü de int*
 ```
 - int a'nın türü = int[10]
 - a'nın adresi olan tür = int (*)[10]
