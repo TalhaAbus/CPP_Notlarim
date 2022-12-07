@@ -103,6 +103,7 @@ int main{
 
 ## Array to pointer conversion: 
 - Dizi isminin dizinin ilk elemanının adresine dönüştürülmesi C dilinde 2 istisna hariç dizi ismi diinin ilk elemanının adresine dönüştürülüyor.
+
 **2 istisna:** 
 > sizeof operatörünün operandının dizi olması.
 > Adres operatörünün operandının bir dizi olması.
