@@ -1,4 +1,4 @@
-# C++ ve C arasındaki temel farklılıklar
+# C++ Diline Ait Bazı Tanımlar
 
 ### Undefined Behaviour
 - Tanımsız davranış, Dilin kurallarına göre doğru olabilir fakat derleniip çalıştırıldığında nasıl bir durum olacağı konusunda bir granti yok.
@@ -28,7 +28,7 @@ void func()
 }
 ```
 
-## Bazı Farklılıklar:
+### Bazı Farklılıklar:
 - Aritmetik türlerden bool türüne tür dönüşümü vardır. Tam tersi de geçerlidir. Dönüşüm 1 veya 0 olur.
 - C++ dilinde global const nesneler iç bağlantıda (internal linkage) (c dilinde external linkage)
 - C++ dilinde adres türleri ile aritmetik türler arasında örtülü tür dönüşümü yoktur.
