@@ -6,3 +6,5 @@
 - Derleyici herhangi bir şekilde kod üretebilir.
 ### Implementation Defined
 - Bu da unspecified behaviour fakat derleyici bunu belgelemek zorunda. Derleyici kararlı bir şekilde belirli bir seçeneği tercih ederek kod üretmek zorunda.
+
+## asda
