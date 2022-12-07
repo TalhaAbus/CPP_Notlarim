@@ -73,13 +73,27 @@ int main()
 > Bool türünden pointer türüne dönüşüm yok. Kod hatalı. 
 Pointer türünden bool türüne dönüşüm var fakat bool türünden pointer türüne dönüşüm yok.
 
+**Soru 3: Kod Geçerli midir?**
 
+```CPP
+int main()
+{
+    const int x = 10;
 
+    int* p = x;
+}
+```
+**Cevap:**
+> Sentaks hatası. C++ dilinde const int* türünden int* türüne dönüşüm yok. (c dilinde var)
 
+**Soru 4: Geçerli midir?**
 
-
-
-
+```CPP
+int main{
+    const int *p;  // Geçerli. Bu const nesne değil. Pointer söz konusu
+    int *const p;   // Geçersiz. Const nesnelere ilk değer vermek mecburi.
+}
+```
 
 
 
