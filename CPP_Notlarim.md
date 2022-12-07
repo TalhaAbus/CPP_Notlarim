@@ -38,7 +38,7 @@ void func()
 
 # Ders 1 Alıştırmalar
 
-** Soru 1. Kod Geçerli midir?**
+**Soru 1. Kod Geçerli midir?**
 
 ```CPP
 #include <iostream>
@@ -53,7 +53,7 @@ int main()
 	bool b1 = ptr;
 }
 ```
-Cevap: 
+**Cevap:**
 > Adres, poniter türlerinden bool türüne otomatik dönüşüm var.  b1'in değeri true
 Burada true veya false dönüşümü pointer ın null pointer olup olmadığına bağlı.
 gp zero initialize edildiği için null pointer değerini almıştır ve dönüşürken false olarak dönüşür.
@@ -69,7 +69,7 @@ int main()
     int *ptr = is_on;
 }
 ```
-Cevap: 
+**Cevap:** 
 > Bool türünden pointer türüne dönüşüm yok. Kod hatalı. 
 Pointer türünden bool türüne dönüşüm var fakat bool türünden pointer türüne dönüşüm yok.
 
