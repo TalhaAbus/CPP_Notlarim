@@ -40,7 +40,7 @@ void func()
 
 1. Kod Geçerli midir?
 
-```
+```CPP
 #include <iostream>
 
 int* gp;
