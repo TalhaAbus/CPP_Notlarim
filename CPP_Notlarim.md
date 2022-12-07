@@ -205,6 +205,7 @@ int a3[4]{};
 - Bir özellik veya bir araç seti compile time ile ilişkili ise, derleyici koda bakarak bir takım kodları üretiyorsa bu tür araçlara static araçlar denir. Söz konusu araç programın çalışma zamanına ilişkin ise dinamik sözcüğü kullanılıyor.
 **Tür çıklarımının faydaları:**
 - Bazı durumlarda bir türü tanımlamak için çok fazla token kullanmak gerekiytor. Tür çıkarımı ile hata yapma riski azalıyor.
+
 **Tür çıkarımları:**
 - auto type deduction
 - decltype type deduction
