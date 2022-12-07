@@ -57,5 +57,10 @@ Cevap: Adres, poniter türlerinden bool türüne otomatik dönüşüm var.  b1'i
 Burada true veya false dönüşümü pointer ın null pointer olup olmadığına bağlı.
 gp zero initialize edildiği için null pointer değerini almıştır ve dönüşürken false olarak dönüşür.
 
+```javascript
+if (isAwesome){
+  return true
+}
+```
 
 
