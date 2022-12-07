@@ -101,13 +101,22 @@ int main{
 - C dilinde "akif" sabiti char[5] türünde bir dizi. Sonunda null karakter de var. Array decay var. Aynı string literali C++ idilinde const char[5] türünde. C++ dilinde array decay olduğunda elde ettiğimiz adres, char* değil. Const char* olur. 
 - Her iki dilde de string literalini değştirme girişimi tanımsız davranış.
 
-## Array to pointer conversion: Dizi isminin dizinin ilk elemanının adresine dönüştürülmesi C dilinde 2 istisna hariç dizi ismi diinin ilk elemanının adresine dönüştürülüyor.
-- 2 istisna: 
+## Array to pointer conversion: 
+- Dizi isminin dizinin ilk elemanının adresine dönüştürülmesi C dilinde 2 istisna hariç dizi ismi diinin ilk elemanının adresine dönüştürülüyor.
+**2 istisna:** 
 > sizeof operatörünün operandının dizi olması.
 > Adres operatörünün operandının bir dizi olması.
 
+**Örnek:**
+```CPP
+int a[10] = {1,5,7};
+```
+int a'nın türü = int[10]
+a'nın adresi olan tür = int (*)[10]
 
-
+> a ifadesi array decay ile dizinin ilk elemaının adresine dönüştürülüyor. 
+> Yani burada a = &a[0]
+> Burada 2 ifadenin türü de int*
 
 
 
