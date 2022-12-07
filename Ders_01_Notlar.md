@@ -1,4 +1,5 @@
 C ve C++ dilleri arasındaki temel farklılıklar:
-
+---
 #Undefinedbahaviour
+===
 $und
