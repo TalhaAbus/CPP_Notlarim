@@ -116,13 +116,22 @@ int a[10] = {1,5,7};
 - Yani burada a = &a[0]
 - Burada 2 ifadenin türü de int*
 ```
-- int a'nın türü = int[10]
-- a'nın adresi olan tür = int (*)[10]
-- a ifadesi array decay ile dizinin ilk elemaının adresine dönüştürülüyor. 
-- Yani burada a = &a[0]
-- Burada 2 ifadenin türü de int*
 
+## Referans Semantiği: 
+- Sabitlerin tek başına, değişkenlerin tek başına yada bunların operatörleri ile birlikte oluşturduğu birimler. Her ifadenin bir türü ve değer kategorisi var.
 
+> Not: C dilinde pointer kullanımı çokçca var. Fakat C++ dilinde pointer kullanımı C diline göre çok daha az. Bunun sebebi pointer kullanılan durumalrdaki ihtiyacı karşılamaya yönelik reference semantiği var. Dinamik ömürlü nesnelerin hayatını kontrol etmek için pointer kullandığımız senaryoların büyük kısmında da C de olmayan fakat c++ ya olan "smart pointer" sınıflarını kullanıyoruz.
+
+**Expression - İfade:**
+```CPP
+x 
+x + 5 
+f(x)
+++X
+x++ 
+f(x) > g(x)
+x * x + y * y
+```
 
 
 
