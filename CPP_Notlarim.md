@@ -1,4 +1,5 @@
-# C++ Diline Ait Bazı Tanımlar
+# Ders 1
+## C++ Diline Ait Bazı Tanımlar
 
 ### Undefined Behaviour
 - Tanımsız davranış, Dilin kurallarına göre doğru olabilir fakat derleniip çalıştırıldığında nasıl bir durum olacağı konusunda bir granti yok.
@@ -35,9 +36,26 @@ void func()
 - Const t* türünden t* türüne dönüşüm yok.
 - Farklı adres türleri arasında da örtülü tür dönüşümleri yok.
 
+# Ders 1 Alıştırmalar
 
+1. Kod Geçerli midir?
 
+```
+#include <iostream>
 
+int* gp;
+
+int main()
+{
+	int x = 100;
+	int* ptr = &x;
+
+	bool b1 = ptr;
+}
+```
+Cevap: Adres, poniter türlerinden bool türüne otomatik dönüşüm var.  b1'in değeri true
+Burada true veya false dönüşümü pointer ın null pointer olup olmadığına bağlı.
+gp zero initialize edildiği için null pointer değerini almıştır ve dönüşürken false olarak dönüşür.
 
 
 
