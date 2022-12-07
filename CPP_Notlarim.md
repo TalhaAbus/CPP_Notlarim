@@ -133,23 +133,36 @@ f(x) > g(x)
 x * x + y * y
 ```
 
+## Value Categories:
 
+**C dilinde :**
+- L Value expression
+- R Value expression
 
+**C++ value categories:**
+- Primary value categories:
+- PR Value
+- L Value
+- X Value (Ex-pired value) Hayatı bitmekte olan bir nesneye ilişkin
 
+### Value Categories Notlar
+- Bir ifadenin L value olması, o ifadenin bellekteki bir nesne olduğunu gösterir.
+- Bir ifadenin R value olması, bellekte kalıcı yeri olmayan, bir ifadenin değerini hesaplamak için oluşturulan ifade demektir. 
+- Atama işlecinin hem sol tarafında hem sağ tarafında yer alması geçerli olan ifadeler sol taraf değeridir.
+- Atama işlecinin yalnızca sağ tarafında yer alabilen (sol tarafında yer alamayan) ifadeler sağ taraf değeridir.
+- Değişkenlerin ouşturduğu ifedeler(diziler dahil) L value expression.
+- L value olan ifadeler birer nesneye karşılık geliyor. (Değişkenler)
+- PR value ve X value birleşimine R Value deniliyor.
+- L value ve X value birleşimine GL Value deniliyor.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Scope resolution operator: 
+- Bir ismi isim alanı içinde arayıp bulmak için :: operatörü kullanılır. 
+## Namespace:
+- Global isim alanındaki isimleri birbirinden korruyan isimleri içeren bir konteynır.
+## Static ömürlü nesleler:
+1. Global değişkenler
+2. Static anahtar sözcüğü ile tanıtılan yerel değişkenler.
+3. String literalleri karşılığı derleyicinini oluşturduğu char diziler.
 
 
 
