@@ -16,6 +16,17 @@
 Örnek: 
 > static int x; internal linkage
 
+### Scope Leakage: Kapsam Sızıntısı
+- Eğer değişken tanımladığınız alan dışında görünür durumdaysa scope leakage vardır.
+
+Örnek:
+```javascript
+void func()
+{
+    int i;
+    for (i = 0; i < 10; ++i)    
+}
+```
 
 ## Bazı Farklılıklar:
 - Aritmetik türlerden bool türüne tür dönüşümü vardır. Tam tersi de geçerlidir. Dönüşüm 1 veya 0 olur.
