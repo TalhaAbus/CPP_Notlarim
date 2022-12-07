@@ -169,33 +169,34 @@ x * x + y * y
 3. String literalleri karşılığı derleyicinini oluşturduğu char diziler.
 
 Örnek:
-``CPP
+```CPP
 bool b; //global olarak tanımlanan bu değişken false değeri ile hayata başlar.
 int * gp; //bunun değeri nullptr olarka başlar.
-``
+```
 
 ## Initialization:
-``CPP
+
+```CPP
 int x;          // Default initialization
 int x = 10;     // copy init
 int x(98);      // direct init
 int x{10};      // uniform init  // brace init
-``
+```
 - Default initialization nesneleri çöp değer ile hayata başlatıyor. Bunu kullanmak undefined behaviour.
 
 ### Neden modern C++ ilk değer verme biçimi olarka {} getirdi?
 1. Unmiform olması, neye ilk değer veirrsen ver küme parantei kulanabilrioysun.
 2. Daraltıcı dönüşümler küme parantezi ile yapılırsa sentaks hatası.
-``CPP
+```CPP
 double dval = 5.6;
 int i{dval}; // Burada veri  kaybı olduğundan sentaks hatası verecek. Normal parantez kullanılsaydı bu legal bir kod olacaktı.
-``
+```
 **C++ dilinde bunların hepsi aynı anlamda:**
-``CPP
+```CPP
 int a1[4] = {0};
 int a2[4] = {};
 int a3[4]{};
-``
+```
 > Hepsi zero initialize edilmiş oluyor. C dilinde boşluğun içi dolu olmak zorunda ama burdada boş bırakılabilir.
 
 ## Type Deduction - Tür çıkarımı:
@@ -211,20 +212,20 @@ int a3[4]{};
 - lambda expression
 - template
 **Örnek:**
-``CPP
+```CPP
 int* foo(const int*, size_t);
 
 int main()
 {
     int* (*fp)(const int*, size_t) = &foo;  // auto fp = &foo
 }
-``
+```
 **Not:**
 - NULL bir makrodur. c nin standart başlık dosyasında tanımlnamış.
-``CPP
+```CPP
 time(NULL);
 time(0);
-``
+```
 > İkisi arasında bir fark yok. nullptr bir anahtar sözcük, bir constant, türü de nullptr_t türüdür. Bunu kullanmak için herhangi bir başlık dosyasını iclude etmemiz gerekmiyor.
 
 
