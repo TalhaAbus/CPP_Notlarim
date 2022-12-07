@@ -94,6 +94,39 @@ int main{
     int *const p;   // Geçersiz. Const nesnelere ilk değer vermek mecburi.
 }
 ```
+# Ders 2
+## Notlar:
+- C++ dilinde karşılaştırma operatörleri boolean türünden değer üretiyorlar. (True, false)
+- Karakter sabitlerinin türü C dilinde int türü iken c++ dilinde char türü.
+- C dilinde "akif" sabiti char[5] türünde bir dizi. Sonunda null karakter de var. Array decay var. Aynı string literali C++ idilinde const char[5] türünde. C++ dilinde array decay olduğunda elde ettiğimiz adres, char* değil. Const char* olur. 
+- Her iki dilde de string literalini değştirme girişimi tanımsız davranış.
+
+## Array to pointer conversion: Dizi isminin dizinin ilk elemanının adresine dönüştürülmesi C dilinde 2 istisna hariç dizi ismi diinin ilk elemanının adresine dönüştürülüyor.
+- 2 istisna: 
+> sizeof operatörünün operandının dizi olması.
+> Adres operatörünün operandının bir dizi olması.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
