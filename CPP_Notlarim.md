@@ -38,7 +38,7 @@ void func()
 
 # Ders 1 Alıştırmalar
 
-1. Kod Geçerli midir?
+### 1. Kod Geçerli midir?
 
 ```CPP
 #include <iostream>
@@ -58,5 +58,5 @@ Cevap:
 Burada true veya false dönüşümü pointer ın null pointer olup olmadığına bağlı.
 gp zero initialize edildiği için null pointer değerini almıştır ve dönüşürken false olarak dönüşür.
 
-
+### 2
 
