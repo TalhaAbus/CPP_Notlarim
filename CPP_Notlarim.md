@@ -20,7 +20,7 @@
 - Eğer değişken tanımladığınız alan dışında görünür durumdaysa scope leakage vardır.
 
 Örnek:
-```javascript
+```CPP
 void func()
 {
     int i;
