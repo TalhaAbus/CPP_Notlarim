@@ -7,4 +7,15 @@
 ### Implementation Defined
 - Bu da unspecified behaviour fakat derleyici bunu belgelemek zorunda. Derleyici kararlı bir şekilde belirli bir seçeneği tercih ederek kod üretmek zorunda.
 
-## asda
+## Bazı Farklılıklar:
+- Aritmetik türlerden bool türüne tür dönüşümü vardır. Tam tersi de geçerlidir. Dönüşüm 1 veya 0 olur.
+
+
+
+### User-Defined type
+- Kullanıcının bildirim ile tür oluşturması. (struct, enum, union sözcükleri ile oluşturulan türler)
+
+
+
+
+
