@@ -31,7 +31,9 @@ void func()
 ## Bazı Farklılıklar:
 - Aritmetik türlerden bool türüne tür dönüşümü vardır. Tam tersi de geçerlidir. Dönüşüm 1 veya 0 olur.
 - C++ dilinde global const nesneler iç bağlantıda (internal linkage) (c dilinde external linkage)
-
+- C++ dilinde adres türleri ile aritmetik türler arasında örtülü tür dönüşümü yoktur.
+- Const t* türünden t* türüne dönüşüm yok.
+- Farklı adres türleri arasında da örtülü tür dönüşümleri yok.
 
 
 
