@@ -13,7 +13,8 @@
 ### Internal Linkage
 - Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması
 
-Örnek static int x; internal linkage
+Örnek: 
+> static int x; internal linkage
 
 
 ## Bazı Farklılıklar:
