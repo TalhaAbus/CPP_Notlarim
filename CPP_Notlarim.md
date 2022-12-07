@@ -1,3 +1,4 @@
 # C++ ve C arasındaki temel farklılıklar
 
-## underfimned
+## Undefined Behaviour
+- Tanımsız davranış
