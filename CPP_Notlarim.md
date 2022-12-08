@@ -776,6 +776,171 @@ Alıştırma soruları: [Tıkla](https://github.com/TalhaAbus/CPP_Notlarim/blob/
 2. Aynı türe verilenm tür eş isimleri overloading yaratmaz.
 3. Call by value, call by reference overloading oluşturur.
 
+# Ders 8
+**Bazı Tanımlar:**
+
+### Function overloading:
+- Aynı isimli fonksiyonların aynı scopeta bulunması özelliği. Function overload resolution yapılarak hangi fonksiyonun çağırıldığı anlaşılıyor.
+
+### User - defined conversion:
+- Örtülü olarka yapılamayan dönüşüm kullanıcı fonksiyon bildirdiği için derleyici fonksiyonma çağrı yaparak dönüşüm gerçekleştiriliyor.
+
+```CPP
+void func(int x, int y = 0);
+void func(int x);
+```
+> Function overloading çünkü imzaları farklı.
+
+**Örnek:**
+int x = 5;
+
+- x in value category si nedir?
+
+> Bir ifadenin value category si olur. Bir değişkenin olmaz. Bu exression u niteleyen bir terim.
+
+> X in bize data type ı sorulabilir. Bunun cevabı int. 
+
+> Value category soruluğunda 3 cevap olabilir: PR - X - L value.
+
+**Örnek:**
+```CPP
+int x = 10;
+int &r = x;
+```
+- r nin value category si L value.
+
+```CPP
+int &&r = 10;
+```
+**r nin value category si?**
+> Eğer R value expression kullanılırsa, bu nesnenin yerine geçen bir isimdir. Yani L value expressiondır.
+
+> Yani bir ifade isim tarafında oluşturulmuşlsa her zaman l value expressinodur.
+
+## Bazı Tanımlar:
+
+### One Definition Rule
+- Bazı varlıklar farklı kaynak dosylarrda tanımları aynı olmak üzere external olmalarına rağmen ODR yi ihlal etmiyor.
+### Inline expension: 
+- Derleyicilerin en sık kulandığı bir optimizasyon tekniğidir. Complier optimizationdır.
+### Compiler optimization:
+- Derleyici birebir assembly kodu üretmek zorunda değil. Observable behaviour değişmeden derleyici istediği gibi kod üretebilir.
+### Dead code elimination:
+- Observable behaviour değiştirmeyen her kodu derleyici siler.
+**Kısaca:**
+> biz derleyiciye ne istedğimizi veriyoruz. O bize sonuç garantisi vererek istediği gibi kod üretebiliyor. ve bu optimizasyon yapılırken derleyici UB olmadığına güvenerek yapıyor.
+### Loop unrolling:
+- Bir döngü olmasına rağmen derleyici ilave maliyet yaratan iişlemleri elimine etmek için bu döngü yokmuş gibi kodu derliyor. Döngü kadar kodu tekrar yazabiliyor (Ek optimizasyonlar ile birlikte)
+### Loop reversal: 
+- Döngünün ters çevirilmesi
+### Generic programming:
+- Derleyici compile time da yazdığı kodun ne olacağı, yine derleyicinin compile time da yaptığı bir takım kontroller ile belli oluyor.
+- Yani farklı versiyonlarda kod yazıp o kodu da yine optimize edebiliyor.
+### Inline expension:
+- En sık ve en eski kullanılan teknik. En fazla verim üstünde en çok verim sağlayan teknik.
+
+
+## Bu tanımlar ile ilgili notlar:
+
+- C++ ve C en büyük farklarından biri, c++ derleyicileri sadece çeviri programı değil. Derleyici bizim için kod yazaıyor. Bunu yazarken kullandığı paradigma , **generic programming paradigması**.
+
+```CPP
+a = func();
+```
+> func ın bir geri dönüş değeri var, yazılacağı bir bellek adresi var. O bellek adresindeki değeri de a ya kopyalamaya yönelik bir kod üretiyor diyelim.
+
+> Bu satırdaki koddan önce func ın definition ının olduğunu varsayalım. Derleyici direkt a = (fonksiyonun kodu); olacak şekilde bir kod üretecek. Peki neden böyle bir kod üretilsin? 
+
+> Fonksiyona giriş ve çıkışın da bir maliyeti var. Fakat optimize edildiğinde doğrudan aritmetik işelemler yapan kodlar var.
+
+> Örneğin fonksiyonun içinde 3 birimlik iş yapılıyor ise, fonksiyına giriş ve çıkışın maliyetinin 10 birim olduğunu varsayalım. İşte derleyici maliyet hesaplaması ile bunun daha verimli olup olmadığına bakıyor. İşte buna inline expension denir. Yani kaynak kodda bir fonksiyon çağrısı var ama derleyicinin ürettiği kodda aritmetik işlemler yapan kodlar var.
+
+> Bunun en büyük adayları, kodu küçük olan ve çok sık çağırılan fonksiyonlar.
+
+### inline fonksiyonlar: 
+- one definition rule ihlal etmeyecek demek.
+
+```CPP
+inline int func(int x, int y)
+{
+    
+}
+```
+- Bu fonksiyonun tanımını birden fazla kaynak dosyada token by token aynı yapılırsa, one definition rule ihlal etmeyecek demek.
+- Yani inline fonksiyon başlık dosyasına tanıumı koyulduğuda, ODR ihlal etmeyecek.
+- Bunu neden yapalıkm?
+
+> Derleyiciye inline expension olanağı sağlamak amacıyla yapalım.
+Biz inline fonksiyon yaptığımızda derleyicinin bu fonksiyonu görmesini sağlıyoruz.
+
+**Not:**
+> Derleyici inline anahtar sözcüğü kullanıldı diye onu inline etmek zorunda değil ve yine inline yazmadığımız fonksiyonları derleyici inline expend edebilir.
+
+- inline yazmanın amacı başlık dosyasına koymak, inline omasaydı ODR ihlali olurdu.
+
+### Complete Type - Incomplete Type
+
+```CPP
+class Nec; // Class decleration
+```
+- Derleyici bir türün varlığınndan harberdar ama o türün detaylarını bilmiyor.
+- Biz böyle bir bildirim yaparsak derleyici bu bildirimini gördüğünde sınıf türünü bilecek ama tanımını görmüyor.
+- Bu bir incomplete type. Complete type ise tam tersi. Tüm bilgilere derleyici hakim.
+
+**Türün complete ya da incomplete olması bizi niye ilgilendiriyor?**
+> Bazı kodlar için türün incomplete olması o kodun derlenmesi için yeterli. Bazıları için complete olması gerekiyor.
+
+```CPP
+struct Nec;
+Nec f1(Nec);
+Nec* f2(Nec&);
+
+typedef Nec* NecPtr;
+using NecRef = Nec&;
+extern Nec necx; // Burada sentaks hatası yok. Bu bir değişken bildirimi.
+                    // Bu bir decleration. Definition olsaydı derleyici bunun için yer ayırmak zorunda kalacaktı ve storage ihgtiyacını bilmek zorunda olacaktı.
+```
+> Bunların hepsi incomplete type olmasına rağmen sentaks hatası yok.
+
+> sizeof operatörünün operandı yapılamaz, yapılması için complete type olması gerekiyor.
+
+# Ders 8 Alıştırmalar
+
+```CPP
+struct Nec;
+
+int main()
+{
+	Nec mynec;
+}
+```
+**Hata: incomplete type is not allowed.**
+
+```CPP
+struct Nec;
+Nec* foo();
+
+int main()
+{
+	Nec *p = foo();
+	*p = 1;
+}
+```
+**Cevap:**
+> Türün incomplete olması sebebiyle sentaks hatası, dereference ediliyorsa o nesneye erişiliyor ama o nesnenin bilgileri bilinmiyor.
+
+**Örnek:**
+```CPP
+void func(int &);   viable değil
+void func(int &&);  viable
+
+int main()
+{
+    func(10);
+}
+```
+
+
 
 
 
