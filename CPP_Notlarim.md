@@ -1904,6 +1904,451 @@ private:
 
 [Ders 11 Ornek koddlar > calistir](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%2011%20kodlari.md)
 
+# Ders 12
+
+**Bir sınıfın özel üye fonksiyonlari 3 statude olabilir.**
+
+- not declared: fonksiyon yok demek
+- user declared: programci fonksiyonu bildirmis demek
+- implicitly declared: derleyici dilin kurallarina dayanarak fonksiyonu bildirmis.
+
+**User declared: 3 ihtimal**
+
+- User declared defined: programci bildiriyor ve tanimliyor
+- User declared defaulted: Programci bildiriyor ama derleyicinin tanimlamasini istiyor.
+- User declared deleted: Programci bildiriyor ama delete ediyor. (Bunu cagirilmasi sentaks hatasi)
+
+### Derleyici bir ozel uye fonksiyonu nasil yaziyor?
+
+- Her ozel uye fonksiyonu icin derleyicinin yazdigi fonksiyonun nasil yazilacagini belirleyen kurallar var:
+
+**Derleyici tarafindan default edilen "default ctor", sinifin:**
+
+non-static, public, inline fonksiyonudur.
+
+**Implicityli declared:**
+
+1. Derleyici tanimiyor
+2. Derleyici ortulu bildirdigi fonksiyonu delete ediyor.
+
+**Not:** 
+> Eger derleyici bir special member fnction u default ettiginde dilin kuralarini cigneyen bir durum olusursa derleyici sentaks hatasi vermek yerine defaukt etmesi gerektigi fonksiyonu delete eder.
+
+**Neden sentaks hatasi olusabilir?**
+- default init edilemiyor olabilir. (Referans veya const tur.)
+- Olmayan bir fonskyina cagri olabilir.
+- Private fonksiyona cagri 
+- Deleted fonsiyona cagri
+
+**Ornek:**
+```CPP
+class Nec {
+public:
+
+private:
+	const int x;
+};
+```
+> Derleyici Myclass icin dil kurallarina gore default constructor i default etmek zorunda ve derleyicinin yazdigi default cosntructor elemanlari default init etmek zorunda.
+
+> Burada const bir nesne default init edilemez. Bu durumda derleyicinin yazmasi gereken default constructor sentaks hatasi olusturacak. 
+
+> Burada derleyici sentaks hatasi vermek yerine sinifin default constructor ini delete edecek.
+
+**Ornek:**
+
+```CPP
+class Nec {
+public:
+
+private:
+	const int x;
+};
+
+int main{
+    Nec m;
+}
+
+```
+> Sentaks hatasi : delete edilmis fonksiyona cagri.
+
+**Ornek:**
+
+```CPP
+class Nec {
+public:
+
+private:
+
+};
+
+class Myclass {
+public:
+
+private:
+	Nec mnec;
+};
+
+int main(){
+	Myclass m;
+}
+```
+**Analiz:**
+> Derleyici Myclass icin default constructor yazdi. Derleyicinin yazdigi default constructor, sinifin private veri elemani olan Nec turudnen mnec isimli elemani default init etti.
+
+> Bu default constructor cagirilmasinda bir engel yok.
+
+**Ornek:**
+
+```CPP
+class Nec {
+public:
+	Nec(int);
+};
+
+class Myclass {
+public:
+
+private:
+	Nec mnec;
+};
+
+int main(){ 
+
+}
+
+```
+**Analiz:**
+
+> Suan Nec in default constructor i yok. Myclass sinifi icin derleyici default constructor yazmak zorunda ve Myclass sinifi icin derleyici default cosntructor yazmak zorunda. Burada eleman olan mnec icin de default constructor cagirilmak zorunda ama default constructor yok.
+
+> Bu durumda sentaks hatasi olusmasi gerekiyor. Bunun yerine Myclass sinifinin default constructor ini delete edecek. Burada sentaks hatasi alcagim durum: Myclass sinifinda default constructor gerektirecek bir nesne olusturmak.
+
+**Ornek: **
+
+```CPP
+class Nec {
+
+	Nec();
+};
+
+class Myclass {
+public:
+
+private:
+	Nec mnec;
+};
+
+int main(){ 
+
+}
+```
+**Analiz:**
+> Myclass sinifinin default constructor i suanda deleted.
+
+> Nec constructor i private. Private olan default constructor a yapilan cagri sentaks hatasi. Derleyici Myclass sinifi icin yazdigi default constructorda eleman olan mnec icin default constructor a cagri yapcak. Bu da private oldugu icin sentaks hatasdi olusturacak. 
+
+> Bu durumda derleyici Myclass sinifinin implicitly devlared olan default constructor ini delete edecek. 
+
+> Yani Myclass default constructor i derleyici tarafindan delete edilmis durumda. Ama bunun nedeni private fonksiyona yapilan cagri.
+
+**Not:**
+> Derleyici, eger bir sinifin special member function i implicityly declared ise ve derleyici bu ozel uye fonksiyonu default ederken bir sentaks hatasi olusursa (yazilmasi gereken kod dilin kuralarina ayriki duruma duserse) bu durumda derleyici yazmasi gereken special member function i delete ediyor.
+
+**Ornek:**
+
+```CPP
+#include <iostream>
+
+class Myclass {
+public:
+
+    void print()const
+    {
+    std::cout << mx << " " << my << "\n";
+    }
+private:
+    int mx;
+    int my;
+};
+
+
+int main()
+{
+    Myclass m;
+
+    m.print();
+}
+```
+> mx ve my cop degerde. Bunlari kulanmak UB. Neden cop degerde?
+
+> Cunku derleyicinin yazdigi default constructor bunlari default init etti. Default init demek garbage value demek.
+
+**Ornek :**
+
+```CPP
+#include <iostream>
+
+class Myclass {
+public:
+
+    void print()const
+    {
+    std::cout << mx << " " << my << "\n";
+    }
+private:
+    int mx{10};
+    int my{35};
+};
+
+
+int main()
+{
+    Myclass m;
+
+    m.print();
+}
+
+```
+> Burada ise UB yok. Myclass sinifinin default constructor ini derleyici yazdi. Ama yazarken default member initializer a bakti ve bu degerler ile init edecek sekilde default constructor i yazdi.
+
+
+**Notlar:**
+
+- Bircok dilde (nesne yonelimli programlamaya destek veren) constructor kavrami var. Fakat destructor bircok dilde yok. Destructor olmasi aslinda RAII idiomu ile ilgili.
+
+> Bir sinif nesnesi kaynak kullanacaksa, kullandigi kaynagi sinif nesnesine baglayan constructor yolu ile kaynagi ediniyor. Fakat bu kaynagi nesne hayatta oldugu surece kullanacak. Nesnenin hayati bittigi zaman bu kaynagin geri verilmesi gerekiyor.
+
+> C dilinde bu kaynagin geri verilmesini bir fonksiyona cagri yaparak gerceklestirecektik ve bunu unutma ihtimali de var. Fakat C++ dilinde destructor kavrami bu olayi otomatik yapiyor.
+RAII kisaca: kaynagin edinilmesi ve geri verilmesi.
+
+**Ornek: Copy constructor **
+
+```CPP
+#include <iostream>
+
+class Nec {
+public: 
+	Nec()
+	{
+		std::cout << "default ctor this" << this << "\n";
+	}
+	~Nec()
+	{
+		std::cout << "destructor this" << this << "\n";
+	}
+};
+
+void foo(Nec x)
+{
+
+}
+
+int main()
+{
+	Nec mynec;
+
+	foo(mynec);
+	(void)getchar();
+}
+```
+**Çıktı:**
+
+default ctor this000000E5338FF854
+destructor this000000E5338FF830
+
+destructor this000000E5338FF854
+
+**Peki burada fonksiyonun parametre degiskeni icin destructor cagirildi ama constructor cagirilmadi, neden?**
+**Cevap:** onun icin de constructor cagirildi, onunu icin cagirilan cosntructor default constructor degil. Copy constructor.
+
+## Copy Constructor : 3. special member function
+
+1. ogrendigimiz default constructor
+2. desctructor
+3. copy constructor
+
+> Bir sinif nesnesi hayata degerini ayni turden bir baska sinif nesnesinden alarak getirildiginde burada sinif nesnesini hayata getirecek constructor, sinifin copy constructor i.
+
+**Ornek:**
+
+```CPP
+Student batuhan 
+Student korhan= batuhan;
+```
+
+> Batuhan hayatta olan bir sinif nesnesi.
+
+> Ayni turden korhan degiskeni olusturdum. Bu degiskenin degerini batuhan ile ayni olmasini istiyorum. Yani korhan da ayni turden bir sinif degiskeni olsun fakat degerini batuhandan alsin. Yani surec tamamlandiginda korhan ve batuhan ayni degerde ama birbirinden farkli 2 degisken olsun.
+
+> Iste bu durumda cagirilan korhani hayata getirecek fonksiyon, student sinifinin copy constructor i.
+
+**Derleyici tarafindan yazilan copy constructor sinifin:**
+- non - static, public, inline üye fonksiyonudur.
+
+```CPP
+class Nec{
+public:
+	Nec(const Nec&);
+private:
+	A ax;
+	B bx;
+	C cx;
+};
+```
+> Nec, ismi sinif ismi ile ayni oldugu icin bir constructor. Ama sinif turunden parametreye sahip oldugu icin bu bir copy constructor. 
+
+```CPP
+Nec x;
+Nec y = x;
+```
+> Bu sekilde bir nesne olusturdugumuzda x hayata gelmiyor, hayata gelen y. 
+
+> Burada this pointer i hayata getirilecek olan nesnenin adresi olduguna gore (constructor icinde) y nin adresidir.
+
+> Burada x aslinda fonksiyona referans semantigi ile arguman olarak gonderiliyor.
+
+> Bazi durumlarda ise sinifin copy constructor ini kendimiz yamamiz gerekecek. Cunku derleyicinin yazdigi copy consttuctor bizim icin uygun olmayacak.
+
+> Derleyicinin yazdigi copy constructor dogrudan elemanlari birbirine kopyaliyor. Elemanlarin pointer olmasi durumunda bir pointerin degeri bir baskasina aktariliyor ayni ikisi de ayni adresteki nesneyi gosteriyor.
+
+**Eger bir sinifa destructor yaziyorsaniz %99 bu sinif icin copy constructor da yazmalisiniz.**
+
+### Operator overloading: 
+- Bir sinif nesnesi bir operatorun operandi oldugunda derleyici bunu fonksiyona yapilan bir cagriya donusturuyor. Burada cagirilan fonksiyonlara operator fonksiyonlari deniliyor.
+
+### Copy assignment function:
+- bir sinif nesnesine ayni turden aska sinif nesnesi atandiginda.
+
+> Hayatta olan bir sinif nesnesine = yine hayatta olan bir baska sinif nesnesini atama operator ile atadigimizda bir fonksiyon cagiriliyor. 
+
+**Örnek:**
+
+```CPP
+class Nec{
+public:
+	Nec& operator=(const Nec& other);
+private:
+	A ax;
+	B bx;
+	C cx;
+};
+```
+necx = necy;
+Burada aslinda 
+necx.operator=(necy);
+fonksiyonu cagiriliyor.
+
+> Burada this pointer i necx in adresi
+other in adresi = necy nin adresi
+
+**Hatirlatma:** Atama operatorunun urettigi deger nesneye atanan degerdir.
+
+### Move Semantics:
+- Oyle yerler var ki biz bir nesneyi hayata getirirken, degerini bir baska nesneden alarak hayata gelemsini istiyoruz.
+```CPP
+T x = other;
+```
+Copy constructer ne yapiyordu:
+```CPP
+T x = other;
+```
+- Bu nesnenin kaynagina esdeger bir kaynak edinecek ve bu nesnenin kaynagindan kendi kaynagina kpyalama yapacak.
+- Atama durumunda: kendi kaynagini geri verecek, yeni kaynak edinecek ve edindigi yeni kaynaga diger nesnenin kaynagindan kopyalama yapacak.
+
+**Baska bir senaryo:**
+```CPP
+T x = other;
+```
+> other ile ifade ettigimiz nesnenin hayatinin bitmekte oldugunu, bu nesneyi kullanacak baska bir kodun olmadigindan emin olalim. Bu durumda bu nesnenin kaynagini kopyalamak gereksiz olacak ve bu nesne de hayati bittiginde kaynagini geri vermis olacak.
+
+> Burada boyle bir kod calisacagina, bizim nesnemizin pointer i diger nesnenin pointerini kopyalasin. Yani onun kaynagini kullanir hale gelsin. Other icin destructor cagirildiginda bizim destructor geri cerilmesin.
+
+> Yani hayati bitecek olan nesnenin hayatinin biteceginden emin isek onun kaynagini calabiliriz.
+
+```CPP
+T x = expr;
+```
+> Sagdaki ifade hayati bitecek olan, baska kodlarin kullanamayacagi bir nesne anlamina geliyorsa, (compile time da) farkli bir kodu sececek, hayati devam edecek bir nesne ise baska bir kodu sececek.
+
+> expr, hayati bitecek olan bir nesne ise yani baska bir kodun bunu kullanma ihtimali yoksa bu ifade R value expression.
+
+> Yani bir ifade PR value veya X value ise bu sinif nesnesini kullanacak baska bir kod yok. Bunun kaynagi calinabilir.
+
+> Ama ifadenin deger kategorisi L value expression ise o kaynagi kopyalamamiz gerekiyor. Nesne zaten hayatta, eger calinirsa nesne kullanilamayacak bir duruma duser.
+
+> Bir ifade R value expression ise ve sinif nesnesi ise, o sinif nesnesinin baska bir kod tarafindan kullanilma ihtimali yok.
+
+```CPP
+class Myclass{
+public:
+	Myclass(const Myclass&);	// copy constructor
+	Myclass(Myclass&&r);	// move constructor
+};
+```
+> Derleyici koda bakarak fonksiyona gonderilen argumanin value categorysinin ne oldugunu anlayarak function overload resolution ile ustteki veya alttaki fonksiyonu cagiracak.
+
+> Ustteki kaynak kopyalamaya yonelik olusturulmus, alttaki kaynak calmaya gore olusturulmus.
+
+**Örnek:**
+
+```CPP
+class Myclass{
+public:
+	Myclass();
+	Myclass(const Myclass&);	// copy constructor
+	Myclass(Myclass&&r);	// move constructor
+};
+
+Myclass foo();
+
+int main()
+{
+	Myclass x;
+	Myclass y = foo();
+}
+```
+> Y yi hayata getirmek icin alttaki fonk cagirilir cunku foo() R value expression.
+
+> Yani biz bir nesneyi L value expression olan bir ifade ile hayata getirdigimizde onun kaynaginin kopyalanmasinis saglayacaz.
+
+> Ama nesneyi hayata getirirken ona ilk deger verdigimiz ifade bir R value expression ise o zaman move constructor cagirilacak ve move constructor onun kaynagini calacak.
+
+> Buradaki amac, zaten olecek bir nesnenin kaynagini alip, yeni nesne icin gereksiz kopyalama yapmanin engellenmesi. 
+
+# Ders 12 Alıştırmalar
+[Ders 12 kodları](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%2012%20Kodlari.md)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
