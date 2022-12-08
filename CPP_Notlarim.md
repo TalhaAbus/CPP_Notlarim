@@ -647,6 +647,73 @@ int main()
 **Cevap:**
 > C dilinde tüm fonksiyon çağrıları call by value dur. Bu sebeple x indeğeri her zaman 45 tir. Fakat C++ dilinde func fonksiyonunda referans semantiği kullanılmış olabilir. Fonksiyonun kodunu görmeden bu sorunun cevabı verilemez.
 
+# Ders 6
+
+```CPP
+auto x{3};      // Burada çıkarım int olarak yapılıyor.
+auto x = {3};   // Burada çıkarım std::initializer_list olarak yapılıyor.
+```
+
+```CPP
+int x = 10;
+auto p1 = &x;       // int *p1 = &x; auto ==> int*
+auto* p2 = &x;      // int *p2 = &x; auto ==> int
+```
+
+```CPP
+int* ptr = &x;
+
+auto p1 = &ptr;     // auto nun yerine gelen tür int**
+auto* p2 = &ptr;    // int*
+auto** p3 = &ptr;   // int
+
+Ama sonuçta p1, p2, p3 int** türünen değişkenler. Çıkarım değişken için değil auto için yapılıyor.
+```
+## Reference Collapsing:
+
+- C++ dilinin kurallarında referecen to reference yok. Ama bazı bağlanlar ile oluşturuluyor.
+- Referecne to referecne olması gereken türn yerine L value veya R value reference kullanılıyor.
+
+## Decltype:
+
+- Bir ifadeyi temsil ediyor. Decltype(x);
+
+```CPP
+decltype(expr);
+```
+Burada hangi türün elde edileceği expr ifadesinin değer kategorisine (primary value category) bağlı.
+
+## Varsayılan Argüman:
+
+- C'de olmayan bir araçtır. Argüman fonsksiyon çağrısında kullanılan ifadedir.
+
+> Parameter: Fonksiyıonun parametresi.
+> Argument: Fonksiyıon çağrısında değeri gönderilen ifadeler.
+
+```CPP
+foo(12); // Fonksiyona 12 değerindeki argümanı gönderdim.
+```
+
+```CPP
+void func(int, int, int = 10);
+```
+> Fonksiyonun 3. parametesi gödnerilmez ise 10 gönderilmiş varsayılacak.
+> Varsayılan argünamlar son parametreler için geçerli.
+
+**Bir sabitr ifadesi olmak zorunda değil, örnek:**
+```CPP
+void f(int = x);
+veya,
+int f1(int x = 0);
+void f2(int y = f1());
+int main()
+{
+    f2(); == f2(f1(0));
+}
+```
+
+
+
 
 
 
