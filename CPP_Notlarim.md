@@ -768,44 +768,13 @@ int func(int, int);
 - Normalde olmayan bir dönüşüm, bir fonksiyonun bildirilmesiyle ve derleyicinin bu fonksiyonu kullanarak dönüşümü gerçekleştirmesi olayı.
 
 # Ders 7 Alıştırmalar
-
-**Soru 1: İncele**
-
-```CPP
-#include <iostream>
-#include <cstdint>
+Alıştırma soruları: [Tıkla]([https://pages.github.com/](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%207%20Alistirmalar.md))
 
 
-void func(int *)
-{
-    std::cout << "int *\n";
-}
-
-void func(const int *)
-{
-    std::cout << "const int *\n";
-}
-
-int main()
-{
-    const int cx = 5;
-    func(&cx);
-}
-```
-**Cevap:**
-> Burada eğer 2. fonksiyon olmasaydı bu çağrı legal olmazdı.
-
-> Eğer gödnerdiğimiz nesne const t* derğil de t* olsaydı, fonksiyonlardan herhangi biri tek başına olsaydı kod her türlü legal olcaktı. Çünkü int* dan const int* a tür dönüşümü var.
-
-> Bunun faydası, const olan nesneler ve const olmayan nesneler için 2 ayrı kod oluşturup compile time'da derleyicinin bu seçimi yapmasını sağlayacağız.
-
-
-
-
-
-
-
-
+### Sorulardan notlar:
+1. Parametrenin constluğu bir imza farklılığı yaratmaz
+2. Aynı türe verilenm tür eş isimleri overloading yaratmaz.
+3. Call by value, call by reference overloading oluşturur.
 
 
 
