@@ -768,7 +768,7 @@ int func(int, int);
 - Normalde olmayan bir dönüşüm, bir fonksiyonun bildirilmesiyle ve derleyicinin bu fonksiyonu kullanarak dönüşümü gerçekleştirmesi olayı.
 
 # Ders 7 Alıştırmalar
-Alıştırma soruları: [Tıkla]([https://pages.github.com/](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%207%20Alistirmalar.md))
+Alıştırma soruları: [Tıkla](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%207%20Alistirmalar.md)
 
 
 ### Sorulardan notlar:
