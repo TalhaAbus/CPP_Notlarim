@@ -323,6 +323,159 @@ cout nesnesi << operatorunun operandı olduğu için derleyici bunu bir fonksiyo
 Derleyicinin çağıdığı fonskliyona cout nesnesi ve string literali argüman olarka gönderiliyor.
 
 # Ders 3
+## Basic type türler:
+```CPP
+char 
+signed char
+unsigned char
+
+char türünün storage 1 byte olması garanti altında 
+---------
+bool (tam sayı türü ve integral promotion a tabi)
+---------
+short
+unsigned short
+---------
+long
+unsigned long
+---------
+long long   en az 8 byte
+unsigned long long
+---------
+int     çalışılan ortama bağlı olarak 2-4-8 byte
+unsigned int
+
+sizeof(short) <= sizeof(int) <= sizeof(long) <= sizeof(long long)  // garanti altında, veri kaybı yok
+
+char türü karakterlerden bağımsız bir tam sayı türü olarka da kullanılabilir.
+
+Gerçek sayı türleri:
+float
+double
+long double
+```
+
+## Scope Kategorileri:
+### C dilindeki scope kategoerileri:
+
+- block scope 
+- file scope 
+- function scope 
+- function prototype scope
+
+### C++ dilindeki scope kategorileri:
+
+- block scope 
+- namescape scope 
+- class scope 
+- function scope 
+- function prototype scope
+
+## Short Circuit Behaviour:
+
+- || , && operatörleri söz konusu olduğunda bu operatörlerin sol operandları önce değerlendiriliyor. 
+- Lojik ve operatöçrünün sol oeprandı doğru sonucu elde edilmişse sağ taraf için işlem kodu üretilmiyor.
+
+# Ders 3 Alıştırmalar:
+
+**Soru 1: Hangi fonksiyon daha önce çağırılır?**
+```CPP
+x = f1() + (f2() * 5);
+```
+**Cevap:**
+> Unspecified behaviour. Bunun garnatisi yok. Derleyiciye bağlı.
+
+**Soru 2: If doğru kısmına girer mi?**
+```CPP
+int main()
+{
+    const char* p1 = "oytun";
+    const char* p2 = "oytun";
+
+    if(p1 == p2){
+    }
+}
+```
+**Cevap:**
+> Unspecified behaviour. Aynı string literallerinin derleyici tarafından aynı bellek alanında tutulup tutulmayacağı tamamen deeleyiciye bağlı.
+> C++ visual sutudio ile denendi ve aynı adreste tutulduğu görüldü.
+
+**Soru 3: Kod doğru mudur?**
+```CPP
+int x;
+
+int main()
+{
+#include <stdio.h>
+
+int main(void)
+{
+    int printf = 5;
+    printf("merhaba \n");
+}
+```
+**Cevap:**
+> Burada sentaks hatası var. Ama hatanın nedeni name lookup değil. printf name lookup sonucu int türden bir değişken ismi olduğu anlaşılıyor ve bu fonksiyon çağrı operatörününü operandı oluyor. Bu sentaks hatasıdır.
+
+**Soru 4: Kod doğru mudur?**
+```CPP
+#include <stdio.h>
+
+int main(void)
+{
+    printf("merhaba \n");
+    int printf = 5;
+}
+```
+**Cevap:**
+> Burada sentaks hatası yok. Legal bir code. Printf ismi local alanda bulunamadı ve global alanda devam etti ve bulundu.
+
+**Soru 5: Kod geçerli midir?**
+```CPP
+int main()
+{
+    for(int i = 0; i<10; i++)
+    int i = 56;
+}
+```
+**Cevap:**
+> Bu kod C dilinde geçerlidir. C++ dilinde sentaks hatasıdır.
+
+**Soru 6: Kod geçerli midir? **
+```CPP
+void x();
+
+int main(){
+    int x = 34;
+
+    x(); // geçersiz
+    ::x(); // geçerli, global namespace araması
+}
+```
+
+**Soru 7: Kod geçerli midir?**
+```CPP
+int main(){
+    
+    int printf{};
+    ::printf(_Format: "ali");
+}
+```
+**Cevap:**
+> Geçerli globalden printf çağırılıyor.
+
+**Soru 8: y nin değeri nedir?**
+```CPP
+int main()
+{
+    int x =  0;
+    int y = 10;
+
+    int a = x && ++y;
+}
+```
+**Cevap:**
+> y nin değeri 10 olarak kalır. İşlem kodu üretilmez. Short circuit behaviour var.
 
 
 
