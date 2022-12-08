@@ -712,8 +712,92 @@ int main()
 }
 ```
 
+# Ders 7
+
+## Function Overloading
+- Function overloading derleme zamanına ilişkin bir mekanizma.
+
+**Genel Programlama alanında kullanılan popüler terimler:**
+- Derleyici, hangi fonksiyonun çağırıdlığını koda bakarak anlayacak ve o fonksiyonu çağıracak. Çağrının fonksiyona bağlanması, derleyicinin ürettiği kod ile belirleniyor. 
+> Eğer fonksiyon çağrısı derleme zamanında bir fonksiyona bağlanıyorsa buna programlamada "static binding" (early binding)denir.
+> Hangi fonksiyonun çağırıldığı programın çalışma zamanında anlaşılıyorsa (programın çalışma zamanıunda koşan bir kod ile tespit ediliyorsa) buna "dynamic binding" (late binding) denir.
+
+- Function overloading olmasaydı C gibi olurdu. Birden fazla fonskiyona aynı işi yapsalar da farklı isimler vermek zorunda kalırdık ve kodu yazmak daha zor olurdu.
+- Overload olan fonksiyonları nasıl seçeceğimizi bilmezsek yanlış fonksiyonu çağırabiliriz.
+
+**Dilin kurallarına göre aynı isimli fonksiyonlar bir overloading oluşturabilriler veya oluşturmayabilirler.**
+
+### Function overloading olması için:
+1. Fonksiyonların ismi aynı olacak
+2. Kapsamları (scope) aynı olacak
+3. İmzaları farklı olacak
+
+**C++ Scope kategorileri**
+1. namespace scope
+2. class scope
+3. block scope
+4. Function prototype scope 
+5. Function scope
+
+- Aynı isimli fonksiyonlar farklı scope ta ise: name hiding, name masking, name shadowing olabilir.
+- Farklı scope'taki fonksiyonlar overload oluşturmazlar. Farklı scopetaki isimler birbirini gizleyebilirler.
+
+### Function signature :
+- Fonksiyon parametre değişkeni sayısı ve her bir parametresini türü. Overloading olması için imzalarının da farklı olması gerekiyor.
+
+```CPP
+int foo(int, int);
+int func(int, int);
+```
+> Bunların imzaları aynı.
+
+## Fucntion Overload Resolution:
+- Derleyicinin Hangi fonksiyonun çağrılacağını anlamaya  çalışma sürecine function overload resolution denir.
+- Derleyiciye göre değişmeyen bir durumdur.
+
+**Overload Resolution nasıl yapılır?**
+- En fazla 3 aşamada yapılır.
+
+> 1. aşamada Derleyici derleyici sadece fonk. isminden hareketle aynı isimli fonksiyonları kayda alıyor. Bunlar aday fonksiyonlar.
+> 2.aşamda derleyici "bu fonksiyon tek başına olsaydı bu fonksiyon çağrısındaki argümanlar ile çağırılması legal olur muydu" sorusunun cevabını alıyor. Bunun cevabı evet ise bu fonksiyonlara "viable function" deniliyor.
+
+**Not:**
+> Function overloading var olması o isimli fonksiyona yapılan her çağrının legal olduğunu göstermiyor. o fonksiyon çağırısı sentaks hatası da olabilir.
+
+### User- defined conversion :
+- Normalde olmayan bir dönüşüm, bir fonksiyonun bildirilmesiyle ve derleyicinin bu fonksiyonu kullanarak dönüşümü gerçekleştirmesi olayı.
+
+# Ders 7 Alıştırmalar
+
+**Soru 1: İncele**
+
+```CPP
+#include <iostream>
+#include <cstdint>
 
 
+void func(int *)
+{
+    std::cout << "int *\n";
+}
+
+void func(const int *)
+{
+    std::cout << "const int *\n";
+}
+
+int main()
+{
+    const int cx = 5;
+    func(&cx);
+}
+```
+**Cevap:**
+> Burada eğer 2. fonksiyon olmasaydı bu çağrı legal olmazdı.
+
+> Eğer gödnerdiğimiz nesne const t* derğil de t* olsaydı, fonksiyonlardan herhangi biri tek başına olsaydı kod her türlü legal olcaktı. Çünkü int* dan const int* a tür dönüşümü var.
+
+> Bunun faydası, const olan nesneler ve const olmayan nesneler için 2 ayrı kod oluşturup compile time'da derleyicinin bu seçimi yapmasını sağlayacağız.
 
 
 
