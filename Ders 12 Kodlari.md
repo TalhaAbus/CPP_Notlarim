@@ -66,7 +66,7 @@ int main()
 ```
 
 Burada ise getchar koyduk yani 2. destructor in mainden ciktiktan sonra olustugunu gorelim diye.
-=============================
+
 
 Ayni ornek uzerinden :
 
