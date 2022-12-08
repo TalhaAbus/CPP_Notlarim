@@ -232,7 +232,7 @@ time(0);
 ```
 > İkisi arasında bir fark yok. nullptr bir anahtar sözcük, bir constant, türü de nullptr_t türüdür. Bunu kullanmak için herhangi bir başlık dosyasını iclude etmemiz gerekmiyor.
 
-## Ders 2 Alıştırmalar
+# Ders 2 Alıştırmalar
 
 **Soru 1: sizeof operatörünün ürettiği değerin türü nedir?**
 
@@ -322,6 +322,7 @@ Operator overloading: Sınıf nesnesinin operator operandı olması durumunda de
 cout nesnesi << operatorunun operandı olduğu için derleyici bunu bir fonksiyon çağrısına dönüştürüyor.
 Derleyicinin çağıdığı fonskliyona cout nesnesi ve string literali argüman olarka gönderiliyor.
 
+# Ders 3
 
 
 
