@@ -3363,11 +3363,165 @@ void Myclass::bar()
 
 > Sinifin uye fonksiyonu oldugu icin sinifin private bolumune erisebiliyor. Hata yok.
 
+# Ders 15
+
+## friend Bildirimleri:
+- Bir friend bildirimi sınıfın kendi kodlari disinda diger kodlara, private bolume erisim hakki taniyor.
+
+**friend anahtar sozcugu ile yapilan bir bildirim:**
+
+1. Bir namespace deki fonksiyona
+2. B'r sinifin bir uye fonksiyonuna
+3. Bir sinifin tum uye fonksiyonlarina
+
+friend lik verebiliyor.
+
+> Namespace deki bir fonksiyona friend lik verdigimiz zaman bu fonksiyonun tanimini sinifin tanimi icinde yapabiliyoruz.
+
+> A, B ye  friendlik vermisse ve B, C ye friendlik vermisse; A, C ye friendlik vermis degil.
+
+## OPERATOR OVERLADING: OPERATOR YUKLEMESI
+
+- Bir sınıf nesnesi normalde sadece sizeof operatörünün operandı olabilir. Fakat bir sınıf nesnesi bir operatörün operandı olduğunda, öyle bir mekanizma var ki; operatörün operandı olmuş sınıf nesnesi ifadesini bir fonksiyon çağrısına dönüştürüyor. Bu mekanizmaya operatör overloading deniyor.
+- Örneğin bir sınıf nesnesi toplama operatörünün operandı olmuşsa ve eğer toplama operatörü bu sınıf için overload edilmişse bu fonksiyon çağırılacak. Bu fonksiyon çağırmanın bir başka biçimi.
+- Neden böyle bir araç var? Böyle bir aracın çalışma zamanına ek bir maliyeti var mı? Doğrudan fonksiyon ouşturup fonksiyonu ismi ile çağırsaydık daha az maliyet mi olacaktı?
+
+> Amaç programcının işini kolaylaştırmak, daha yüksek bir soyutlama ortamı sağlamak.
+
+```CPP
+Date mydate{31,12,2022};
+++mydate;
+
+if(date1 > date2)
+    date1 -= 20;
+```
+
+**Neden operator everloading mekanizmasını çok iyi öğrenmeliyiz?**
+> standart c++ kütüphanesi operator overloading mekanizmasını kullanıyor.
 
 
+**Örnek:**
+
+```CPP
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main()
+{
+	string name{ "ferhat" };
+	string str{ "murat" };
+
+	if (name == str)
+		name += "can";
+}
+```
+
+**Operandlardan en az birinin sınıf türünden ya da bir numaralandırma türlerinden olması gerekiyor.**
+
+### overload edilemeyen operatörler:
+
+nokta operatörü
+sizeof operatörü
+ternary operator
+:: scope resolution operatörü
+.* operatörü (C dilinde olmayan)
+typeid operatörü
 
 
+```CPP
+#include <iostream>
 
+using namespace std;
+
+int main()
+{
+    int x = 5;
+    cout << x;
+}
+```
+> cout << operatörünün operandı oldu ve derleyici bunu fonksiyona yapılan çağrıya dönüştürdü. Burada bir fonksiyıon çağrısı var.
+
+**Fonksiyon ile cagirmak istersek**
+```CPP
+cout.operator<<(x);
+```
+
+- Bazi operatorler icin sadece uye operator fonksiyou olusturabiliyoruz. 
+
+Member operator function 
+
+[]
+(->)
+type cast 
+()
+
+> Diger operatorler ile istersem global operator fonksiyonu, istersem uye operator fonksiyonu yazabiliyorum.
+
+> Ama bunlar ile sadece uye operator fonk. olusturabiliyorum.
+
+- Bu fonksiyonlar operatorlerin arity sine uymak zorunda (binary ise binary olarak overload edilecek, unary ise unary olarak overload edilecek)
+
+```CPP
+a > b 
+```
+
+> a ve b sinif turunden nesneler olsun. Bu ifade fonksiyon cagrisina donusturulecek.
+    
+- Eger burada cagirilacak fonksiyon global bir fonksiyon ise, yani bu operator global operator fonksiyonu olarak overload edilmisse derleyici, ismi operator>() olan fonksiyona her iki ifadeyi de arguman olarak gonderecek yani:
+
+```CPP
+operator>(a,b);
+```
+
+**Ama operator unary operator ise**
+
+```CPP
+!x      operator!(x);
+```
+> olacak.
+
+**Ornek:**
+
+```CPP
+using namespace std;
+
+class Nec{
+
+};
+
+bool operator>(const Nec&);
+// Derleyici burada hata verdi cunku tek parametreli.
+```
+> Hata: binary 'operator >' has too few parameters. Sadece 2 parametresi var ise gecerli olacak.
+
+**Ornek:**
+
+```CPP
+class A{
+public:
+    bool operator>(const A&)const;  // geçerli
+    bool operator!(const A&)const;  // Geçersiz
+};
+```
+
+**Ornek:**
+
+```CPP
+class A{};
+
+A operator+(const A&); // Kod geçerli, bu toplama operatörünü overload etmiyor, işaret operatörünü overload ediyor.
+```
+
+**4 Tane token 2 ayrı operator gorevinde:**
++
+-
+&
+*
+
+- A operator+(const A&); // sign operator
+- A operator+(const A&, const A&);    // addition operator
 
 
 
