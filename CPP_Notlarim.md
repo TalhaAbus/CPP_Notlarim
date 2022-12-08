@@ -232,11 +232,30 @@ time(0);
 ```
 > İkisi arasında bir fark yok. nullptr bir anahtar sözcük, bir constant, türü de nullptr_t türüdür. Bunu kullanmak için herhangi bir başlık dosyasını iclude etmemiz gerekmiyor.
 
+## Ders 2 Alıştırmalar
 
+**Soru 1: sizeof operatörünün ürettiği değerin türü nedir?**
 
+**Cevap:** 
+> size_t türü
 
+**Soru 2: Bu ifade geçerli midir? Değeri nedir?**
 
+```CPP
+#include <stdio.h>
 
+int main()
+{
+    int x = 10;
+    sizeof x+5;
+}
+
+```
+
+**Cevap:**
+> Geçerlidir, değeri 9 dur. sizeof operatörünün önceliği aritmetik operatörelerden daha yüksektir.
+
+**Soru 3: int türünün 4 byte olduğu sistemde bu kod çalıştığında ekranda ne yazar?**
 
 
 
