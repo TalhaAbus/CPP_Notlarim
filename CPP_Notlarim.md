@@ -552,6 +552,113 @@ int main
 ```
 ### [Ders 5 Örnek Kodlara Bak](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%205%20Ornekler.md)
 
+# Ders 5 Alıştırmalar:
+
+**Soru 1: Kod legal midir?**
+```CPP
+int main()
+{
+	int x= 5;
+	int y = 9;
+	int a = x+++y;
+	std::cout << "a =" << a << "\n";
+}
+```
+**Cevap:**
+> Geçerli. Maximal munch kuralı geçerlidir. En uzun token oluşacak şekilde tokenizing yapılıyor.
+
+**Soru 2: Ekrana merhaba yaz ama ; kullanma.**
+
+**Cevap 1:**
+```CPP
+int main()
+{
+	if (std::cout << "merhaba\n")
+	{
+	}
+}
+```
+**Cevap 2:**
+```CPP
+int main()
+{
+	while (!(std::cout << "merhaba"))
+	{
+	}
+}
+```
+**Cevap 3:**
+```CPP
+int main()
+{
+	switch (!(std::cout << "merhaba"))
+	{
+	}
+}
+```
+
+**Soru 3: Çıktı nedir?**
+```CPP
+#include <iostream>
+
+int main()
+{
+	int x = 10;
+
+	int* p = &x;
+
+	++* p;
+	std::cout << x;
+}
+```
+**Cevap:**
+> Burada değişen x in kendisidir.
+
+
+**Soru 4: Çıktı nedir?**
+```CPP
+#include <iostream>
+
+int main()
+{
+	int x{ 3 };
+	int& r{ x };
+	// Buradan sonra r nin scope içinde r yazmak ile x yazmak arasında bir fark yok.
+	std::cout << "x = " << x << "\n";
+
+	r = 67;
+	std::cout << "x = " << x << "\n";
+	++r;
+	std::cout << "x = " << x << "\n";
+}
+```
+**Cevap:**
+> çıktılar     x = 3  x = 67  x = 68
+
+**Soru 5: C dilinde ve c++ dilinde burada ki x in değeri nedir?**
+```CPP
+int main()
+{
+	int x = 45;
+	// func(x);
+	std::cout << "x =" << x << "\n";
+}
+```
+**Cevap:**
+> C dilinde tüm fonksiyon çağrıları call by value dur. Bu sebeple x indeğeri her zaman 45 tir. Fakat C++ dilinde func fonksiyonunda referans semantiği kullanılmış olabilir. Fonksiyonun kodunu görmeden bu sorunun cevabı verilemez.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
