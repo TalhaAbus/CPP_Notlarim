@@ -1902,7 +1902,7 @@ private:
 }
 ```
 
-
+[Ders 11 Ornek koddlar > calistir](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%2011%20kodlari.md)
 
 
 
