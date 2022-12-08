@@ -550,8 +550,7 @@ int main
     
 }
 ```
-## Ders 5 Örnek Kodları:
-[Ders 5 Örnek Kodları](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%205%20Ornekler.md)
+### [Ders 5 Örnek Kodlara Bak](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%205%20Ornekler.md)
 
 
 
