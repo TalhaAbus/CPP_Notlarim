@@ -477,7 +477,81 @@ int main()
 **Cevap:**
 > y nin değeri 10 olarak kalır. İşlem kodu üretilmez. Short circuit behaviour var.
 
+# Ders 5
 
+## Type Conversion:
+
+- Öyle bir durum ki deleryici bir işlemi yapabilmesi için bir ifadenin statik olarak koddaki türünü kullanmak yerine farklı bir türden değer olarak işe sokuluyor.
+- Burada genelde geçici bir nesne oluşturuluyor.
+
+1. Implicit Type Conversion : Örtülü Tür dönüşümü
+2. Explicit Type Conversion : Açık tür dönüşümü
+
+**Implicit:** Bir kod yazarak derleyiciye bir talimaty verilememsine rağmen derleyici dil kurallarına dayanarak örtülü bir tür dönüşümü yapıyor.
+**Explicit:** Biz derleyiciye bunu yapması emrini veriyoruz.
+
+## References:
+**Modern c++ dilinde 3 ayrı referans kategorisi var:**
+
+- L value Reference
+- R value Reference
+  > Move semantics
+  > Perfect Forwarding
+- Forwarding Reference (Universal Reference)
+
+**Örnek:**
+```CPP
+int main()
+{
+    int x = 10;
+    int* p = &x;
+
+    *p = 20;
+}
+```
+- Burada *p, x nesnesinin kendisidir. Kullandığın zaman x i kullanmış olursun.
+- * p; 
+- *p = 20;
+- Burada üzerinde işlem yaptığımız nesne x in kendisidir. Yani *p demek x demektir.
+
+> Referanslar default initialize edilemez:
+
+```CPP
+int& x; // Sentaks hatası
+int& r = x; // geçerli
+```
+
+```CPP
+int* p = nullptr;
+int* & r = p;
+
+Burada r = p demektir.
+```
+
+### Referans kullanımı:
+%99 ihtimal ile :
+- Bir nesneyi bir fonksiyona call by reference 
+- Bir fonksiyonun kendisini çağıran koda bir nesnenin kendisini göndermesi / iletmesi
+- C dilinde fonksiyon çağrı ifadeleri her zaman R value expression.
+- C++ dilinde fonksiyon çağrı ifadeleri, fonksiyonun geri dönüş değeri L value referece türü ise , fonksiyon çağrısının türü de sol taraf değeridir.
+
+### Type Deduction (Tür çıkarımı)
+- Runtime ile bir alakası yok. Tamamen compile time ile ilişkili.
+- Bir nesnenin türünün programın çalışma zamannında belirlenmesi (Dinamik tür)
+- Tür çıkarımı auto için yapılıyor, bildirilen değişkenin türü için değil.
+
+```CPP
+const int cx = 6;
+auto y = cx; // Burada y nin türü int. Const düşüyor.
+
+int main
+{
+    int a[3] = {1,2,3};
+    
+}
+```
+## Ders 5 Örnek Kodları:
+[Ders 5 Örnek Kodları](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%205%20Ornekler.md)
 
 
 
