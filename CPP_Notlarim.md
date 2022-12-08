@@ -939,6 +939,121 @@ int main()
     func(10);
 }
 ```
+# Ders 9
+
+## Inline Fonksiyonlar
+- Eğer inline fonksiyıonun tanımı ciddi işlem gerektiriyorsa bunu inline ezxpand edilmesi yüksek bir fayda sağlamayacak.
+
+1. Doğrudan inline anahtar sözcüğü ile tanımlanması
+2. Bildirimi sınıf içinde yapılması
+
+```CPP
+class Myclass{
+    void func();
+}
+```
+> Bildirimi sınıf içinde yapılan fonksiyonlar her zaman inline kabul ediliyor.
+
+**Başlık dosyasında bulunupta ODR (one definition rule) ihlal etmeyen varlıklar:**
+
+- inline fonksiyonlar
+- class definitions
+- templetes(şablonlar)
+>    function templates
+>    class templates
+>    alias templates
+>    variable templates
+
+**inline variables:**
+```CPP
+inline int x = 10;
+```
+
+- Birden fazla kaynak dosyada bulunması odr ihlal etmiyor. Global bir değişkenin tanımını başlık dosyasına koyduğumuzda normalde odr ihlal ediliyordu.
+
+## constexpr anahtar sözcüğü:
+
+```CPP
+const int x = 10;   // değiğşkenin kendisinin oluşturduğu ifade bir constant expression
+```
+
+- x ifadesini constant expression gereken yerlerde kullanılabilir.
+- Ancak const anahtar sözcüğü ile tanımlanan bir değişkene sabit ifadesi ile değer vermek mecburi değil.
+
+```CPP
+int foo();
+const int x = foo();
+```
+- Geçerlidir.
+
+**Notlar:**
+- constexpr anahtar sözcüğü ile tanımlanan değişkene ilk değer veren ifadenin sabit ifadesi olaması zorunludur.
+
+
+```CPP
+constexpr int x;
+```
+
+- constexpr keyword ile tanımlanmış ise o değişkenin bir sabit ifadesi olma garantisi var.
+- const nesne için böyle bir garantisi yok.
+
+**Örnek:**
+```CPP
+constexpr int x = 10;
+decltype(x) = const int
+```
+- Orada implicit const var.
+
+> constexpr bir tür değil. Sadece değişkenin sabit ifadesi gereken yerde kullanılabileceğini söylüyor. Implicit olarak const değişken tanımlıyor.
+
+```CPP
+constexpr int* p = &g;
+```
+- p nin türü const int* değil. int* const. Burada değişkenin kendisi const. Bu pointer to const int. 
+
+## constexpr fonksiyonlar:
+- Geri dönüş değeri derleme zamanında belli olan fonksiyonlar (Derleme zamanında çağırılan fonksiyonlar)
+- Aslında constexpr fonskyinoların varlık nedeni verim.
+- Eğer compile time da bazı ifadelerin değeri görülebiliyorsa runtime da bunlar yapılmasın.
+
+```CPP
+func (x + y)
+```
+> Derleyici bu ifadenin değerinin compile time da hesaplanabileceğini görürse bizim yerimize comple time da hesaplayıp, fonksiyon çağrısı olmaqdan bir sabit kullanarak.
+
+# Ders 9 Alıştırmalar:
+
+**Soru 1: başlık dosyasında bu fonksiyon tanımı olursa ne olur?**
+
+```CPP
+void func(int x)
+{
+    //
+}
+```
+**Cevap:**
+> Bu başlık dosyası birden fazla kaynak dosya tarafından include edildiğnide ODR ihlal edilmiş olur.
+
+> Bir başlık dosyasına fonksiyon koyacaksak bu inline fonksiyon, şablon veya constexpr fonksiyonu olmalı. constexpr fonksiyonlar zaten örtülü olarak inline.
+
+**Soru 2: Bu başlık dosyası birdenb fazla kaynak dosyada include edildiğpinde runtime ve link açısından func fonksiyonu nasıl görülecek? 
+(1 adet mi yoksa her kaynak dosya için ayrı func objesi mi görecek)**
+
+```CPP
+//nec.h
+
+inline void func(int x)
+{
+    //
+}
+```
+**Cevap:**
+> 1 adet görülür.
+
+
+
+
+
 
 
 
