@@ -1471,36 +1471,436 @@ public:
 
 > Ama geri donus degeri Myclass* oldugundan const t* dan t* donusumune zorluyorum.
 
+# Ders 11
+
+## Sinifin const uye fonksiyonlari:
+
+**Bir sinifin non-static uye fonksiyonlari**
+1. const olabiliyor
+2. non-const olabiliyor.
+
+```CPP
+class Nec{
+public:
+    void set(int);  // parametre degiskeni Nec*
+    int get()const; // int get(const Nec*) // yani fonksiyonun gizli parametre degiskeni, low level const pointer.
+};
+```
+> Const uye fonksiyonlar kendisini cagiran fonksiyona, bu nesnenin degerini degistirmeyecegi garantisini veriyor.
+
+> Nesneler problem domeninde aslinda varligi temsil ediyor. Bu sebeple o varligin problem domeninde obsevable state i var. (Gozlenebilir durum)
+
+> Ornegin fighter nesnesi bircok silaha sahip olabilir. Bu observable state i arttiriyor.
+
+> Ornegin, nesnenin veri elemanlari degismiyor ancak degeri (observable state) degisiyor.
+
+> Ornegin, nesnenin veri elemanlari degisiyor ancak degeri (observable state) degismiyor.
+
+**Dikkat!**
+- Sinifin tum veri elemanlari (non-static data members), sinifin nesnesinin observable state i dogrudan ilisliki olmayabilir.
+- Yani sinifin bir veri elemaninin degeri degistiginde sinif nesnesinin degeri degismek zorunda degil.
+
+```CPP
+class Date{
+public:
+    void print()const
+    {
+        ++m_debug_count;
+        m_crashed_value += 365;
+    }
+private:
+    int mm, md, my;
+    mutable int m_debug_count;
+    mutable int m_cashed_value;
+}
+```
+> mutable verdigimiz nesneler dogrudan nesnenin observable state i ile ilgili degil. const nesneler icin de const uye fonsiyonlari icin de bu degiskenlerin degerinin degismesi semantik acindan bir hata degil. Boylece derleyici bu kontrolu yapmayip bunu legal kontrol edecek.
+
+**mutable:**
+- Derleyici const uye fonksiyonlari icinde sinifin bu elemaninin degerinin degismesini legal kabul et. 
+- const nesneler icin bu veri elemanin degerinin degismesini legal kabul et.
+
+## Constructor - Destructor
+- Bir sinif nesnesinin hayata gelmesi, kullanilablir bir varlik haline donusmesi, sinifin bir uye fonksiyonu tarafindan gerceklestiliyor. Bu tur fonksoyonlara constructor deniliyor.
+- Her nesneyi hayata bir constructor fonksiyona yapilan cagri getiriyor.
+- Bir sinif nesnesinin hayatinin bitmesi onun destructor fonksiyonunun cagrisi ile gerceklesir.
+- Constructor ismi sinif ismi ile ayni olmak zorunda
+
+```CPP
+class Myclass{
+public:
+    Myclass();
+    Myclass(int);  // constructorlar da overload edileblir.
+};
+```
+> void olmasi ile geri donus degeri olmamasi durumu farklidir. Constructer lar geri donus degeri kavrani yok.
+
+## Destructor
+- non-static uye fonksiyonu olmak zorunda.
+- ismi sinif ismi ile ayni olacak ama basinda ~ karakteri olacak. ~Myclass
+- overload edilemiyor, parametre degiskeni olmamak zorunda.
+- Constructor ismi ile(nokta ya da ok operator ile) cagrilmiyor ama destructor cagirilablir. Bu legaldir. Ama dogru diyemeyiz.
+- Default contructor aslinda arguman gonderilmeden cagrilabilen constructor.
+
+## Special member functions:
+- Bu fonksyonlarin kodlari (tanimlari) belirli kosullar saglandiginda derleyici tarafindan yazilabiliyor. 
+- Derleyicinin bir fonksiyonun kodlarini yazmasi icin kullanilan terim, derleyicinin o fonksiyonu default etmesi.
+- Biz hic constructor tanimlamasak derleyici sinif icin bir default constructor default eder.
+
+**Default contruct olayi 2 farkli sekilde olablir:**
+
+1. Dil kurallarina gore implicitly olarak derleyici bu fonksiyonlari bildirebilir ve bizim icin bu fonksiyonlarin kodlarini yazabilir.
+2. Programci derleyiciden bu fonksiyonlarin kodunu yazmasini isteyebilir.
+
+**6 tane special member function var.**
+
+- default constructor
+- Desctructor
+- copy constructor
+- move constructor
+- copy assignment
+- move assignment
+
+**Constructor, destructor programin neresinde cagiriliyor?**
+- global sinif nesneleri icin main fonk. cagirilmasindan once, 
+- destructor: main fonk. calismasindan sonra.
+
+**Örnek:**
+
+```CPP
+//#include <stdio.h>
+#include <iostream>
+
+class Myclass {
+public:
+    Myclass()
+    {
+        std::cout << "default ctor this:" << this << '\n';
+    }
+    ~Myclass()
+    {
+        std::cout << "destructor this:" << this << '\n';
+    }
+};
+
+Myclass g1;
+Myclass g2;
+Myclass g3;
+
+int main()
+{
+    std::cout << "main basladi\n";
+    std::cout << "main sonra eriyor\n";
+}
+```
+**Dikkat!**
+- Farkli kaynak dosyalarda tanimlanmis global sinif nesnelerinin hayata gelme sirasi belirli degil.
+- Static initialization Fiasco: Farkli kaynak dosyalardaki global degiskenlerin hayata gelme sirasi dil tarafindan belli degil.
+
+## static yerel sinif nesneleri
+
+**Örnek:**
+
+```CPP
+#include <iostream>
+
+class Myclass {
+public:
+    Myclass()
+    {
+        std::cout << "default ctor this:" << this << '\n';
+    }
+    ~Myclass()
+    {
+        std::cout << "destructor this:" << this << '\n';
+    }
+};
+
+void foo()
+{
+    std::cout << "foo cagrildi";
+    static Myclass m;
+}
+
+int main()
+{
+    std::cout << "main basladi\n";
+    foo();
+    foo();
+    foo();
+    foo(); 
+    foo();
+    std::cout << "main sonra eriyor\n";
+}
+```
+
+> foo cagirildiginda nesne hayata geliyor, statik omurlu oldugundan dolayi tekrar cagirildiginda zaten hayatta oldugu icin tekrar hayata gelmiyor. main fonksiyonu bittkten sonra nesnenin hayati biitiyor.
+
+## Otomatik omurlu sinif nesneleri:
+- constructor o nesnenin olusturyldugu noktada cagirilacak ve o nesnenin scope unun sonunda destructor cagirilacak.
+
+## Dinamik omurlu nesneler:
+- C++ dilinde dinamik omurlu nesneler operatorler ile hayata getiriliyor.
+
+```CPP
+new operators
+delete operators
+```
+> Bunlar dilin anahtar sozcukleri.
+
+**Dikkat!**
+- new ve delete malloc ve free nin karsiligi degil.
+- new dinamik omurlu nesne olusturmanin, delete ifadesi bir nesnenin hayatini sonlandiran ifade.
+
+**Açıklama: new Fighter yazıldığında neler olacak?**
+> sizeof fighter kadar bir bellek alaninin elde edimesi gerekiyor. Bunun icin bi alocation fonksiyonunnun cagirilmasi gerekiyor. C dilinde olsaydik burada malloc cagirilacakti. C++ dilinde default olara cagirilan fonksiyon:
+
+> operator new fonksiyonu.
+
+- new operatoru ve operator new fonksiyonu farkli. operator new standart c++ kutuphanesinin bir fonksiyonu. malloc gibi.
+
+```CPP
+void* malloc (std::size_t)
+void* operator new(std::size_t)
+```
+
+- parametrik yapi acisindan malloc ve operator new fonksiyonlarinin bir farki yok. 
+**Aradaki fark:** 
+- parametreye aktarilan tam sayi degeri olan byte kadar blok elde etmeye calisiyor.
+
+> malloc fonk. basarisiz oldugunda nullptr donduruyor. basarili olursa alocate edilmis bellegin adresini donduruyor.
+
+> Ama operator new basarisiz oldugunda exception throw ediyor. Bu exception handling arac seti ile ilgili. 
+
+> Yani new operatoru demek baska, operator new fonksiyonu demek baska.
+
+**Örnek Kod:**
+
+```CPP
+int main()
+{
+    std::cout << "main basladi\n";
+    auto p = new Nec;
+    p->func();
+
+    delete p;
+
+    std::cout << "main devam ediyor\n";
+
+}
+```
+
+### delete ne yapiyor?
+
+> Once sinifin destructor ini cagiriyor. 
+
+p-> ~Fighter();
+
+> operator new ve operator delete, standart kutuphanenin fonksiyonlarinin isimleri. 
+
+> operator new malloc ile ayni parametrik yapida, operator delete free ile ayni parametrik yapida.
+
+```CPP
+void operator delete(void *p)
+void free(void *vp)
+```
+
+**Yani:**
+
+**new = operator new cagrisi + constructor cagrisi**
+**delete = distructor cagrisi + operator delete cagrisi**
+
+### delete unutulursa ne olur?
+
+> delete unutulursa destructor ve operator delete cagrilmayacak. Bellek sizintisi, operator delete in cagrilmamasinin sonucu. 
+
+> Ornegin dimanik omurlu bir nesneyi new ifadesi ile olusturuldu. Bir bellek alani alocate edildi. Bu delete edilmezse bu bellek alani free store a geri verilmeyecek. Isin bu tarafi memory leak, bellek sizintisi olarak ifade edilebilir.
+
+> Ama burada problem cogu zaman bellek sizintisi ile sinirli degil. Cunku destructor cagirilmiyor. Bunun sonucunda RAII idiomu devreye giriyor.
+
+> Bircok sinif turu icin, bir nesnenin kullanilabilmesi icin o nesne hayata getirildiginde bir veya birden fazla kaynagin o nesneye baglanmasi, o nesnenin o kaynagi ya da kaynaklari kullaniyor duruma getirilmesi saglaniyor. Bu kaynaklara recource deniliyor.
+
+> Bu resource bir bellek alani olabilir, bir dosya, veri tabani baglantisi, mutex, network baglantisi ... olabilir.
+
+> Yani bir nesney hayata getirdigimizde cagirilan constructor bir kaynak ediniyor. cinku o nesnenin isini gorebilmesi icin o kaynaklari kullanabilmesi gerekiyor.
+
+> Nesnenin destructor i cagirildiginda destrucor bu kaynaklari geri veriyor. C dilinde olsaydi handle sistemi kullanilacakti. Nesnenin kaynak edilmesini saglayan bir global fonksiyona cagri yapiyor olacaktik. (fopen, createwindow gibi)
+
+> O nesne ile is bittiginde open ya da create donksiyonunun geri dondurdugu adresi (bu adreslere handle deniliyor) kaynaklari geri verecek, temizlik islemlerini gerceklestirecek bir fonksiyona arguman olarak gonderilir.
+
+> C++ dilinde bu otomatik. Constructor open ya da create fonksiyonunun yaptigi isi yapiyor, destructor da clean foksiyonunun yaptigi isi yapior.
+
+> Constructor kaynagi ediniyor, destructor kaynagi geri veriyor.
+
+> delete unutulursa destructor cagirilmayacak. Eger destructor kaynak iade ediyorsa o kaynaklari geri veremiyecek. Buna resource leak deniliyor. Memory bir resource ama resource memory degil. 
+
+**Nasıl bir sentaks ile değişken tanımladığımda sınıfın default constructor unun çağırılması söz konusu?**
+
+1. Default initialization
+2. Value initialization
+
+- Yani burada bir sınıf nesnesi value initialize edildiğinde default constructor çağırılacak.
+
+**Not:** Bir sınıfın default constructor ı olmak zorunda değil. (not declared)
+
+**Örnek:**
+
+```CPP
+#include <iostream>
+
+class Nec {
+public:
+	Nec(int);
+}; // Nec sınıfı için int parametreli bir constructor yazıldı. Derleyici bu sınıf için bir default constructor implicit declared yapmıyor.(Örtülü bir default constructor bildirmiyor)
+
+int main()
+{
+	Nec x;
+}
+```
+> Hata: C++ no default constructor exists for class "Nec"
+
+> Yani bu şekilde nesne tanımlamak için derleyicinin default constructor a çağrı yapması gerekiyor ama default constructor yok.
 
 
+**Örnek:**
 
+```CPP
+#include <iostream>
 
+class Nec {
+public:
 
+}; 
 
+int main()
+{
+	Nec x;
+}
+```
+> Burada ise dilin kurallarına göre default cosntructor imlicip declared. hata yok.
 
+### Special member function:
+> Bu fonksiyonlarin kodları derleyici tarafindan yazilabiliyor.
 
+> Derleyicinin bir kodu bizim yerimize yazmasina da derleyicinin o fonksiytonu default etmesi deniliyor.
 
+> Yani special member functionlar derleyici tarafindan default edilebilen fonksiyonlar.
 
+**Kac tane special member function var?**
 
+1. Default cosntructor 
+2. destructor
+3. Copy cosntructor 
+4. Move constructor        Since (C++ 11)
+5. Copy assignment
+6. Move assignment     	Since (C++ 11)
 
+**User declared - defaulted:**
+> Fonksiyonu ben bildiriyorum ama tanimlamayi derleyiciye birakiyorum.
 
+==============================
+- user declared - defined 
+- user declared - defaulted 
+- user declared - deleted
 
+**Örnek:**
 
+```CPP
+#include <iostream>
 
+class Nec {
+public:
+	const int x;
+}; 
 
+int main()
+{
+	Nec x;
+}
+```
+> Bu sinifin default constructer i var, Derleyici bildirdi. Bu sinifin default cosntructor i deleted. Derleyici implicitly declere etti ama deleted olarak.
 
+**Örnek:**
 
+```CPP
+#include <iostream>
 
+class Nec {
+public:
+	Nec(int x)
+	{
+		std::cout << "Myclass(int x) x =" << x << "\n";
+	}
+}; 
 
+int main()
+{
+	Nec x1(10); // direct init
+	Nec x2{20}; // direct list init
+	Nec x3 = 92; // Copy init
 
+	Nec x4 = (4,5); 
+	Nec x5 = {6,7}; 
+	Nec x6 = {9,12}; 
+}
+```
 
+## Constructor initializer list:
 
+> Cosntructor bir sınıfın nesnelerini hayata getiriyor. Hayata getirmek demek, nesnenin non-static veri elemanlarını initialize etmesi demek.
 
+> Bu non-static veri elemanlarını initialize etmek için contructorların kullandığı sentaksa, constructor initializer lsit deniyor.
 
+1. Yalnızca ctor lar için kullanılabilir.
+2. non-static veri elemanalrını init eder.
 
+```CPP
+#include <iostream>
 
+class Myclass {
+public:
+    Myclass() : mx(10), my(20), md(9.8)  // Bu constructor çağırıldığında mx,my,md yi değerler ile init edecek.
+    {   
 
+    }
+}
+```
+- Eğer programın akışı bir sınıfın contructor ının ana bloğu içindeki kodları yürütmekteyse, zaten sınıfın tüm veri elemanalrı hayata gelmiş demektir.
+- Yani constructor ana bloğu içinde sınıfın veri elemanlarinin kulanirsam init edilmis veri elemanlariin kullanmmis oluyorum.
 
+```CPP
+Myclass() : mx{10}, my{20}, md{9.8} // C++11 standartları ile bu tanımalma geldi.
+```
+
+**Soru : Tüm veri elemanlarıın bu sentaks ile init etmek zorudan miyim?**
+> Sadece mx yazsam digerleriini belirtmesem sentaks hatasi olmaz.
+
+> Ama init edilmemis ogeler default init edilmis sayiliyor. Bu cop degerde birakilmasi demek.
+
+```CPP
+Myclass() : mx{10}, my{20}, md{9.8}
+Myclass()
+{
+    mx = 10;    // assignment
+    my = 20;    // assignment
+    md = 9.8;   // assignment
+}
+```
+> Bu iki tanimlama arasinda fark var. Ikinci tanimlamada once init ediliyor sonra atama yapiliyor. Bunlar initializer degil, assignment.
+
+> Bizim ilk tecihimiz constructor init list olmali.
+
+**Not:** Her zaman veri elemanlarıının hayata gelme sırası, sınıf bildirimindeki sıradır.
+
+```CPP
+class Myclass{
+private:
+    int mx{10};
+    //defeult member initializer
+    //in class initializer
+}
+```
 
 
 
