@@ -3515,10 +3515,10 @@ A operator+(const A&); // Kod geçerli, bu toplama operatörünü overload etmiy
 ```
 
 **4 Tane token 2 ayrı operator gorevinde:**
-+
--
-&
-*
+- +
+- -
+- &
+- *
 
 - A operator+(const A&); // sign operator
 - A operator+(const A&, const A&);    // addition operator
