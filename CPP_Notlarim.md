@@ -1050,6 +1050,461 @@ inline void func(int x)
 **Cevap:**
 > 1 adet görülür.
 
+# Ders 10
+
+## Sınıflar
+
+```CPP
+class Myclass {
+
+// Burada memberlarin tanimi yapiliyor
+// Memberlar: 
+// 1. Data member
+    bunlar non-static data member. Birde static data memberlar var.
+
+// 2. Member function
+    bunlar non-static member function. Birde staci data memberlar var.
+// 3. Member Type
+    bir turun bildirimini class definition icinde yaparsak member type deniliyor.
+
+};
+```
+## Class memberlarin ozellikleri:
+- Ayri bir scope talar.
+- Memberlar public, provate, protected olabilir.
+- class ile tanimladigimizda default access specifier: private
+- struct ile tanimladigimizda default access specifier: public
+
+**Member Fuctionlar 2 ye ayriliyor:**
+1. static
+2. Non-static
+
+```CPP
+class Mylass {
+public:
+    void foo();
+};
+```
+> Aslinda bir parametresi var. Myclass* turunden bir parametresi var. Bir pointer istiyor. Myclass turunden bir nesnenin adresini istiyor.
+
+
+```CPP
+int main()
+{
+    Myclass m;
+    m.foo();
+}
+```
+
+> Sinif nesnesini nokta opratorunun operandi yaptigimizda ve saginda da non-static member function ismi kullandigimizda, derleyici name lookup yapiyor. Ismin sinifin non-static member function ismi oldugunu goruyor.
+
+> Noktanin solundaki nesnenin adresini, foo fonksoyunun aslinda gosterilmeyen Myclass* parametresine arguman olarak gonderiyor.
+
+- Once namelookup
+- Sonra context kontrolu
+- Sonra acess kontrolu.
+
+**Sinifin uye fonksoyunun tanimi:**
+
+```CPP
+//fighter.h
+
+class Fighter{
+public:
+    void attack(Fighter&);
+};
+
+//fighter.cpp
+
+void Fighter::attack(Fighter &r);   // imca ve geri donus turu, sinifta tanimlanan ile ayni olmak zorunda
+{
+
+}
+
+public void Myclass::foo() // yanlis. Yasak. Tanimlarken kullanilamaz.
+```
+
+**Makrodan faydalanmak:**
+
+```CPP
+#define NEC
+
+NEC void foo();
+```
+
+> Onislemci program bu makroyu silmek zorunda. Yani derleyiciye geldiginde Translation unit oldugunda Makronun olmadigi garantisi var.
+
+> Bazi programcilar cpp dosyasina bakildiginda tanimlarda da public,private,protected gormek istediginde (ide yardimi olmadan), cpp dosyasinda makro olarak ifade ediyorlar.
+
+```CPP
+#define PUBLIC
+#define PRIVATE
+#define PROTECTED
+
+PUBLIC void Myclass::foo()
+{
+
+}
+```
+
+**ClassUye fonksiyonlarin taniminda 2 alternatif var.**
+1. cpp dosyasinda 
+2. Fonksiyonun tanimini direkt class definition icinde yapmak.
+
+> Bu ikisi kesinlikle ayni sey degil.
+
+> Sin1if icinde fonksiyon taniminda fonksiyonu inline yapmis oluyoruz.
+
+> Inline koymasan bile inline olcak. Implicit inline fonksiyon. Inline koyarsan da hata olmaz.
+
+**Dikkat:**
+
+- Eger bir isim sinifin uye fonksionu icinde nitelenmeden kullanilmissa su sira ile aranir:
+
+1. Kullanildigi blok icinde
+2. Onu kapsayan blok icinde 
+3. Onu kapsayan blok icinde 
+4. Class scope
+
+**Örnek:**
+
+```CPP
+class Myclass{
+public: 
+    void foo();
+private:
+    int a,b;
+    int x;  // non-static member
+};
+
+void Myclass::foo()
+{
+    x; 
+}
+```
+> Burada x kullandigimda isim arama ile bunun non statci data member oldugu anlasiliyor.
+
+> Bu x icin kod uretilirken fonksiyonun gizli parametre degiskeni olan pointerin gosterdigi nesnenin x i.
+
+**Redecletarion konusunda not:**
+- Global fonksiyonlar icin redecleration soz konusudur ama class member function lari class definition icinde yeniden bildirilemez.
+
+```CPP
+class Myclass {
+public:
+    void func(int);
+    void func(int);
+};
+```
+
+## this Keyword'u
+- Bu anahtar sozcuk yalnizca sinifin non-static uye fonksiyonlari icin kullanilabilir.
+- Global bir fonksiyon icidne sinifin static uye fonksiyonu icinde kullanilmi sentaks hatasidir.
+- Birlikte kullanildigi nesnenin adresi anlamina geliyor.
+- this ifadesinin value category si PR value expression.
+
+> this bir pointer , * this bir sinif turudnen nesne. L value expression.
+
+### this neden var?
+
+- Bazi durumlardan this kullanmadan derdimizi ifade etmenin bir baska yolu var. Nedir bunlar?
+
+**Ornek:**
+- Bir sinifin uye fonksiyonunun global bir fonksiyona cagri yapmasi gerekiyor. Global fonksiyonun parametresi Myclass*. Ama bizim fonksiyonumuz hangi nesne icin cagirildiysa o nesnenin adresi ile fonksiyona gonderilmek isteniyor.
+
+```CPP
+class Mylass {
+public:
+    void f();
+
+private:
+    int x;
+    int y;
+};
+
+void foo(Myclass*)
+void bar(Myclass)
+void baz(Myclass&)
+
+void Myclass::f()
+{
+    foo(this);
+    bar(*this);
+    baz(*this);
+}
+```
+
+## Const member functions
+
+**Const correctness:** : Const olmasi gereken her sey const yapilir mi?
+
+**Not:**
+- C++ dili olusturuldugu zaman c++ derleyicisi de yoktu. Kodlar c nin onislemci programi kullanilac=rak derleniyordu.
+- Yani derleme isini c derleyicisi yapiyordu. Onlislemci prigramin komutlari kullanilarak c++ kodunu c diline donusturen onislemci programi vardi.
+
+**Siniflarin const non-static uye fonksiyonlari 2 kategoride olabilir**
+
+1. const membr function ->  () sonrasinda const keyword kullanimi
+2. non - const member function
+
+```CPP
+int main()
+{
+    const vector<int> x{1,2,3,4,5};
+
+    x.front()= 23;
+    auto y = x.front();
+}
+```
+> ustteki sentaks hatasi. Const olamdiginda sentaks hatasi vemiyor.
+Const overloading yapiyor.
+
+# Ders 10 Alıştırmalar
+
+**Soru 1: Hata Nedir?**
+
+```CPP
+class Myclass {
+public:
+    void foo();
+};
+
+int main()
+{
+    Myclass::foo();
+}
+```
+
+**Cevap:**
+> Namelookup ta bir sorun olmaz. Derleyici :: opratoru ile nitelenmis bir isim gordugunde bu ismi class scope ta arar. Name lookup biter.
+
+> Yani isim classtaki fonksiyonun ismi. Hata namelookup ile ilgili degil. Context kontrolune takiliyor. 
+
+> Bu bir non-static uye fonksiyon. Bu fonksiyonun cagirilmasi icin ortada bir Myclass nesnesinin olmasi gerekir ama bir myclass nesnesi yok. Fonksiyon static olsaydi gecerli olacakti.
+
+**Soru 2: Hata Nedir?**
+
+```CPP
+class Myclass {
+public:
+    void foo();
+};
+
+int main()
+{
+    Myclass m;
+    foo(&m); 
+}
+```
+
+**Cevap:**
+> namelookup hatasi, foo ismi bulunamadi.
+
+> Myclasss::foo(&m) Yazsaydik, Yine hatanin nedeni namelookup degil, fonksiyonun cagirilmasi yanlis.
+
+**Soru 3:**
+
+```CPP
+class Myclass{
+public:
+    void foo();
+private:
+    int x;
+};
+
+Myclass g;
+
+void Myclass::foo()
+{
+    g.x = 10;
+}
+```
+
+**Cevap:**
+
+> Sinifin uye fonksiyonu icinde sinifin private ismi kullanilabilir.
+
+**Soru 4:Function overloading mi?**
+
+```CPP
+class Myclass{
+public:
+    void func(int);
+private:
+    void func(int, int);
+}
+```
+
+**Soru 5: Hangi fonksiyon cagirilacak**
+
+```CPP
+class Myclass{
+public:
+    void func(int);
+private:
+    void func(double);
+};
+
+int main()
+{
+    Myclass m;
+    m.func(2.3);
+}
+```
+
+**Cevap:**
+> Once functoin overload resolution yapilacak. Double parametreli olan kazanacak. Access control yapilacak. Private double parametreli oldugundan derleyici access control hatasi verecek.
+
+> Yani access conrol function overload resolution dan daha sonra yapiliyor.
+
+**Soru 6: Kod legal mi?**
+
+```CPP
+class Myclass{
+public: 
+    void foo()
+    {
+ 
+    }
+    void func()const
+    {
+        foo();
+    }
+}
+```
+
+**Cevap:**
+> Illegal. func parametresi const Myclass* ama foo parametresi Myclass*
+
+> Bu yazilirken ayni zamanda derleyiciyi const T* dan T* a ortulu tur donusumune zorluyorum.
+
+**Soru 7: Kod legal mi?**
+
+```CPP
+class Myclass{
+public: 
+    void foo()
+    {
+        func();
+    }
+    void func()const
+    {
+
+    }
+}
+```
+
+**Cevap:**
+
+> Legal. Buradaki donusum T* dan const t* turune. Yani kisaca sinifin const uye fonksyinonlari sinifin non-const uye fonksiyonlarini dogrudan cagiramaz.
+
+> Ama sinifin non cost uye fonsiyonlari const uye fonksiyonlarini ismi ile cagirabilir.
+
+**Soru 8: Kod legal mi?**
+
+```CPP
+class Myclass{
+public: 
+    void foo()
+    {
+        func();
+    }
+    void func()const
+    {
+
+    }
+}
+
+int main(){
+    Myclass m;
+
+    m.foo();
+    m.func();
+}
+```
+
+**Cevap:**
+> Legal. Birisi myclass* dan myclass* a donusum, Digeri myclass* dan const myclass * a donusum.
+
+**Soru 9: Kod legal mi?**
+
+```CPP
+class Myclass{
+public: 
+    void foo()
+    {
+        func();
+    }
+    void func()const
+    {
+
+    }
+}
+
+int main(){
+    const Myclass m;
+
+    m.foo();
+    m.func();
+}
+```
+
+**Cevap:**
+
+> foo cagrisi error. func legal. const t* dan t* donusum yok.
+
+**Soru 10: Kod legal mi?**
+
+```CPP
+class Myclass{
+public:
+    Myclass* foo()const
+    {
+        return this;
+    }
+}
+```
+
+**Cevap:**
+
+> illegal. This pointer degeri sinif nesnesinin adresi. Sinif nesnesi const. This in degeri olan adres const t*
+
+> Ama geri donus degeri Myclass* oldugundan const t* dan t* donusumune zorluyorum.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
