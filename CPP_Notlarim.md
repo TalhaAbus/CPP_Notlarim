@@ -2319,6 +2319,1054 @@ int main()
 # Ders 12 Alıştırmalar
 [Ders 12 kodları](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Ders%2012%20Kodlari.md)
 
+# Ders 13
+
+**Sinifin ozel uye fonksiyonlari:**
+
+- Default constructor
+- Destructor
+- Copy constructor
+- Move constructor
+- Copy assignment
+- Move assignment
+
+> Bu fonksiyonlarin ortak ozelligi: derleyici bunlarin kodlarini bizim icin yazabiliyor. Bu yazma izlemine derleyicinin default etmesi deniyor.
+
+**Bu fonksiyonlar:**
+1. not declared
+2. user declared
+3. implicitly declared
+olabilir.
+
+**Eger user declared ise:**
+1. user declared defined, programci tanimlayabilir.
+2. User declared defaulted, programci bildirir ama derleyicinin tanimlamasini ister
+3. User declared deleted: Programci bildirir ama delete edilmis olarak.  
+**Cagirilmasi sentaks hatasi.**
+
+**Hangi durumda derleyici ortulu olarak bildirdigi ozel uye fonksiyonu delete eder?**
+> Derleyicinin yazdigi kodda bir sentaks hatasi olusursa, sentaks hatasi vermek yerine yazmasi gereken special member function i delete ediyor. Boylece implicitly declared deleted oluyor.
+
+
+```CPP
+class Nec{
+public:
+    Nec() : ax(), bx(), cx() {}
+    ~Nec() {}
+    Nec(const Nec& other) : ax(other.ax), bx(other.bx), cx(other.cx)
+
+private:
+    A ax;
+    B bx;
+    C cx;
+}
+```
+**Derleyicinin yazdigi default constructor sinifin:**
+non-static, public, inline fonksiyonudur.
+- Sinifin butun elemanlarini default initialize ediyor. Bu cop deger ile hayata baslamak demek.
+
+> Eger copy constructor yazmayiderleyiciye birakirsak derleyici sinifimizin her bir elemanini parametreye referans yolu ile baglanan diger nesnenin karsilikli elemani ile initialize edilecek.
+
+> Sinifi kopyalama ve tasimaya kapatabiliriz,
+Kopyalamaya kapatabilir, tasimaya acabiliriz,
+Ya da her ikisine de acabiliriz.
+
+```CPP
+int x = y;
+```
+> int turden bir nesnenin tasinmasi soz kunusu degil. Primitiv turler icin tasima = kopyalama.
+
+**Ama sinif turleri icin:**
+```CPP
+Myclass m2= m1;
+```
+> Boyle yazarsak Myclass sinifinin hem copy contructor i hem move constructor i varsa m2 yi hayata getirmek icin copy constructor cagirilir. 
+
+```CPP
+Myclass m2 = std:move(m1);
+```
+> Boyle olsaydi m2 yi hayata getirmek icin move constructor cagirilacakti.
+
+**Not:** Bir nesneyi sag taraf referansina baglamak o nesneyi tasimak anlamina gelmez.
+
+```CPP
+string s = move(str);
+```
+> move fonksiyonu ile tasima gerceklestirmis olmuyorum, sadec value category degistiriyor.
+
+**Örnek:**
+
+```CPP
+void func(const std::string& s)
+{
+
+}
+int main()
+{
+    std::string s(10000, '+');
+    func(s);
+}
+```
+> Burada bir kopyalama yok, referans semantigi. Burada bir tasima da yok.
+
+**Örnek:**
+
+```CPP
+void func(const std::string& s)
+{
+    std::string str(s);
+}
+
+void func(std::string&& s)
+{
+    std::string str(std::move(s));
+}
+
+int main()
+{
+    std::string s(10000, '+');
+    func(s);
+}
+```
+> L value olan string fonksiyonlari icin ustteki fonk. 
+
+> R value olan string fonksiyonlari icin alttaki fonk.
+
+> Burada function overloading yaparak func fonksyonuna gelen nesnenin deger kategorisine gore kaynagi kopyalama (copy ctor) veya calma islemi(move ctor) yaptiriyoruz. 
+
+**Dikkat:** const bir sinif nesnesinin kaynagini calamazsiniz ve calmamalisiniz. Dilin kurallari buna engel olur.
+
+**Örnek:**
+
+```CPP
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(const Myclass&)
+    {
+        std::cout << "copy ctor\n";
+    }
+    Myclass(Myclass&&)
+    {
+        std::cout << "move ctor\n";
+    }
+};
+
+int main()
+{
+    Myclass x;
+    Myclass y = std::move(x);
+}
+```
+> Derleyip calistirildiginda move ctor cagirilacak. 
+
+> const Myclass x; yaparsak copy ctor cagirilacak.
+
+> move fonksiyonu const bir neneyi aldiginda move un degi donus degeri const qualified R value expression.
+
+**Special member functions** oyle fonksiyonlar ki bunlarin kodunu derleyici belirli kosullar saglandiginda bizim icin yaziyor.
+**Hangi kosullarda bunu yapiyor?**
+- Eger bir sinifa hicbir constructor yazilmazsa (special member function bildirilmezse) bu durumdaderleyici sinifin 6 ozel uye fonksiyonunu da default ediyor.
+- Yani sinifi bu sekilde olusturmak ve hicbir special member fucntion yazmamak arasinda hicbir fark yok:
+
+```CPP
+class Myclass{
+public:
+    Myclass() = default;
+    ~Myclass() = default;
+    Myclass(const Myclass&) = default;
+    Myclass(Myclass&&) = default;
+    Myclass& operator = (const Myclass&) = default;
+    Myclass& operator = (Myclass&&) = default;
+};
+```
+
+**Eger sinifa parametreli bir cnstructor yazilirsa,**
+
+```CPP
+class Myclass{
+public:
+    Myclass(int);  // biz yazdik. Alttakileri derleyici yazdi
+
+    Myclass(const Myclass&) = default;
+    Myclass& operator = (const Myclass&) = default;
+    Myclass(Myclass&&) = default;
+    Myclass& operator = (Myclass&&) = default;
+
+};
+```
+> Bir constructor yazdigimiz icin derleyici default constructor i default etmeyecek. 
+
+Destructor
+Copy constructor
+Copy assignment
+move constructor
+Move assignment
+
+default edecek.
+
+> Yani sinifin default constructor i yok.
+
+**Eger sinifa default cosntructor yazilirsa:**
+
+```CPP
+class Myclass{
+public:
+    Myclass();  // default constructor user declared
+
+    Myclass(const Myclass&) = default;
+    Myclass& operator = (const Myclass&) = default;
+    Myclass(Myclass&&) = default;
+    Myclass& operator = (Myclass&&) = default;
+
+};
+```
+destructor
+Copy constructor
+Copy assignment
+Move constructor
+Move assginment 
+
+default edecek.
+
+
+**Eger sinifa destructor yazilirsa:**
+
+```CPP
+class Myclass{
+public:
+    ~Myclass();  // destructer user declared
+
+    Myclass() = default;
+    Myclass(const Myclass&) = default;
+    Myclass& operator = (const Myclass&) = default;
+};
+```
+default constructor
+copy constructor
+copy assginment
+
+default edilecek.
+
+> move vonstructor ve move assignment default edilmeyecek. Not declared durumunda. Bu cok tehlikeli bir durum.
+
+> Eger destructor user declared yapilmissa muhtemeken bir kaynak iadesi yapiliyordur ve bu durumda copy cosntructor ve copy assignment in derleyici tarafindan yazilmasi istenmez. Yani eger sinifin destructor i user declared ise copy constructor ve copy assignment da user declared olmasi gerekir.
+
+**Eger copy constructor i kendimiz yazarsak:**
+
+```CPP
+class Myclass{
+public:
+    Myclass& operator = (const Myclass&);
+
+    ~Myclass();  
+    Myclass& operator = (const Myclass&) = default;
+};
+```
+> Bu durumda default constructor in durumu not declared.
+
+**Kural:** Eger bir cosntructor yazarsaniz derleyici sizin icin default cosntructor yazmaz. Yani suanda default cosntructor not decalared.
+
+Destructor 
+copy assignment
+
+Derleyici tarafindan yazilir.
+
+**Copy assignment yazilirsa:**
+
+```CPP
+class Myclass{
+public:
+
+    Myclass& operator = (const Myclass&) = default;
+
+    Myclass() = default;
+    ~Myclass() = default;
+    Myclass(const Myclass&) = default;
+
+};
+```
+default cosntructor
+destructor
+copy constructer
+
+derleyici tarafindan yazilir.
+
+
+**Eger move cosntructor yazilrisa:**
+
+```CPP
+class Myclass{
+public:
+    Myclass(Myclass&&);
+
+    ~Myclass() = default;
+    Myclass(const Myclass&) = delete;
+    Myclass& operator = (const Myclass&) = delete;
+
+};
+```
+- Derleyici yine cosntructor yazmaz cunku bu da bir constructor. 
+- Derleyici copy memberlari delete eder.
+- Destructer yine yazilacak.
+
+**Sinifa bir move assignment yazarsak:**
+
+```CPP
+class Myclass{
+public:
+    Myclass& operator = (Myclass&&);
+
+
+    Myclass() = default;
+    ~Myclass() = default;
+    Myclass& operator = (const Myclass&) = delete;
+    Myclass(const Myclass&) = delete;
+};
+```
+
+**Soru: Bir sinifi kopyalama ve tasimaya kapatmak istiyorum.**
+
+```CPP
+class Myclass{
+public:
+    Myclass(const Myclass&) = delete;
+    Myclass& operator(const Myclass&) = delete;
+
+};
+```
+> Copy constructor ve copy assignment delete ediyoruz. Move memberlari delete etmeme gerek yok.
+
+**Ornek: kopyalamaya karsi kapatilmis ama tasimaya karsi acilmis:**
+
+```CPP
+class Myclass{
+public:
+
+    Myclass();
+    Myclass(int);
+
+    Myclass(const Myclass&) = delete;
+    Myclass& operator(const Myclass&) = delete;
+
+    Myclass(Myclass&&);
+    Myclass& operator = (Myclass&&);
+};
+```
+
+
+**Yapilmamasi gereken bir ornek:**
+
+```CPP
+class Myclass{
+public:
+
+    Myclass();
+    Myclass(int);
+
+    Myclass(const Myclass&);
+    Myclass& operator(const Myclass&);
+
+    Myclass(Myclass&&)= delete;
+    Myclass& operator = (Myclass&&) = delete;
+};
+```
+> copy memberlar bildirilmis ama move memberlar delete edilmis. Tasima olmasi gereken yerde kopyalama yapilmasi gerekiyor, burada sentaks hatasi olur.
+
+**Costructor ismi ile cagirilamaz:**
+
+```CPP
+Myclass m;
+Myclass *ptr = &m;
+
+m.Myclass();    // sentaks hatasi
+ptr-> Myclass();    // sentaks hatasi
+```
+
+**Destructor ismi ile cagirilabilir ama cagirmayin.**
+
+```CPP
+m.~Myclass(); // gecerli bir kod 
+ptr-> ~Myclass(); // sadece tek senaryoda yazilabilir, placement new operator ile ilgili.
+```
+
+**Oyle durumlar var ki, isimizi gerceklestirmemiz icin dinamik omurlu bir sinif nesnesini kendi temin ettigimiz bir bellek alaninda olusturmamiz gerekiyor.**
+
+```CPP
+class Myclass{
+public:
+    Myclass()
+    {
+        std::cout << "Myclass()\n";
+    }
+    ~Myclass()
+    {
+        std::cout << "~Myclass()\n";
+    }
+    int a[4]{};
+};
+
+int main()
+{
+        std::cout << "sizeof(Myclass)= " << sizeof(Myclass) << "\n";
+
+        unsigned char buffer[sizeof(Myclass)];
+
+        std::cout << "&buffer =" << &buffer << '\n';
+        Myclass* p = new (buffer)Myclass;
+
+}
+```
+
+**Cikti:**
+> Ayni adresler gozukuyor. Yani benim nesnem buffer bellek alaninda hayata getirilmis oldu.
+
+> Simdi nesneyi delete etmemiz gerekiyor ama direkt delete p; yazarsam felaket olur.
+
+> Delete operetoru karsiligi aslinda derleyici once sinifin destructor ini cagiriyor. Sonra delete operatorunun operandi olan adresi operator delete fonksiyonuna gonderiyor.
+
+- Bu yozden destructor direkt ismi ile cagirmamzi gerekiyor:
+
+```CPP
+p-> ~Myclass();
+```
+
+### Delegating constructor:
+- Dile sonradan eklendi, diger dillerin etkisi ile.
+- Oyle bir constructor ki, isi baska bir constructor a havale ediyor. Yani constrcutor nesneyi initialize etmek icin baska bir constructor cagiriliyor. Burada kullanilan sentaksa delegating constructor deniliyor.
+- Bircok durumda sinifin birden fazla contructor inin ortak bir kodu oluyor.
+
+## Geçici Nesneler (Temporary objects)
+- Ayrı bir ömür statüsü aslında. Otomatik ömürlü nesneler geçici nesneler değil.
+- Öyle durumlar var ki kodda bir değişken ismi görünmese de arka planda derleyici dilin kurallarına uyarak bir nesne oluşturuyor.
+- Yani kaynak kodda direkt ismi olmayan ama üretilen kodda bir nesnenin hayat getirilmesi durumundaki nesnelere tempporary objeect deniyor. Bazı durumlarda da derleyici durumda bir vazife çıkartarak bir geçici nesne oluşturuyor.
+- Bir geçici nesnenin hayatı o geçici nesne ifadesinin icinde bukundugu ifadenin degerlendirilmesinden (evaluate edilmesinden) sonra sona erer.
+
+**Örnek:**
+
+```CPP
+class Myclass {
+public:
+	Myclass()
+	{
+		std::cout << "default ctor this:" << this << "\n";
+	}
+	~Myclass()
+	{
+		std::cout << "destructor this:" << this << "\n";
+	}
+	
+	void foo()
+	{
+		std::cout << "Myclass foo() this:" << this << "\n";
+	}
+private:
+
+};
+
+int main()
+{
+	std::cout << "main baslıyor\n";
+	Myclass{}.foo();
+	std::cout << "main devam ediyor\n";
+}
+```
+
+**Çıktı:**
+main baslıyor
+default ctor this:00000009800FFD54
+Myclass foo() this:00000009800FFD54
+destructor this:00000009800FFD54
+main devam ediyor
+
+**Sonuç:**
+> Geçici nesnenin bulunduğu ifadenin yürütülmesinden sonra nesnenin hayatı sona ermiş olacak.
+
+**Örnek:**
+```CPP
+class Myclass {
+public:
+	Myclass(int a, int b)
+	{
+		std::cout << "Myclass (int, int) a = " << a << "b = " << b << "\n";
+	}
+	~Myclass()
+	{
+		std::cout << "destructor this:" << this << "\n";
+	}
+	
+	void foo()
+	{
+		std::cout << "Myclass foo() this:" << this << "\n";
+	}
+private:
+
+};
+
+int main()
+{
+	std::cout << "[1] main basladi\n";
+	
+	if (1) {
+		Myclass&& r = Myclass{ 3,5 };
+		std::cout << "[2] main decam ediyor\n";
+		r.foo();
+	}
+}
+```
+**Çıktı:**
+[1] main basladi
+Myclass (int, int) a = 3b = 5
+[2] main decam ediyor
+Myclass foo() this:00000073B474FB74
+destructor this:00000073B474FB74
+
+## Reference Qualifiers:
+
+Bir sınıfın non-static üye fonskiyonları 
+1) Değer kategorisi L value olan sınıf nesneleri ifadeleri ile çağırılabilir,
+2) Değer kategorisi R value olan sınıf nesneleri ifadeleri ile çağırılabilir
+
+## Conversion Constructors:
+- Bir special member funstion değil. Constructor ı niteleyen bir terim.
+- Asıl varlık nedenininn yanında örtülü yada örtülü olmayan şekilde tür dönüşümü için kullanılabilecek constructorlar. Sınıf türünden olmayan bir ifafde sınıfın conversion cosntructorlarının kullanılmasıyla sınıf  türlerine dönüştürülebilirler.
+
+**Örnek:**
+
+```CPP
+class Myclass{
+public:
+
+};
+
+int main()
+{
+    Myclass m;
+    m=12;
+}
+```
+> Sentaks hatası, sebebi int türünden Myclass türüne bir dönüşüm yok. Ama bu sınıfa int parametreli bir constructoır bildirmiş olsam kod legal olacak.
+
+**Örnek:**
+
+```CPP
+class Myclass{
+public:
+    Myclass() = default;
+    Myclass(int);
+
+};
+
+int main()
+{
+    Myclass m;
+    m=12;
+}
+```
+> Kod legal oldu. Myclass türünden bir nesneye int türünden bir değer atayabiliyorum.
+
+> Burada Myclass(int); sınıfın conversion constructor ı.
+
+> Burada derleyicinin yazdığı:
+
+> m = Myclass(12);
+
+> Derleyici durumdan bir vazife çıkarttı ve geçici nesne oluşturdu. Geçici nesneyi oluşturmak için sınıfın int parametreli constructor ını kullandı.
+
+**Kodu tekrar yazıp anlatalım.**
+
+```CPP
+class Myclass {
+public:
+	Myclass()
+	{
+		std::cout << "Myclass default ctor. this =" << this << '\n';
+	}
+	Myclass(int x)
+	{
+		std::cout << "Myclass (int x) x =" << x << "this " << this << '\n';
+	}
+	~Myclass()
+	{
+		std::cout << "Myclass default ctor. this =" << this << '\n';
+	}
+};
+
+int main()
+{
+	Myclass m;
+
+    m =5;
+
+    std::cout << "main devam ediyor \n";
+}
+```
+> m = 5 ifadesi yürütüldüğünde geçici nesnenin destructor ı çağırılacak. Ama main closing brace geldiğimizde diğer destructor çağırılacak. 
+
+**Çıktı:**
+Myclass default ctor. this =00000001000FF854
+Myclass (int x) x =5this 00000001000FF934
+Myclass destructor this =00000001000FF934
+main devam ediyor
+Myclass destructor this =00000001000FF854
+
+> Buradaki atamayı da sınıfın move constructor ı gerçekleştiriyor. Ama ben sınıfa bir copy constructor yazarsam copy constructor cağırılacak.
+
+```CPP
+class Myclass {
+public:
+	Myclass()
+	{
+		std::cout << "Myclass default ctor. this =" << this << '\n';
+	}
+	Myclass(int x)
+	{
+		std::cout << "Myclass (int x) x =" << x << "this " << this << '\n';
+	}
+	~Myclass()
+	{
+		std::cout << "Myclass destructor this =" << this << '\n';
+	}
+	Myclass& operator = (const Myclass& other)
+	{
+		std::cout << "copy assignment func" << "\n";
+
+		std::cout << "this =" << this << "\n";
+		std::cout << "other =" << &other << "\n";
+		return *this;
+	}
+};
+
+int main()
+{
+	Myclass m;
+
+	m = 5;
+
+	std::cout << "main devam ediyor \n";
+}
+```
+**Çıktı :**
+Myclass default ctor. this =0000007A7EAFF7A4
+Myclass (int x) x =5this 0000007A7EAFF884
+copy assignment func
+this =0000007A7EAFF7A4
+other =0000007A7EAFF884
+Myclass destructor this =0000007A7EAFF884
+main devam ediyor
+Myclass destructor this =0000007A7EAFF7A4
+
+**Sonuç:**
+Böyle bir dönüşüm çok tehlikeli. Tehlikenin bir örneği:
+
+```CPP
+class Myclass{
+public:
+    Myclass();
+    Myclass(int x);
+};
+
+int main()
+{
+    Myclass m{23};
+    int ival{};
+
+    m = ival;
+}
+```
+> Bir Myclass nesnesine yanlışlıkla int türünden  bir değer atarsam sentaks hatası değil, tür güvenliği açısından son derece riskli.
+
+> Conversion cosntructor tahmin edilmeyen yerde dönüşümün otomatik olarka yapılması sebebiyle yanlış yazılmış bir kodun legal olmasını sağlayabilir.
+
+**Çok önemli bir kural:**
+
+```CPP
+class Myclass{
+public:
+    Myclass();
+    Myclass(int x);
+};
+
+int main()
+{
+    Myclass m;
+    double dval{};
+
+    m = dval;   // Myclass türünden nesneye double türünden nesne atandı
+    m = 10 > 5;  // Myclass türünden nesneye boolean türünden nesne atandı
+}
+```
+
+Burada sentaks hatası yok. Bunu sebebi çok önemli bir kural.
+Function overload resolution sürecinde argümandan parametreye yapılan dönüşümlerden birisi user-defined consversion.
+Yani sınıfın conversion cosntructorını çağırılması ile yapılan dönüşüm user-defined conversion.
+User defined consversion neydi?
+Eğer dil kurallarına göre bir dönüşüm yoksa ve bildirilen fonksiyona çağrı ile bu dönüşüm mümkün hale geliyorsa (örneğin conversion cosntructor) bu dönüşmülere user edfined conversion denir.
+
+**Önemli olan kural:**
+```CPP
+Eğer bir örtülü dönüşüm  =
+
+standart conversion + user defined conversion
+user defined conversion + standart conversion
+
+bunlardan birisiyle yapılıyorsa,
+
+derleyici bu dönüşümü yapmak zorunda.
+```
+
+```CPP
+m = dval;
+```
+dediğimizde, dval in int e dönüşmesi gerekiyor. int in de Myclass a dönüşmesi gerekiyor. 
+dval den int e dönüşüm standart conversion. int ten Myclass a dönüşüm, user define conversion.
+
+- Bu durumda derleyici bu dönüşümlerin ikisini de otomatik olarak yapmak zorunda. 
+- Aslında derleyiciye şu talimatı veriyoruz:
+
+```CPP
+static_cast<Myclass>(static_cast<int>(dval))  // derleyici bizim yazdığımız deyimi bu şekilde ele almak zorunda.
+```
+
+**Bir örnek daha:**
+
+```CPP
+class Myclass {
+public:
+    Myclass();
+    Myclass(bool);
+};
+
+int main()
+{
+    int x;
+    int* ptr = &x;
+    Myclass m;
+
+    m = ptr;
+}
+```
+> Bu kod da legal. Çünkü int* türünden bool türüne implicit conversion var. Bu standart conversion. Bool türünden de myclass türüne user defined conversion var. Derleyici bu dönüşümü yapmak zorunda oluyor.
+
+- user defined conversion + user defined conversion olarak yapılabilen bir dönüşüm varsa derleyici bunu örtülü olrak yapmaz.
+
+**Örnek:**
+
+```CPP
+class A{
+
+};
+
+class B {
+public: 
+    B(A);   // A dan B ye ortülü donusum var.
+};
+
+class C {
+public:
+    C(B);   // B den C ye örtülü dönüşüm var.
+};
+
+int main()
+{
+    A ax;
+
+    C cx = ax;
+} 
+```
+> Bu legal değil. Nden?
+
+> Çünkü bu dönüşümün yapılabilmesi için önce ax in b ye. Sonra b den c ye dönüşmesi lazım. Her ikisi de user defined conversion olduğu için derleyici bu dönüşümü örtülü olarak gerçekleştirmeyecek.
+
+```CPP
+C cx = ax;  
+```
+> bu sentaks hatası. Ama şöyle yazsaydım hata olmayacaktı:
+
+```CPP
+C cx = static_cast<B>(ax);
+```
+> İlk dönüşüm explicit olarak yapıldı 2. dönüşüm implicit olarak yapıldı.
+
+Özet:
+Eğer bir derleyici örtülü olarak bir dönüşümü:
+1. standart conversion + user defined conversion
+2. user defined conversion + standart conversion
+
+yaparak gerçekleştirebiliyorsa, derleyici bunu otomatik olarak yapmak zorunda.
+
+- Söz konusu dönüşüm arka arkaya 2 tane user defined conversion ile yapılabliyorsa derleyici bunu yapmamak zorunda.
+- Örtülü dönüşümü engellemenin yolu, constructor bildiriminde bir explicit anahtar sözcüğü tanımlanırsa buna explicit constructor denir. Explicit sadece bildirimde olacak tanımda olmayacak.
+
+**Ornek:**
+
+```CPP
+class Myclass{
+public:
+    explicit Myclass(int)
+    {
+        std::cout << "explicit Myclass(int)\n";
+    }
+    Myclass(double){
+        std::cout << " Myclass(double)\n";
+    }
+
+};
+
+int main()
+{
+    Myclass x = 12;
+}
+
+```
+**Sonuc:**
+
+double parametreli constructor cagirildi. int parametreli olan explicit oldugu icin.
+Constructor in explicito lmasi donusumu imkansiz kilmasi demek degildir.
+
+**Soyle bir kod da yazilabilir:**
+
+```CPP
+int main()
+{
+    int ival{54};
+    Myclass m;
+
+    m = static_cast<Myclass>(ival);
+    m = (Myclass)(ival);
+}
+```
+
+## Copy Elision
+
+- kopyalamanin yapilmamasi, kopyalamadan kacinma
+- Oyle durumlar var ki aslinda sentaks geregi orada bir kopyalama soz konusu. Ama derleyici kodu optimize ederek kopaylamayi elimine ediyor. 
+- Yani kagit ustunde kopyalama var ama derleyicinin urettigi kodda, derleyici daha etkin kod uretmesi sebebiyle kopyalamadan kaciliyor.
+- c++17 standartlari ile copy elision in belli bicimleri zorunlu oldu. Yani belirli copy elision senarayolari derleyici optimizasyonu olmaktan cikartilip dilin kurallarinca garantiye baglandi.
+- Yani oyle durular var ki artik derleyici optimizasyon yaptigi icin degil, dilin kuralalri debebiyle copy elision yapiyor.
+- Sadece optimizasyon ise derleyici bunu yapmak zorunda degil
+
+**1. senaryo:**
+**Elimizde bir sinif var ve fonksiyonun parametresi sinif turunden. Call by value**
+
+**Ornek:**
+
+```CPP
+class Myclass{
+public:
+    Myclass()
+    {
+        std::cout << "Myclass default ctor\n";
+    }
+    Myclass()
+    {
+        std::cout << "Myclass copy ctor\n";
+    }
+    ~Myclass()
+    {
+        std::cout << "Myclass destructor\n";
+    }
+};
+
+void func(Myclass)
+{
+
+}
+
+int main()
+{
+    func(Myclass{});
+}
+```
+
+> Eger copy elision olmasaydi once derleyici gecici nesne icin default constructor cagirmaliydi. Sonra da fnksiyonun parametre degiskenini copy constructor ile hayata getirmeliydi. Ama burada sadece default constructor cagirilacak.
+
+**Burada derleyicinin yaptigi:**
+> Gecici nesne zaten kullanilmiyor, gecici nesneyi olusturup copy constructor ile aktarmak yerine, sanki dogrudan fonksiyonun parametre degikeninin hayatagelecegi adreste bu nesneyi hayata getiriyor. Derleyici bu optimizasyonu daha onceden de yapailiyordu ama simdi zorunlu.
+
+**Debug mode:** Derleyici belirli optimizasyonlari yapmiyor ve kendisi de kod ilave ediyor.
+**Release Mode:** Derleyici o debug kodlarinieklemiyor ve optimizasyon konusunda daha agresif oluyor.
+
+# Ders 14
+
+## Return value optimization:
+
+- Oyle durumlar var ki derleyicinin kopyalama kodu olusturasi gerekiyor. ve burada bir sinif turu soz konusu ise kopyalamayi yapmak icin duruma gore sinifin copy consturcot veya move constructor inin cagirilmasi gerekiyor. Fakat derleyici copy constructor ya da move constructor cagirmak yerine kopyalamayi tamamen ortadan kaldiriyor. 
+
+> Return value optimization bir bicimi dahavar ve mandatory degil.
+
+- named return value optimization  NRVO
+
+> Farki, derleyici bunu yapmak zorunda degil ve copy construcotr in cagirilabilir durumda olmasi gerekiyor.
+
+```CPP
+class Myclass(){
+public:
+    Myclass()
+    {
+        std:cout << "myclass default ctor\n";
+    }
+    // Myclass(const Myclass&) = delete;
+
+    ~Myclass()
+    {
+        std::cout << "Myclass destructor";
+    }
+};
+
+Myclass foo()
+{
+    Myclass m;
+
+    return;
+}
+
+int main()
+{
+    Myclass m foo();
+}
+```
+> copy cosntructor delete ettigimizde sentaks hatasi veriyor.
+
+## Siniflarin static veri elemanlari:
+
+### static nedir?
+- Simdiye kadar gordugumuz veri elemanlari object iliskili. Yani:
+
+```CPP
+class Nec{
+    int a,b,c;
+};
+```
+> Her nec nesnesinin 1 adet a b ve c si var.
+
+> Yani sizeof Nec 3xsizeof int
+
+- Ama sinifin static veri elemanlari adeta C deki global degiskenler. Ayni degil ama assembly duzeyinde ayni. Nesnenin icinde degil ama sinifa ait.
+
+**Global degiskenleri global olmaktan cikartip sinifin static veri elemani yaptigimizda ne degisiyor?**
+> class scope a almis oluyoruz. Bir erisim kontrulu soz kunusu oluyor.
+
+- static omurludur, global degisken gibi. Program calismayabasladigi anda hayatta. main cagirilmadan hayata baslayacak. Program sonuna kadar hayatta kalcak.
+ 
+```CPP
+class Myclass{
+    static int x;
+};
+
+int main()
+{
+    Myclass::x =10;
+}
+```
+> Sentaks hatasi, sebebi erisim kontrolu.
+
+**Bir sinifin static veri elemanini dogrudan ismi ile kullanabilmem icin**
+
+o ismi aratip bulmam gerekiyor
+eristigim ismin public olmasi gerekiyor
+ya da friend bildirimi ile bana erisim hakkinin verilmis olmasi gerekiyor.
+
+**Sinifin static veri elemanlari nasil tanimlanacak?**
+
+```CPP
+// myclass.h
+
+class Myclass{
+public:
+    static int x;
+};
+
+// myclass.cpp
+// #include "myclass.h"
+
+int Myclass::x;  // bildirimde static anahtar sozcugu olacak ama tanimda olmayacak.
+int Myclassx = 10;
+```
+
+```CPP
+class Myclass {
+private:
+    Myclass m;
+};
+```
+> Sentaks hatasi,
+
+```CPP
+class Myclass {
+private:
+    static Myclass m;
+};
+```
+static oldugu zaman sentaks hatasi degil. 
+Sonuc: Bir sinifin static veri elemani kendi turunden olabilir.
+
+**C++ 17 standartlari ile:**
+- sinifin static veri elemanlari ve global degiskenler inline anahtar ozcugu ile tanimlanabiliyorlar.
+
+### inline variable neydi?
+- Bu bir definition, link asamasina geldigimizde bundan 1 tane olma garantisi var. Birden fazla kaynak dosyada bu token by token tanimi ayni ise, ODR ihlal edilmiyor.
+
+**Örnek:**
+
+```CPP
+//necati.h
+
+inline int x =5;
+```
+> Kac tane kod dosyasi necati.h include ederse etsin ODR ihlal edilmis olmayacak.
+
+### Static member functions:
+
+non-static member functions
+    const
+    non-const
+static member functions
+
+```CPP
+class Myclass{
+public:
+    void foo(); //non-static member fucntion
+    static void bar();  // static member function
+};
+```
+> Burada foo fonksiyonu Myclass nesnesinin adresi ile cagiriliyor. Bunlarin this pointer i var.
+
+> Ama static uye fonksiyonlar yine scope class ta ve erisim kontrolune sahip. Ama this pointeri yok.
+```CPP
+Myclass::foo(); 
+```
+> dersem sentaks hatasi. Cunku bu fonksiyonun cagirilmasi icin bir object gerekiyor.
+
+```CPP
+Myclass::bar();
+```
+> Derleyici isim aramayla bu fonksiyonun static uye fonksiyon oldugunu gorecek. This pointeri olmadigi icin buna cagri kodunu dogrudan olusturacak. Bu bir nesneye ihtiyac duymuyor. Hata yok.
+
+**Yani semantik olarak bakarsak ta;**
+- sinifin geneli ile ilgili is yapan, ama nesnenin ozeli ile ilgili is yapan bir fonksiyon degil.
+
+```CPP
+class Myclass {
+public:
+    static void bar();
+private:
+    int mx;
+}
+
+void Myclass::bar()
+{
+    Myclass m;
+    auto a = m.mx;
+}
+```
+
+> Sinifin uye fonksiyonu oldugu icin sinifin private bolumune erisebiliyor. Hata yok.
+
+
+
+
+
 
 
 
