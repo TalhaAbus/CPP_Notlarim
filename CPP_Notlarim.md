@@ -249,13 +249,86 @@ int main()
     int x = 10;
     sizeof x+5;
 }
-
 ```
 
 **Cevap:**
 > Geçerlidir, değeri 9 dur. sizeof operatörünün önceliği aritmetik operatörelerden daha yüksektir.
 
 **Soru 3: int türünün 4 byte olduğu sistemde bu kod çalıştığında ekranda ne yazar?**
+
+```CPP
+int main()
+{
+    int x = 10;
+    size_t y = sizeof x++;
+
+    printf("%zu %d \n", y, x);
+}
+```
+**Cevap:**
+> Cevap: y=4 x=10 olarka çıkar. sizeof operatörünün operandı olan ifade için işlem kodu üretilmez. C++ dilinde bir ifadenin karşışıoğında i,şlem kodunun üretilmedi durumlara "unevaluated context" denir.
+> C dilinde unavaluated context sadece sizeof operatörü için var. C++ dilinde işlem kodu üretilmeyen context 8-9 adet var.
+
+**Soru 4: Kod neden hatalı?**
+
+```CPP
+int main()
+{
+	char* p = "batuhan";
+}
+
+```
+**Cevap:**
+> Cevap: Bu const char bir dizi olduğu için array decay ile const char * türüne dönüştü. const char* türünden char* türüne c++ dilinde örtülü dönüşüm olmadığı içiçn sentaks hatası oldu.
+> Hata kodu: a value of const char* type cannot be used to initialize an entity of type char *
+
+**Soru 5: Türü nedir?**
+```CPP
+int main()
+{
+    short s1 = 5, s2 = 7;
+    s1 + s2 
+}
+```
+**Cevap:**
+> s1 + s2 ifadesinin türü short değil, int türüdür. İnt türü altı işlemler yapıldığında int türüne dönüşür.
+
+**Soru 6: Türü nedir?**
+```CPP
+int main()
+int main()
+{
+    int x = 10;
+    x > 5 ? 3 : 4.7; 
+}
+```
+**Cevap:**
+> Runtime ve x değerinin ne oldupunndan bağımsız bu ifadenin türü double dır.
+
+**Soru 6: Kodu açılayınız.**
+```CPP
+#include <iostream>
+
+int main()
+{
+    std::cout << "hello world";
+}
+```
+**Cevap:**
+> Bir ismi isim alanı içinde arayıp bulmak için :: operatörü kullanılır. Bunun ismi scope resolution operator.
+> cout bir değişkenin ismi, ismi ostream olan sınıf türünden global bir değişkenin ismi.
+> << bitsel kaydırma operatörü burada operator overloading denilen mekanizmanın arcı olarak kullanılıyor.
+Operator overloading: Sınıf nesnesinin operator operandı olması durumunda derleyicinin bu ifadeyi bir fonksiyon çağrısına dönüştürmesi.
+cout nesnesi << operatorunun operandı olduğu için derleyici bunu bir fonksiyon çağrısına dönüştürüyor.
+Derleyicinin çağıdığı fonskliyona cout nesnesi ve string literali argüman olarka gönderiliyor.
+
+
+
+
+
+
+
+
 
 
 
