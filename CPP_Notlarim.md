@@ -3520,40 +3520,433 @@ A operator+(const A&); // Kod geçerli, bu toplama operatörünü overload etmiy
 - A operator+(const A&); // sign operator
 - A operator+(const A&, const A&);    // addition operator
 
+# Ders 16
+
+## Ok ve içerik operatörlerinin overload edilmesi
+
+- p -> x demek aslında (*p).x demek
+
+```CPP
+SmartPtr    ptr;
+ptr -> foo();
+```
+
+> Eğer ptr bir sınıf nesnesi ise ve ok operatörün operandı olmuşsa derleyici ptr nin ait olduğun sınıfın ok operatör fonksiyonunun olup olmadığına bakacak
+
+**Dikkat: Ok operatörü binary bir operatör olmasına rağmen unary bir operatör gibi yüklenir.**
+
+**Örnek üzerinden anlayalım:**
+
+```CPP
+class Prt{
+public:
+    A & operator*();
+    A* operator->();
+};
+
+int main()
+{
+    Ptr p;
+
+    p->foo();
+    p.operator->()->foo();
+}
+```
+
+> p->foo yazmakla operator ok fonksiyonunu çağırıp oradan elde edilen geri dönüş değerini yine gerçek ok operatorunun soluna koymak aynı anlama geliyor.
+
+## Fonksiyon çağrı operatörlerinin overload edilmesi
+
+- Fonksiyon çağrı operatörü de bir operatör ve bu operatör de dilin kurallarına göre overload edilebiliyor. En sık overload edilen operatördür.
+
+- Fonksiyon çağrı operatörünün overload edilmesi daha çok generic programlama araçları ile birlikte kullanılıyor. C++ dilinin en önemli araçlarından birisidir.
+
+```CPP
+func();
+```
+
+- C dilinde bu yapıyı geçerli kılan 3 ihtimal var.
+
+1. func bir fonksiyon ismidir.
+2. func bir fucntion pointer olabilir. (Bu durumda function pointer olan func ın değeri olan adresteki fonksiyon çağırılacak.)
+3. func bir fonksiyonel makro olabilir. Yani önişlemci program bir yer değiştirme yapacak.
 
 
+- C++ dilinden bu ihtimalin dışındaki olasılıklar da söz konusu.
 
+1. func bir sınıf nesnesi olabilir ve bu sınıf fonksiyon çağrı operatörünü overload etmiş olabilir. 
 
+**Bu durumda derleyici :**
 
+```CPP
+func(10) ifadesini,
+func.operator()(10); (func nesnesinin operator fonksiyon çağrı fonksiyonunu çağıracak ve 10 değerini argüman olarak gönderecek.)
+```
 
+- Fonksiyon çağrı operatörünü overload eden sınıflara karşılık gelen 2 terim var. 
 
+1. function class 
+2. functıon object
 
+**Fonksiyon çağrı operatörünün overload edilmesini inceleyelim.**
 
+```CPP
+class Nec {
+public:
+    int operator()()
+    {
+        std::cout << "Nec::operator()() this = " << this << '\n';
+        return 1;
+    }
+};
 
+int main()
+{
+    Nec mynec;
+    std::cout << "&mynec = " << &mynec << "\n";
 
+    auto val = mynec();
+    std::cout << "val = " << val << "\n";
+}
+```
 
+> mynec() ifadesi karşılığı derleyici operator() fonksiyonunu çağıracak. Bu fonksiyonda *this mynec nesnesi olacak. 
 
+- **Bir soru: Bir sınıfın birden fazla fonksiyon çağrı operatörü olabilir mi?**
 
+```CPP
+class Nec {
+public:
+    void operator()()
+    {
+        std::cout << "Nec::operator()() \n";
+    }
+    void operator()(int)
+    {
+        std::cout << "Nec::operator()(int) \n";
+    }
+    void operator()(int, int)
+    {
+        std::cout << "Nec::operator()(int, int) \n";
+    }
+    void operator()(double)
+    {
+        std::cout << "Nec::operator()(double) \n";
+    }
+};
 
+int main()
+{
+    Nec mynec;
 
+    mynec();
+    mynec(10);
+    mynec(3.4);
+    mynec(3,5);
+}
+```
 
+- Neden ben bir sınıf nesnesinin fonksiyon çağrı operatörünün operandı olması durumunda bir fonksiyonun çağırılmasını istiyorum?
 
+```CPP
+mynec.func();
+```
 
+> Bu şekilde bir üye fonksiyon oluşturup onun ismiyle çağırabilirdim.
 
+> mynec(); yazarak sanki sınıf nesnesini bir fonksiyonmuş gibi izlenim yaratıyoruz.
 
+> Bu sorunun cevabı generic programlama tarafında.
+mynec() bir sınıf nesnesi. Sınıf nesnesi olduğu için bir state e sahip. Aynı sınıf türünden nesneler ayunı state te olmak zorunda değil. Bu bir gerçek fonksiyon olsaydı sadece kendisine gelen argümanları kullanabilirdi. Ya da static yerel değişkenleri kullabilirdi. Ama bu bir sınıf nesnesi olduğu için kendi elemanalrını da kullanabilir. 
 
+**Örnek:**
 
+```CPP
+int main()
+{
+    Nec nf1;
+    Nec nf2;
+    Nec nf3;
 
+    nf1();
+    nf2();
+    nf3();
+}
+```
+> Bu sınıfları fonksiyuon çağrı operatörünün operandı yaptığımızda her biri ayrı verileri kullanıyor olabilir. Bu normal fonksiyonlarda doğrudan mümkün olmayan bir araç.
 
+**Bir örnek:**
+Fonksiyonumuzun verilen bir aralıkta rastgele bir sayı üretmesini istiyoruz. Normal fonksiyon olarak yazarsak:
 
+```CPP
+int myrand(int low, int high) // hangi aralıkta rastgele sayı alacağı bilgisini client koddan almak zorunda. Ben ancak buna bu argümanalrı gönderirsem bu aralıkta bir rastgele sayı üretebilir. 
+```
 
+> Öyle bir yapı oluşturmak istiyorum ki, fonksiyona argüman göndermiyorum ama fonksiyon hangi aralıkta rastgele sayıo üreteceği bilgisini kendi durumuyla (state) tutacak. Bunu bir function object hanline getirerek yapabilirim. 
 
+## Tür Dönüştürme Operatör Fonksiyonları
 
+- Bir sınıf türünden nesneyi bir başka türe dönüştürmek için kullanacağımız fonksiyonlardır. Yani derleyici durumdan vazife çıkartıp bu fonksionlara çağrı yaparak sınıf türünden nesneyi başka bir türe dönüştürme olanağına sahip olacak. 
+**Bir notu hatırlayalım:**
+> Normale mümkün olmayan bir dönüşüm eğer bir fonksiyon bildirimiyle, derleyicinin o fonksiyona çağrı yapması halinde gerçekleştiriliyorsa böyle dönüşümlere user-defined conversion deniliyordu. Şimdiye kadar biz user defined conversion un conversion constructorlar ile yapılcabileceğini gördük. Yani derleyici sınıfın conversion constructor ına çağrı yaparak sınıf türünden olmayan bir değeri sınıf türüne dönüştürebiliyordu. 
 
+- Şimdi user defined conversion ın yapılcabileceği ikinci bir yol öğrenceğiz. Sınıf türünden olan bir nesnenin başka bir türe dönüştürülmesini sınıfın tür dönüştürme operator fonksiyonları ile gerekleştirebiliriz. 
 
+**Bir örnek:**
 
+```CPP
+class Myclass{
 
+};
 
+int main()
+{
+    Myclass m;
+    int ival = m;
+}
+```
+
+> Sentaks hatası, Myclass sınıfından int türüne otomatik dönüşümyok. Hata mesajı: cannot convert from Myclass to int 
+
+> Peki ben bir fonksiyon bildirsem derleyici bu fonksiyona çağrı yaparak Myclass türünden bir nesneyi int türüne dönüştürebilir mi? Evet. Bu dönüşümleri gerçekleştirecek fonksiyonlara tür dönüştürme operatör fonksiyonları denir. 
+
+> Peki böyle bir fonksiyon nasıl bildirilecek? Bu da bir opratör fonksiyonu olduğu için yine operator keyword u kullanılacak. Bunun yanına hangi türe dönüşüm gerçekleşecekse o tür yazılcak.
+
+**örnek:**
+
+**Myclass türünden bir nesneyi:**
+- int türüne dönüştürecek fonksiyonun ismi operator int
+- double türüne dönüştürecek olan operator double
+- int * türüne dönüştürecek olan operator operator int*
+
+> operator int fonksiyonunun geri dönüş değeri int. Bu geri dönüş değeri yazılmayacak.
+
+**Örnek bir dönüşüm:**
+
+```CPP
+class Myclass {
+public:
+	operator int(const)
+	{
+		std::cout << "Myclass::operator int() this =" << this << "\n";
+		return 1;
+	}
+};
+
+int main()
+{
+	Myclass m;
+
+	int x = m;
+}
+```
+> Bir sentaks hatası yok.
+
+**Aynı örnek üzerinden:**
+
+```CPP
+class Myclass {
+public:
+	operator int(const)
+	{
+		std::cout << "Myclass::operator int() this =" << this << "\n";
+		return 1;
+	}
+};
+
+int main()
+{
+	Myclass m;
+	double dval;
+	dval = m;
+}
+```
+> Burada Myclass nesnesi int e dönüştürülecek sonrasında int double a dönüştürülecek. Birincisi user defined converison ve ikincisi standart conversion.
+
+**Aynı örnek üzerinden:**
+
+```CPP
+class Myclass {
+public:
+	operator int(const)
+	{
+		std::cout << "Myclass::operator int() this =" << this << "\n";
+		return 1;
+	}
+};
+
+int main()
+{
+	Myclass m;
+
+	if(m){}
+}
+```
+> Sentaks hatası olmayacak. Derleyici sınıfın operator int fonksiyonunu çağıracak. int türünden de bool türüne dönüşüm olduğu için kod geçerli olacak.
+
+- Bu örtüülü dönüşüm bazen bizim yararımıza olmayabilir. Tür dönüştürme operator fonksiyonları modern CPP öncesinde explicit olamıyordu. 
+
+**Örnek:**
+
+```CPP
+class Myclass {
+public:
+	explicit operator int(const)
+	{
+		std::cout << "Myclass::operator int() this =" << this << "\n";
+		return 1;
+	}
+};
+```
+> burada explicit yapıp yapmamak bizim seçeneğimiz. Bu dömüşümün otomatik olarak gerçekleşmesi gerekiyorsa explicit yapılmayacak. Ama birçok örnekte explicit olasında fayda var çünkü isteğimiz dışında tür dönüşümü gerçekleştirebilir.
+
+**Örnek:**
+
+```CPP
+class Myclass {
+public:
+	explicit operator int(const)
+	{
+		std::cout << "Myclass::operator int() this =" << this << "\n";
+		return 1;
+	}
+};
+
+int main()
+{
+	int x = 5;
+	Myclass m;
+
+	x = m;
+}
+```
+
+> Artık kod legal değil çünkü tür dönüştürme operatörü explicit. Burada örtülü dönüşüm sentaks hatası ama biz kendimiz static_cast operatörü ile dönüşüm gerçekleştirebiliriz.
+
+```CPP
+x = static_cast<int>(m);
+```
+
+**Bir Öneri:**
+Makul bir neden olmadıkça tür dönüştürme operatörlerini explicit yapınız.
+
+- Bir sınıf türü bool gerektiren hiçbir yerde kullanılamaz. Ama sınıfın bool türüne dönüşüm yapan bir fonksiyonu varsa kullanılabilir. 
+
+**Örnek:**
+
+```CPP
+class Nec {
+public:
+	operator int()const;
+};
+
+int main()
+{
+	Nec nec1, nec2;
+	!nec1;
+	nec1&& nec2;
+	nec1 || nec2;
+	nec1 ? 10 : 20;
+	if (nec1);
+}
+```
+> Kodların hepsi geçerli oldu. Derleyici artık boolean değer beklenen yerde sınıfın operator int fonksiyonunu çağırdı ve bunu geri dönüş değerini de standart conversion ile bool türüne dönüştürdü. 
+
+**Örnek:**
+
+```CPP
+class Nec {
+public:
+	operator bool()const;
+};
+
+int main()
+{
+	Nec mynec;
+
+	int x = mynec;
+
+	if (mynec) {
+
+	}
+}
+```
+
+> Burada kod geçerli. Önce bool türüne dönüşecek ardından bool türünden int türüne dönüşecek. If kısmında ise derleyici sınıfın operator bool fonksiyonunu çağıracak. 
+
+**Ama explicit yaptığım zaman:**
+
+```CPP
+class Nec {
+public:
+	explicit operator bool()const;
+};
+
+int main()
+{
+	Nec mynec;
+
+	int x = mynec;
+
+	if (mynec) {
+
+	}
+}
+```
+
+> if deyimi geçerliliğini koruyacak çünkü boolean context ama bir üstteki sentaks hatası. 
+- Bazı C++ standart kütüphanesinin sınıfları operator bool fonksiyonuna sahip ve bunlar explicit. Yani boolean context varsa dönüşüm sağlıyorlar ama boolean contexct dışında dönüşüm sağlamıyorlar.
+
+**Bir mülakat sorusu:**
+```CPP
+class Nec {
+public:
+	operator bool()const
+	{
+		return true;
+	}
+};
+
+int main()
+{
+	Nec x, y;
+	auto val = x + y;
+	std::cout << "val =" << val << "\n";
+}
+```
+
+> val değişkeninin değeri int Ama değeri 2. operator bool fonksiyonu explicit olsaydı sentaks hatası olacaktı. 
+
+**Örnek:**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	unique_ptr<string> up;
+
+	if (up) {
+		std::cout << "not empty!\n";
+	}
+	else {
+		std::cout << "empty!\n";
+	}
+}
+```
+> if parantezi içinde unique_ptr nesnesini kullanıdım zaman unique_ptr nesnesinin oıperator bool fonksiyonu çağırılıyor. Bu fonksiyon true ya da false döndürecek. True demek, unique_ptr nesnesinin hayatını kontrol etmekte olduğu dinamik ömürlü bir string söz konusu. Eğer false döndürürse unique_ptr nesnesi boş. Aslında derleyici if içindeki ifadeyi operator bool fonksiyonuna yapılan çağrıya dönüştürdü. unique_ptr nin operator bool fonksiyonu explicit bir fonksiyondur. Gerektiği yerde (if içinde) dönüştürüldü.
+
+## İsim alanları
+
+- C dilinde kod yazıyor olsaydık bir global kod alanımız vardı ve bu alandaki isimler birbiriyle çatışma riskindeydi. Örneğin 2 ayrı başlık dosyasını include ettiğimizde bu başlık dosyalarından gelen isimlerde bir çakışma olması durumunda sentaks hatası olacak. Hatta bunlar ayrı kaymak dosyalarda ise compile time da değil, link time da yaşanacak bu problem. 
+
+- C++ dilinde isim çakışmasını engellemek için C dilindeki yöntemler akılcı değil. Dilin bu konuda bir araca ihtiyacı var. Bu yüzden C++ dilinde namespace denilen araç var. Namespace, global isim alanındaki isimleri diğer isimlerden gizlemeye yönelik bir araç.
+
+SS
+
+İsmi global isim alanına doğrudan koymak yerine böyl bir korumalı isim alanına koymak bu ismin diğer isimler ile çakışmasını engelliyor. Kısaca isim alanı global isim alanındaki isimlerin birbiriyle çakışmasını engelleyen ama isimleri bir arada tutan bir araç. 
+
+**Dikkat:** İsim alanı içinde oluşturulan isimler de C bakış açısıyla yine globaldir. Statik ömürlüdür. Yani isim alanı diğer özelliklerini değiştirmiyor sadece  yeni bir scope oluşturmuş oluyorsunuz. C'deki file scope un yerini namespace scope terimini kullanıyoruz.
 
 
 
