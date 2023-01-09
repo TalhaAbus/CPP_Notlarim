@@ -3942,11 +3942,73 @@ int main()
 
 - C++ dilinde isim çakışmasını engellemek için C dilindeki yöntemler akılcı değil. Dilin bu konuda bir araca ihtiyacı var. Bu yüzden C++ dilinde namespace denilen araç var. Namespace, global isim alanındaki isimleri diğer isimlerden gizlemeye yönelik bir araç.
 
-SS
-
-İsmi global isim alanına doğrudan koymak yerine böyl bir korumalı isim alanına koymak bu ismin diğer isimler ile çakışmasını engelliyor. Kısaca isim alanı global isim alanındaki isimlerin birbiriyle çakışmasını engelleyen ama isimleri bir arada tutan bir araç. 
+> İsmi global isim alanına doğrudan koymak yerine böyl bir korumalı isim alanına koymak bu ismin diğer isimler ile çakışmasını engelliyor. Kısaca isim alanı global isim alanındaki isimlerin birbiriyle çakışmasını engelleyen ama isimleri bir arada tutan bir araç. 
 
 **Dikkat:** İsim alanı içinde oluşturulan isimler de C bakış açısıyla yine globaldir. Statik ömürlüdür. Yani isim alanı diğer özelliklerini değiştirmiyor sadece  yeni bir scope oluşturmuş oluyorsunuz. C'deki file scope un yerini namespace scope terimini kullanıyoruz.
+
+- Namespace ler global isim alanı içinde veya bir kaşka namespace içinde olabilir.
+
+```CPP
+double x;
+
+namespace nec {
+	int x = 5;
+}
+
+namespace erg {
+	void x();
+}
+```
+> Geçerli Kod
+
+```CPP
+namespace nec {
+	int x = 5;
+	class Date {
+
+	};
+	enum Color {blue, black, red};
+}
+
+int main()
+{
+	nec::blue;
+}
+```
+> İsmin bir namespace de aranıp bulunması için ismin namespace ismi ile nitelenmesi gerekiyor
+
+- Standart kütüphanenin bildirdiği tüm isimler ismi std olan bir namespace içinde geliyor. Vector, string, bitset C++ standart kütüphanesinin birer sısnıf şablonları. Cout standart kütüphanenin tanımladığı global bir değişkenin ismi. Ostream standart kütüphanenin tanımladığı bir sınıf şablonunun ismi, bir tür eş ismi. 
+- Tüm bunları kullanmak için başlık dosyasını include etmemiz yeterli değil.
+
+```CPP
+int main()
+{
+	std::cout;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
