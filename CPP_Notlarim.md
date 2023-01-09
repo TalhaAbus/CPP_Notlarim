@@ -3987,6 +3987,79 @@ int main()
 }
 ```
 
+- Namespaceler için bir access konrolü yok. Yani bir namespace oluştursam bunun içinde public, private, protected kullanamam. (namespace in kendisi için)
+
+```CPP
+namespace nec {
+	namespace erg {
+		int ival;
+	}
+}
+
+int main()
+{
+	nec::erg::ival;
+}
+```
+
+```CPP
+namespace nec {
+	int a, b, c;
+}
+namespace nec {
+	double x, y;
+}
+```
+> Derleyici bunları aynı namespace olarak alıyor.  Yani bir namespace bildirimi ayrı ayrı bildirimler şeklinde de yapılabilir. Anlamsal açıdan ve sonuç açısından bir fark yok. Neden böyle bir kural var?
+
+> Eğer böyle bir kural olmasaydı bir kütüphanedeki bildirimleri farklı başlık dosyalarına bölünemezdi. Örneğin:
+
+```CPP
+#include <vector>
+#include <string>
+#include <iostream>
+
+int main()
+{
+	std::vector<int>x;
+	std::string s;
+	std::cout;
+}
+```
+> Farklı başlık dosyalarından gelen isimler aynı namespace içinde.
+
+- Bir namespace içindeki ismi ancak niteleyerek kullanabiliyorum. Öyle araçlar var ki bir ismi namespace ismi ile nitelemesem dahi derleyici o ismi o namespace te yine arayacak. 3 tane darklı araç var.
+
+1. using decleration
+2. Using nameapce (directive) decleration
+3. ADL (arguıment dependant lookup)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
