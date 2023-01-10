@@ -4812,12 +4812,71 @@ int main()
 }
 ```
 
+### Nested Classes
 
+```CPP
+class Nec {
+	class Nested {
+		static void foo();
+	};
+	void f()
+	{
+		Nested::foo();
+	}
+};
+```
+> Nec sınıfı Nested in private bölümüne erişebilir mi? Hayır erişemez, sentaks hatası. Eğer böyle bir şey istiyorsak friend bildirimine ihtiyaç var.
 
+> Bunun tersi geçerli midir?
 
+```CPP
+class Nec {
+private:
+	int mx;
+	static void foo();
 
+	class Nested {
+		void bar()
+		{
+			auto sz = sizeof(mx);
+			Nec::foo();
+		}
+	};
+};
+```
+> Burada erişimde bir sorun yok. Nested type, visible olan private ögelere erişebiliyor.
 
+```CPP
+class Nec {
+private:
+	class Nested{};
+public:
+	static Nested foo();
+};
 
+int main()
+{
+	Nec:Nested nx = Nec::foo();
+}
+```
+> Nec::Nested, private olduğu için hata.
+
+- Aynı örnekte küçük bir değpişiklik yapalım:
+
+```CPP
+class Nec {
+private:
+	class Nested{};
+public:
+	static Nested foo();
+};
+
+int main()
+{
+	auto nx = Nec::foo();
+}
+```
+> Sentaks hatası değil. Erişim kontrolüne takılmıyor. Çünkü erişim kontrolü identifier kullnaımına ilişkin. Ortada doğrudan kullanılan bir identifier yoksa erişim kontrolünden bahsetmek mümkün değil. Yani isim yoksa erişim kontrolü de yok.
 
 
 
