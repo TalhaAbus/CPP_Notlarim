@@ -4537,6 +4537,122 @@ int main()
 ```
 > Hata yok. Buradaki endl global bir fonksiyon. Global fonksiyona cout nesnesi ile çağrı yaptım. endl fonksiyonu std namespace içinde olduğundan, endl ismi std namespace içinde arandı.
 
+**Başka Bir Örnek:**
+```CPP
+int main() 
+{
+	std::vector<int> ivec(100);
+	sort(begin(ivec), end(ivec));
+}
+```
+>  sort, begin ve end isimleri nitelendirilmemiş fakat hiçbir hata yok. Bunun nedeni ADL. ivec, std namespace içindeki bir sınıfa ilişkin. Dolayısıyla begin ve end fonksiyonlarının std namespace içinde aranıp bulunmasının sebebi bu. Fakat sort nasıl bulunuyor? begin(ivec) fonksiyonunun geri dönüş değeri türü de yine std namespace içinde. Doalyısıyla sort'a gönderilen argüman olan ifadenin türü std namespace deki bir türe ilişkin olduğu için sort ismi de std namespace içinde aranıyor.
+
+**Örnek:**
+
+```CPP
+//myclass.h
+
+class Myclass {
+public:
+	void func();
+};
+
+void foo(Myclass);
+
+int main()
+{
+	Myclass m;
+
+	m.func();
+	foo(m);
+}
+```
+> Bu kodda bir hata yok. Şimdi bunu bir namespace içinde düşünelim:
+
+```CPP
+//myclass.h
+namespace nec {
+	class Myclass {
+	public:
+		void func();
+	};
+	void foo(Myclass);
+}
+
+int main()
+{
+	nec::Myclass m;
+
+	m.func();
+	foo(m);
+}
+```
+> Yine sentaks hatası olmadı. Böylece func ismini nasıl nitelemek zorunda kalmıyorsam, foo ismini de nitelemek zorunda kalmıyorum.
+
+### Unnamed namespaces
+
+- Bir namespace in ismi olmayabilir. Buna unnamed namespaces deniliyor. Eğer bir kaynak dosyada isimlendirilmemiş bir isim alanı oluşturulursa bunun içindeki varlıklar doğrudan iç bağlantıda oluyor. Bu ne demek?
+
+> Eğer bazı ögerlerin sadece klendi kaynak dosyamızda kullanımasını istiyorsak ve diğer kaynak dosyalarda bu isimlerin başka varlıkların isimleri olmasına izin vermek istiyorsak. (normalde bunu C'de yapmanın yolu static anahtar sözcüğü) 
+
+**Unnamed namespace içindeki isimleri nasıl kullanıyorum?**
+
+```CPP
+namespace xyz{
+	int x = 10;
+	void func()
+	{
+
+	}
+
+	class Myclass {
+
+	};
+}
+
+using namespace xyz;
+```
+
+> Burada derleyici sanki namespace ismi xyz imiş gibi ve çıkışında using namespace xyz yazılmış gibi davranıyor.
+
+- Yani isimsiz isim alanı içindeki isimleri nitelemek zorunda değiliz:
+
+```CPP
+namespace {
+	int x = 10;
+	void func()
+	{
+
+	}
+
+	class Myclass {
+
+	};
+}
+int main()
+{
+	x= 45;
+	::x=45;
+}
+```
+> İki türlü de yazılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
