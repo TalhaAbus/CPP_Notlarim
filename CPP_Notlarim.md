@@ -4465,16 +4465,77 @@ int main()
 ```
 > Hangi func çağırılır? Ambiguity var. ADL isim aramada 2. yol değil. Yani "önce normal aranıyor sonra ADL ile aranıyor" veya "önce ADL ile aranıyor sonra normal aranıyor" değil. Aramada öncelik yok. Burada ambiguity var.
 
+**Örnek:**
+
+```CPP
+#include <vector>
+
+namespace nec {
+	class A {
+
+	};
+	void func(A);
+}
 
 
+int main()
+{
+	nec::A a;
 
+	void func(int);
+	func(10);
+	func(a);
+}
+```
+> Hatalı kod. no suitable conversion function from "nec::A" to "int".  Burada name hiding söz konusu.
 
+- Biraz daha ADL'den bahsedelim. Operator overloading mekanizması için kaçınılmaz gerekli.
 
+**Örnek:**
 
+```CPP
+int main()
+{
+	std::cout << "hello world";
+}
+```
+> Burada ADL var. Peki nasıl?
 
+> Burada çağırılan bir fonksiyon var. Operator fonksiyonu. Bu operator fonksiyonu cout değişkeninin ait olduğu sınıfın bir global operator fonksiyonu. Global olduğuna göre aslında şöyle çağırılıyor:
 
+```CPP
+// std::cout << "hello world";
+operator<<(std::cout, "hello world");
+```
+> Yukarıdakininin aşağıdakinden bir farkı yok. Operator <<, std namespace içinde yer alan bir fonksiyon. std namespace içinde yer alan bir fonksiyonu std::operator... şeklinde nitelenmesi gerekyior ama nitelemedim. Çünkü operator fonksiyonuna gönderdiğim cout, std namespace içinde olduğundan, operator<< ismi std namepace içinde de arandı. Yani burada ADL var.
 
+**Başka bir örnek:**
 
+```CPP
+int main()
+{
+	std::cout << endl;
+}
+```
+> Burada hata var. Burada çağırılan fonksiyon global bir fonksiyon değil. Aslında çağırılan fonksiyon şu:
+
+```CPP
+std::cout.operator<<(endl);
+```
+> Bunu ADL ile bir alakası yok. Yani endl isminin aranması ile ADL nin bir alakası yok. endl nin kendisi argüman. Ama şöyle deseydik hata olmayacaktı.
+
+```CPP
+std::cout.operator<<(std::endl);
+```
+
+**Başka Bir Soru:**
+```CPP
+int main()
+{
+	endl(std::cout);
+}
+```
+> Hata yok. Buradaki endl global bir fonksiyon. Global fonksiyona cout nesnesi ile çağrı yaptım. endl fonksiyonu std namespace içinde olduğundan, endl ismi std namespace içinde arandı.
 
 
 
