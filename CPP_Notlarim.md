@@ -4635,15 +4635,182 @@ int main()
 	::x=45;
 }
 ```
-> İki türlü de yazılabilir.
+> İki türlü de yazılabilir. Kümülatif olma özelliği isimsiz isim alanları için de geçerlidir.
 
+**Not:** ADL modern C++ tan önce de vardı ve yoğun olarak kullanılıyordu. ADL modern C++ ta gelmedi fakat  ADL ilişkin bazı özellikler geldi. 
 
+**Bir Soru:** Bir class ı kaynak dosyada iç bağlantı yapmanın tek yolu bu mudur?
+**Cevap:** Bir sınıf iç bağlantıda olmaz. Bir isim iç bağlantıda olabilir. Ama bir sınıf bir unnamed namespace içinde olmadığı zaman bu projeyi oluşturan başka bir kaynak dosyada yine aynı isimli class sınıfı global düzeyd oluşturulmuş olsaydı ve bunlar token by token aynı olmasaydı **One definition Rule** ihlal edilecekti. Ama unnamed namespace ile ihlal etmeyecek.
 
+**ADL hakkında bir bilgi:**
+- Eskiden ADL e koenig Lookup deniliyordu. Andrew Koenig'in bunu standartlara dahil ettiği konusunda bir algı vardı. Ama kendisi bulmamıştır(Kendi beyanına göre).
 
+```CPP
+using std::cout, std::endl;
+```
+> C++17 ile bu özellik eklendi. Öncesinde aradaki virgül kabul edilmiyor.
 
+### Nested namespaceler için eklenen kurallar:
 
+- Bir nested namespace oluşturabilmek için onu kapsayan namespace içine yazmak zorundaydık. Örnek:
 
+```CPP
+namespace ali::veli::can {
+	int c = 10;
+}
 
+namespace ali {
+	int a;
+}
+
+namespace ali::veli {
+	int v;
+}
+
+int main()
+{
+	ali::a = 1;
+	ali::veli::v = 2;
+	ali::veli::can::c = 3;
+}
+```
+> Bu şekilde nested namespace bildirmek C++17 ile dile eklenen bir araç.
+
+### inline namespace için eklenen özellikler:
+
+- Inline nerelerde kullanılıyordu?
+> Inline fonksiyonlarda, inline variable ve inline namespace çıktı son olarak.
+
+**Kural:**
+
+```CPP
+namespace ali {
+	namespace veli {
+		int x;
+	}
+}
+
+int main()
+{
+	ali::veli::x;
+}
+```
+> Burada x'e erişmek için böyle bir kod gerekiyor. Bu kodu using namespace kullanarak değiştirelim:
+
+```CPP
+namespace ali {
+	namespace veli {
+		int x;
+	}
+	using namespace veli;
+}
+
+int main()
+{
+	ali::x;
+}
+```
+> using kullanarak x'e bu şekilde de erişebiliriz. Fakat şimdi inline kullanarak x'e farklı bir yoldan erişeceğiz.
+
+```CPP
+namespace ali {
+	inline namespace veli {
+		int x;
+	}
+}
+
+int main()
+{
+	ali::x;
+}
+```
+> Burada inline bildirdiğimiz namespace içindeki isimler az önceki örnektye olduğu gibi using namespace bildirimi varmış gibi onu içine alan namespace içinde visible hale geliyor. Standart kütüphanede bazı nested nanemspaceler de böyle inline namespaceler. Peki neden böyle bir şey yapayım? 
+
+> x ismi hala veli namespace içinde ama aynı zamanda ali namespace içinde de visible durumda.
+
+- Inline namespace in dile eklenmesinin nedenlarınden biri ADL'nin daha önce bazı senaryolarda inline namespaceler için devreye girmemesi.
+- Bir diğer nedenleden birisi de versiyon kontrolü. 
+
+```CPP
+namespace nec {
+
+#ifdef ver1
+inline
+#endif
+	namespace version_1 {
+		class Myclass {
+			///
+		};
+	}
+#ifdef ver2
+inline
+#endif
+	namespace version_2 {
+		class Myclass {
+
+		};
+	}
+}
+
+int main()
+{
+	nec::Myclass m;
+}
+```
+> Burada kodda artık sadece hangi makroyu define edileceğine bağlı olarak müşteri kodların hangi versiyonu kullanacağını ayarlayabiliriz. 
+
+- C++ 20 standartları ile eklenen:
+
+```CPP
+namespace A::B:: inline C{
+	int x;
+}
+
+int main()
+{
+	A::B::x = 5;
+}
+```
+> Bu şekilde nested namespace i bir kerede bildirip onu inline olarak bildirmemiz de mümkün.
+
+### namespace alias (İsim alanı eş ismi)
+- C++ ilk çıktığından beri var.
+
+- Bir namespace e verilenm eş isim. Adeta typedef bildirimi gibi ama türe değil bir isim aalanına eş isim veriyoruz.
+
+- İsim alanı isim çakışmasına karşı bir önlem. Fakat namespace in kendi ismi de global isim alanında. Yani biz namespace ile başka modüller, başka kodlardan gelen isimler ile çakışmasını engelliyoruz ama namespace isminin çakışmasını engellemiyoruz. Bunun da çakışmaması gerekiyor.
+
+**Örnek:**
+
+```CPP
+namespace siemens_pro_xyz_lib {
+	int a;
+}
+
+namespace sms = siemens_pro_xyz_lib;
+
+int main()
+{
+	siemens_pro_xyz_lib::a = 5;
+	sms::a;
+}
+```
+
+```CPP
+namespace ali {
+	namespace veli {
+		namespace proj {
+			class Myclass{};
+		}
+	}
+}
+
+int main()
+{
+	namespace pro = ali::veli::proj;
+	pro::Myclass;
+}
+```
 
 
 
