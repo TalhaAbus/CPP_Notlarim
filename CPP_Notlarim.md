@@ -4034,31 +4034,436 @@ int main()
 2. Using nameapce (directive) decleration
 3. ADL (arguıment dependant lookup)
 
+# Ders 17
 
+**Örnek:**
 
+```CPP
+void func();
 
+namespace nec {
+	void foo()
+	{
+		func();
+	}
+}
+```
+> Hatasız kod. İsim globalde bulunacak. Biraz daha zorlaştıralım.
 
+```CPP
+void func();
 
+namespace nec {
+	void bar();
 
+	void foo()
+	{
+		bar();
+		baz();
+		nec::baz();
+	}
+	void baz();
+}
+```
+> 'baz': identifier not found, daha aşağıya bakmıyor.
 
+> nec::baz(); diye belirtsek bile isim aramayı kendi yukarısında yapıyor. Yine sentaks hatası.
 
+1. using decleration
+2. Using nameapce (directive) decleration
+3. ADL (argument dependant lookup)
 
+- Bunların üçü de ayrı araçlardır. 
 
+### 1. using Bildirimi
 
+- C++ dilinin en fazla overload edilen anahtar sözcüklerinden biri using. Sınıf içinde, tür eş ismi bildiriminde, enum bildirimlerinde ... kullanılıyor.
 
+```CPP
+using std::cout;
+```
+> cout std namespace indeki bir isim olduğnuu derleyiciye söylüyoruz. 
 
+> Bu bir bildirimdir ve her bildirimdeki gibi bunun da bir kapsamı vardır. Global isim alanı. Globalde bu isim visible. Bu ne demek?
 
+```CPP
+using std::cout;
 
+void func()
+{
+	cout << 1;
+}
+void foo()
+{
+	cout << 1;
+}
+```
+> Burada cout ismi nitelenmeden kullanıldı fakat sentaks hatası değil çünkü üstteki bildirimin kapsamı içinde kullanıldı. Bildirimi func fonksiyonunun içine alsam:
 
+```CPP
+void func()
+{
+	using std::cout;
+	cout << 1;
+}
+void foo()
+{
+	cout << 1;
+}
+```
+> Sentaks hatasıdır. Derleyici bu noktada using bildirimini görmüyor. Using bildiriminin kapsamını dar tutmak daha iyidir.
 
+**Not:** 
+- using bildirimi ile sunulan isim bildirimin yapıldığı isim alanına enjekte edilir. Bu ne demek?
 
+```CPP
+int x = 10;
 
+int main()
+{
+	int x = 20;
+}
+```
+> Burada sentaks hatası yok. Ayrı scopetaki isimler. Şimdi biraz değiştirelim.
 
+```CPP
+namespace nec {
+	int x = 10;
+}
 
+int main()
+{
+	using nec::x;
+	int x = 20;
+}
+```
+> Kod hatalı. using bildirimi ile ben o ismi main içine enjekte ettim. Yani ismin bu scope ta adeta bildirilmiş etkisi oluyor. Burada isim aynı scope ta ikinci kez bildirilmiş oldu.
 
+> using bildirimi ile tanıtılan isim o kapsama enjekte edilir. (O kapsamda bildirilmiş etkisi yapar)
 
+**Örnek:**
+```CPP
+int x = 10;
 
+namespace ali {
+	using ::x;
+}
 
+int main()
+{
+	ali::x = 10;
+}
+```
+> Geçerli.
+
+```CPP
+namespace ali {
+	int x = 4;
+}
+namespace can {
+	int x = 4;
+}
+namespace eda {
+	int x = 4;
+}
+
+int main()
+{
+	eda::x = 5;
+}
+```
+> Geçerli
+
+```CPP
+namespace ali {
+	void func(int)
+	{
+		std::cout << "ali::func\n";
+	}
+}
+
+namespace can {
+	void func(int, int)
+	{
+		std::cout << "can::func\n";
+	}
+}
+void func()
+{
+	std::cout << "::func()\n";
+}
+
+int main()
+{
+	using ali::func;	//geçerli
+	using can::func;	//geçerli
+	func(12);		//geçerli
+	func(1, 2); 	//geçerli
+	func();		//geçersiz
+}
+```
+> global func ismi gizlenmiş durumda. ::func(); olarak çağırsaydım hata olmazdı.
+
+Not: C++ 17 ile using bildirimi için homo seperated list kullanılamıyordu. Yani:
+
+```CPP
+using std::cout, std::endl;
+```
+> C++17 ile bu mümkün hale geldi.
+
+**Başka bir örnek:**
+```CPP
+namespace nec {
+	int a, b, c;
+
+	namespace erg {
+		double x, y;
+	}
+}
+
+int main()
+{
+	using nec::erg::x;
+}
+```
+
+## 2. using namespace bildirimi 
+
+- using namespace std
+- using namespacew boost
+
+> Bu dildirimin de bir kapsamı vardır.
+
+```CPP
+// namespace nec {
+	int a, b, c;
+// }
+```
+> Öyle bir araç olsun ki sanki bu isimler bu isim alanı içinde değil de, bu isim alanının bildirildiği isim alanı içinde bildirilmiş gibi görülür olsun.
+
+> Diğer bir deyişle bu namaspace içindeki isimler sank bu namespace iöinde değil de onu kapsayan namespace içinde tanımlanmış gibi visible duruma gelecek. İşte bu araç using namespace bildirimi.
+
+**Örnek:**
+
+```CPP
+namespace nec {
+	int x, y;
+	void foo();
+}
+
+int main()
+{
+	nec::x = 1;
+	nec::y = 2;
+	nec::foo();
+}
+```
+> Bu koda bir ekleme yapacağım ve bakalım neler değişecek:
+
+```CPP
+// namespace nec {
+	int x, y;
+	void foo();
+// }
+
+int main()
+{
+	using namespace nec;
+	nec::x = 1;
+	nec::y = 2;
+	nec::foo();
+}
+```
+> using namespace nec eklediğim zaman nec namespace içindeki isimler sanki nec içinde değil de onu kapsayan namespace içnde bildirilmiş gibi görünür olsunlar.
+
+**Not:** Using namespace bildirimi using bildiriminden farklı olarak isimleri bildirimin yapılkdığı alana enjekte etmiyor. 
+
+```CPP
+namespace nec {
+	int x, y;
+	int foo();
+}
+
+using namespace nec;
+
+void func()
+{
+	x = 5;
+}
+void foo()
+{
+	y = 10;
+}
+```
+> Hatasız kod.
+
+```CPP
+namespace nec {
+	int x, y;
+	int foo();
+}
+void func()
+{
+	y = 45;
+	using namespace nec;
+	x = 5;
+}
+```
+> Sentaks hatası
+
+**Örnek:**
+
+```CPP
+namespace ali {
+	int x = 456;
+}
+namespace eda {
+	double x = 4.9;
+}
+using namespace ali;
+using namespace eda;
+```
+
+> Burada herhangi bir hata yok. Çünkü isimleri enjekte etmiyor. Ama soru şöyle sorulsaydı:
+
+```CPP
+namespace ali {
+	int x = 456;
+}
+namespace eda {
+	double x = 4.9;
+}
+using namespace ali;
+using namespace eda;
+
+int main()
+{
+	x = 45;
+}
+```
+> Sentaks hatası. Çünkü her ikisi de görülür durumda olduğu için ambiguity var.
+
+> Bu kod anlamsız çünkü globalde bu şekilde yapılan using namespace bildirimleri isim alanının varlık nedeni ortadan kalmış oluyor. İsimler yine çakışıyor.
+
+**using namespace özeti:**
+```CPP
+using namespace ali;
+```
+> Ali namespace içindeki isimler aranırsa bu isimleri sanki onun içinde değil de onu kapsayan isim alanı içindeymiş gibi düşüneceksin, diyor derleyiciye.
+
+**Başka bir örnek:**
+```CPP
+namespace ali {
+	void func(int)
+	{
+		std::cout << "ali::func\n";
+	}
+}
+
+using namespace ali;
+
+void func(double)
+{
+	std::cout << "::func\n";
+}
+
+int main()
+{
+	func(12);
+	func(1.2);
+}
+```
+> using namespace ile function overloading. 
+
+### 3. ADL (Argument Dependant Lookup)
+
+- C++ dilinin en sık kullanılan akronimlerinden birisi. Argümana bağlı isim arama.
+
+**Örnek üzerinden gidelim:**
+
+```CPP
+namespace nec {
+	void func();
+}
+
+int main()
+{
+	func();
+}
+```
+> Burada basitçe görüldüğü gibi sentaks hatası var. Kodu biraz değiştirelim:
+
+```CPP
+namespace nec {
+	class Neco {
+		//..
+	};
+	void func(Neco);
+}
+
+int main()
+{
+	nec::Neco x;
+	func(x);
+}
+```
+> Hiçbir sentaks hatası yok. 
+
+> **Eğer bir fonksiyon çağrısında argüman olan bir ifadede yer alan bir isim bir isim alanı içinde bildirilen bir türe ilişkin ise fonksiyon ismi o isim alanında da aranır.**
+
+> Yani burada x isminin türü nec isim alanında tanımlanan Neco sınıfı türünden olduğu için derleyici bu ismi normalde aradığı yerlerin dışında bu namespace içinde de arayacak.
+
+**Başka bir örnek:**
+
+```CPP
+namespace nec {
+	enum Color {blue, black};
+	void func(Color);
+}
+
+int main()
+{
+	func(nec::black);
+}
+```
+> Sentaks hatası yok. func içindeki ifade nec namespace içindeki bir türe ilişkin.
+
+**Başka bir örnek:**
+
+```CPP
+namespace nec {
+	class Neco {
+		//...
+	};
+	void func(std::vector<Neco>);
+}
+
+int main()
+{
+	std::vector<nec::Neco> x;
+	func(x);
+}
+```
+> Hatasız kod. Burada func fonksiyonuna gönderdiğim argüman nec namespace'i içinde değil. std namespace i içinde. 
+
+**Örnek:**
+```CPP
+namespace nec {
+	class A {
+
+	};
+	void func(A);
+}
+void func(nec::A);
+
+int main()
+{
+	nec::A a;
+
+	func(a);
+}
+```
+> Hangi func çağırılır? Ambiguity var. ADL isim aramada 2. yol değil. Yani "önce normal aranıyor sonra ADL ile aranıyor" veya "önce ADL ile aranıyor sonra normal aranıyor" değil. Aramada öncelik yok. Burada ambiguity var.
 
 
 
