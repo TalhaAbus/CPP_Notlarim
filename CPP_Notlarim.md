@@ -4878,6 +4878,191 @@ int main()
 ```
 > Sentaks hatası değil. Erişim kontrolüne takılmıyor. Çünkü erişim kontrolü identifier kullnaımına ilişkin. Ortada doğrudan kullanılan bir identifier yoksa erişim kontrolünden bahsetmek mümkün değil. Yani isim yoksa erişim kontrolü de yok.
 
+# Ders 18
+
+## Nested Type
+
+- Bildirimi sını tanımı içinde yapılıyor. Bir enum türü, tür eş ismi, sınıf olabilir.
+- Neden bir türü doğrudan namespace içinde değil de bir sınıfın içinde bildiriyoruz?
+
+1. O türün içine alan sınıfla mantıksal ilişkisi vurgulanıyor. Türü içeren sınıf o türü işlemlerinde kullanacak.
+2. Class scope a giriyor ve isim arama kuralları değişiyor.
+3. Erişim kontrolü geliyor. 
+
+- Standart kütüphanenin en önemli bileşeni olan **STL** çok sayıda nested type kullanıyor. Bu nested typelar generic programlama tarafında önemli rol oynuyorlar.
+
+**Hatırlatma:**
+
+- class Nested private bir nested type olabilir. Ama sınıfın static bir fonksiyonu Nested döndürebilir. (Bildirimin daha yukarıda olması gerek)
+
+```CPP
+class Myclass {
+
+
+private:
+	class Nested {
+
+	};
+public:
+	static Nested foo();
+};
+
+int main()
+{
+	// Nested x = Myclass::foo();	// hatalı kod
+	auto x = Myclass::foo();	// Legal kod
+
+}
+```
+
+## Pimple Idiom (Pointer Implementation)
+
+- Bu teknik sınıfın private bölümünü gizlemeye yönelik. Bu ne demek?
+
+```CPP
+class Myclass {
+private:
+	// data members
+	// private functions
+};
+```
+> Sınıfın private bölümünün başlık dosyasında yer alması bazen bir takım dezavantajlar oluşturuyor.
+
+> Neden sınıfın private bölümünü neden gizliyoruz?
+
+```CPP
+// myclass.h
+
+#include <string>
+#include "date.h"
+#include "falanca.h"
+
+class Myclass {
+private:
+	std::string str;
+	Date date;
+	Falanca f;
+};
+```
+> Bizim başlık dosyamızı (myclass.h) iclude eden client kodlar, bizim dosyamızda include edilen başlık dosyalarını da include edecekler. Bunun zararlarından birisi compile time uzaması.
+
+> private bölümü gizlemenin bir faydası daha var. Başlık dosyası bir text dosyası. Bunun derlenmiş hali yok, belki bunun da görüülmesini istemiyoruz.
+
+## Containment (Composition)
+
+**Association - Aggregation - Composition**
+
+### Association
+- 2 sınıf birlikte çalışarak bir işi gerçekleştiriyorlar. Association ın bir biçimi de aggregation. Her aggrehation bir association ama her association bir aggregation değil.
+- Bir association bir aggregation ise nesnelerden biri diğerin sahibi konumunda. Bir nesne diğerini sahipleniyor ve onu kullanarak işini görüyor. 
+- Aggregation ın özel bir biçimine de composition deniliyor.
+- Composition onlduğunda bir sahiplik ilişkisi var fakat ömürsel bir birliktelik te olması gerekiyor. Yani sahip olan nesne hayta geldiğinde sahip olacağı nesne de hayata geliyor ve ömrü bititğinde de ikisi de bitiyor. 
+
+**Özet:** 
+- Composition nedir?
+
+>  Compsition bir aggregation dır.  Aggregation da bir association dur. Eğer iki nesneden biri diğerinin sahibiyse, bu nesne işlerini sahibi olduğu nesneyi kullanarak görüyorsa ve bunlar arasında ömürsel bir birliktelik varsa bunlar composition ilişksii içinde.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
