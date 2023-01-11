@@ -4996,21 +4996,105 @@ int main()
 
 > Owner ın destructor ı var. Sınıfın dest. olamma ihtimali yok. Deleted, defaulted, user declared olabilir ama not declared olamaz.
 
+# Ders 19 
+
+- String sınıfı C++ standart kütüphanesinin en sık kullanbılan ilk 2 sınıfından biri. İlk ikisi vector ve string olabilir. Bu iki sınıf aslında aynı veri yapısını implemente eden sınıflar. Her ikisi de veri yapısı olarak baktığımızda dinamik dizi sınıfı. Aradaki fark, vector genel amaçlı bir dinamik dizi sınıfı iken; string, yazı işlemleri için özelleştirilmiş, özel yazı işlemlerine yönelik arayüzü olan bir sınıf. 
+- Her ikisi de C++ dili kurallarına göre birer standart STL container ı. 
+- STL: Standart Template Library  (C++ dili stndart kütüphanesinin en önemli bileşeni)
+- STL'in amacı: Veri yapılarını ve algoritmaları generic programlama paradigmasında ifade etmek.
+
+> STL ve C++ standart kütüphanesi aslında tamamen aynı şeyler değil. STL standart kütüphanenin bir bileşeni ama çok büyük çoğunluğunu oluşturan bir bileşen olduğu için günümüzde aynı anlamda kullanılıyor.
+
+> STL generic bir kütüphane, türden bağımsız.
+
+- STL şablonlardan oluşuyor (Template). Doalyısıyla string sınıfının da sbir sınıf şablonu olduğunu belirtirsek, aslında string sınıfı da generic prohgramlama teknikleri ile implemente edilmiş bir sınıf. 
+
+**Dinamik Dizi ne demekti?**
+- Öyle bir veri yapısı ki ögeler bellekte ardışık oalrak tutuluyor ve sondan ekleme ve silme işlemlerinin karmaşıklığı O-1. Constant type.
+- String'in dinamik diziyi kullanma amacı yazının karakterlerini tutmak.
 
 
+- Aslında dinamik diziyi temsil eden sınıf nesnesi içnde 3 tane pointer tutuyor.
 
+![image](https://user-images.githubusercontent.com/75746171/211778245-91025802-72bf-47e7-8914-3d0ba4263cde.png)
 
+1. Birisi alocate edilen (edinilen) bellek bloğunun adresini
+2. Bellek bloğunun bittiği noktayı.
+3. Sondan ekleme yapılırsa eklemenin nereden devam edeceği bilgisi
 
+> 1, pointer olabilir. 2 ve 3 pointer yerine tam sayı da olabiliir. (Pointer + tam sayı yaparak adrese erişilebilir)
 
+> Size ve capacity eşit olduğunda artık alocate edilmiş bellek alanında bir nesne daha ekleyemem. Bu durumda yeni bir bellek alanının alocate edilmesi ve eski bellek alanındaki verilerin yeni bellek bloğuna kopyalanması veya taşınması gerekecek. Bu maliyetli bir işlem.
 
+- String sınıfındaki fark, tutulan ögelerin yazının karakterleri olması. Yani necati yazısı tutulacaksa aslında necati yazısının karakterlerinin kodlarının tutuyor olacağım.
 
+**Not:** Sınıfları küçük tutmak, nesneye yönelik programlamada önemli.
 
+- string sınıfı bir sınıf şablonudur. (Class Template): Generic programlama aracı, türden bağımsız. Std namespace'i içinde tanımlanmış bir sınıf şablonu.
 
+- Aslında bu sınıf şablonuun ismi **basic_string**
 
+```CPP
+std::basic_string<
+```
+> Bu sınıf şablonu; yazının karakteri olan tür, Karakter işlmelerinin nasıl yapılacağını belirleyen tür ve bellek alanlarının ne şeklide elde edileceğini belirleyen türe göre template hale getirilmiş.
 
+```CPP
+int main()
+{
+	std::basic_string<char, std::char_traits<char>, std::allocator<char>>;
+}
+```
+> Aslında string sınıfı türünden bir nesne oluşturduğumuz zaman bu yukarıdaki sınıf türüden bir nesne oluşturmuş oluyoruz. Sadece strin yazmak  yeterli.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s;
+}
+```
+> Default initialize etmiş oluyorum ve bu nesne için default constructor çağırılacak.
 
+**Char dizilerde yazı tutma olayı:**
+> C++ dilinde de bu yapılabilir ama özel oalrak yapılması gereken bir senaryo yoksa gerek yok. Zaten char dizi static. Yani dizinin karakter sınırı var.  Yazının programın çalışma zamanı içinde büyütülme ihtiyacı varsa char dizi bizim işimizi görmeyecek fakat string sınıfı dinamik olarakyazının uzunluğununu arttırılıp azaltılabileceği bir sınıf. 
+
+- Yazılar ile işlem yaparken string sınıfının üye fonksiyonlarını kullancağız (Member functions). Aynı zamanda global fonksiyonları (free functions) da kullancağız.
+
+**Bir soru: Yazının tutulması için dinamik bellek alanının (Free store'un) kullanılması maliyet açısından bir dezavantaj değil mi?**
+
+> Kesinlikle. İşlem maliyeti artıyor. Dinamik bellek alanı elde edilmesi, geri verilmesi.. bunlar maliyetli işlemler. Ama string string sınıflarının implementasyonlarında kullanılan bir teknik var: SSO (Small string optimization). Bu teknik ile küçük yazılar için dinamik bellek alanı elde etme gerekli olmayabiliyor.
+
+- Bizim derleyicimizdeki stirng ve char* sizeof değerlerine bakalım:
+
+```CPP
+int main()
+{
+	using namespace std;
+	std::cout << "sizeof(char*) = " << sizeof(char*) << "\n";
+	std::cout << "sizeof(string) = " << sizeof(string) << "\n";
+}
+```
+> Çıktı olarak 8 ve 40 aldık. Neden?
+
+> Günümüzdeki modern string implementasyonları 3 tane pointer tutmak yerine nesnenin içinde asynı zamanda bir buffer tutuyorlar. Bu yüzden Small Buffer Optimization (SBO-SSO) deniyor. Eğer string nesnesinin tutacağı yazı belirli bir uzunluktan küçükse hiçbir dinamik bellek alanı alocate etmiyor. Bunun yerine yazıyı doğrudan string sınıf nesnesinin içinde tutuyor. Bunun iin ayrılan alan yetersiz olduğu zaman (Yazıyı büyütmek istediğimiz zaman arka plandaki implementasyon kodları o zaman bir bellek alanı alocate ediyor) 
+
+![image](https://user-images.githubusercontent.com/75746171/211795038-0d778c0a-bd1e-4810-9fae-f17da7964536.png)
+
+### string denildiğinde ne kastediliyor?
+
+- Sonunda null karakter olan, bir bellek alanında tutulan bir yazı mı?
+
+> aliemrekoc\0
+
+- string sınıfı türüden bir nesne mi?
+
+> and object of std::string
+
+- KAynak kodda derleyicinin gördüğü, derleme zamanında ne olduğu belli olan bir yazı mı?
+
+> "Muratcan"
 
 
 
