@@ -5114,7 +5114,20 @@ String sınıfı nasıl bir sınıf?
 
 - Bazı sınıflar da string sınıfı ile doğrudan ilişkili ama bunlar standart kütüphanenin ayrı sınıfları. 
 
-> string_wiev
+> string_wiev, regex
+
+- Bazi parametrik yapilari iyi anlamamiz gerekiyor:
+
+- Bazi fonksiyonlarin parametrik yapisi const char* . Bu ne demek?
+
+> Bizden bir adres istiyor ama istedigi adresteki yazinin sonunda null karakter istiyor. (Null terminated byte stream). Boyle bir fonksiyona bir adres gecersek ve gectigimiz adres:
+
+1. Null pointer olursa
+2. Sonunda null karakter olmazsa
+
+> tanimsiz davranis olur.
+
+### Tipik parametrik yapilar
 
 
 
