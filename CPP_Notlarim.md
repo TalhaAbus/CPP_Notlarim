@@ -5104,11 +5104,17 @@ and object of std::string
 
 String sınıfı nasıl bir sınıf?
 
+> Bir template'in açılımı, Bir tür eş ismi...
 
+- Çok sayıda üye fonksiyonu var ve bunlar çoğunlukla overload edilmiş. Operator overloading mekanizmasından faydalanan bir sınıf. 
 
+- **Container hatırlatma:** Aynı türden ögeleri bir bellekte oluşturulmuş düzenekte bir arada tutan sınıflara container sınıflar deniyor. String aynı zamanda bir container sınıf.
 
+- String sınıfı modern C++ ile ciddi değişime uğrayan sınıflardan. Taşıma semantiği yoktu. 
 
+- Bazı sınıflar da string sınıfı ile doğrudan ilişkili ama bunlar standart kütüphanenin ayrı sınıfları. 
 
+> string_wiev
 
 
 
