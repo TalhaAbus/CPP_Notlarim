@@ -4963,8 +4963,38 @@ private:
 
 >  Compsition bir aggregation dır.  Aggregation da bir association dur. Eğer iki nesneden biri diğerinin sahibiyse, bu nesne işlerini sahibi olduğu nesneyi kullanarak görüyorsa ve bunlar arasında ömürsel bir birliktelik varsa bunlar composition ilişksii içinde.
 
+## Initilizaton
 
+- bir sınıf nesnesi hayata geldiğinde o sınıf nesnesinin elemanı olan sınıf nesne ya da nesneleri de bildirimdeki sırayla hayata gelir. Onları hayata getiren, constructorlara yapılan çağrı.
+- Eğer sınıfın default ctor'ı derleyici taafından yazılırsa veri elemanlarını da default initilize ediyordu. Bu ne demek:
+- Veri elemanlarının default initialzie edilmesi, veri elemanalrının sınıf türünden olması durumunda sınıfın default constructor ı çağırılıyor demek. 
 
+```CPP
+class Member {
+public:
+	Member()
+	{
+		std::cout << "member default ctor\n";
+	}
+	~Member()
+	{
+		std::cout << "member destructor\n";
+	}
+};
+
+class Owner {
+private:
+	Member m;
+};
+
+int main()
+{
+	Owner x;
+}
+```
+> Owner sınıfının  default constructor ı var. Implicityly declared. Yani derleyicinin yazdığı default constructor, elemanın default constructor ıyla elemanı hayata getiriyor.
+
+> Owner ın destructor ı var. Sınıfın dest. olamma ihtimali yok. Deleted, defaulted, user declared olabilir ama not declared olamaz.
 
 
 
