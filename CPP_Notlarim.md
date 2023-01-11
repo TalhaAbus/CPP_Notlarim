@@ -5129,7 +5129,7 @@ String sınıfı nasıl bir sınıf?
 
 ### Tipik parametrik yapilar
 
-
+ 45
 
 
 
