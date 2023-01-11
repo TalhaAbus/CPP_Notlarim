@@ -5088,15 +5088,21 @@ int main()
 ```CPP
 aliemrekoc\0
 ```
-- string sınıfı türüden bir nesne mi?
+> c string ya da NTBS (Null terminated byte stream)
 
-> and object of std::string
+- string sınıfı türüden bir nesne mi?
+```CPP
+and object of std::string
+```
+> std::string
 
 - KAynak kodda derleyicinin gördüğü, derleme zamanında ne olduğu belli olan bir yazı mı?
+```CPP
+"Muratcan"
+```
+> string Literal (Bunun sonunda da null karakter var ama bu compile time da derleyicinin gördüğü bir yazı, static ömürlü ve const anahtar sözcüğü klkullnaılmasa da const olduğunu biliyoruz)
 
-> "Muratcan"
-
-
+String sınıfı nasıl bir sınıf?
 
 
 
