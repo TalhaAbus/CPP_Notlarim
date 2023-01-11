@@ -5085,9 +5085,9 @@ int main()
 ### string denildiğinde ne kastediliyor?
 
 - Sonunda null karakter olan, bir bellek alanında tutulan bir yazı mı?
-
-> aliemrekoc\0
-
+```CPP
+aliemrekoc\0
+```
 - string sınıfı türüden bir nesne mi?
 
 > and object of std::string
