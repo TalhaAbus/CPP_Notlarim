@@ -5441,16 +5441,122 @@ int main()
 ```
 > Her satıra bir fazla yıldız basmış olduk.
 
+**Bir sınav sorusu:**
 
+```CPP
+int main()
+{
+	using namespace std;
+	
+	string s1(49, 'A');
+	cout << s1 << '\n';
+	string s2(49, 'A');
+	cout << s2 << '\n';
+}
+```
+> Birinde küme parantezi diğerinde normal. Küme parantezi söz konusu olduğunda initializer_list parametreli constructor öncelkik kazanıyor (Overload resolution). Yani burada küme parantezi olduğu için few constructor değil initializer_list constructor devreye giriyor.
 
+> Burada
 
+**Bunun başka bir örneği**
 
+```CPP
+#include <string>
+#include <iostream>
 
+using namespace std;
 
+class Nec {
+public:
+	Nec(int)
+	{
+		std::cout << "int\n";
+	}
+	Nec(initializer_list<int>)
+	{
+		std::cout << "initializer list\n";
 
+	}
+};
 
+int main()
+{
+	Nec x(12);
+	Nec{ 12 };
+}
+```
+> Parantez kullanıldığında int parametreli constructor çağırıldı ama küme parantezi kullanılınca initializer_list parametreli constructor çağırıldı.
 
+**Dikkat:** String sınıfının char parametreli bir constructor'ı yok. Bir char ile string'i başlatamazsın. Peki bunu nasıl yapabilirim?
 
+```CPP
+string s1("a");		// csting constructor
+string s2(1, 'b');	//few constructor
+string s3('c');		// initializer_list constructor
+```
+
+### substring constructor
+
+```CPP
+int main()
+{
+	string name{ "necatiergin" };
+	string str(name, 6);
+	cout << "[" << str << "]\n";
+}
+```
+> 6 indexinden başlayarak geriye kalan karakterlerin hepsi, anlamına geliyor.
+
+**Aynı örnek üzerinde değişiklik yapalım:**
+```CPP
+int main()
+{
+	string name{ "necatiergin" };
+	string str(name, 6, 40);
+	cout << "[" << str << "]\n";
+}
+```
+> Normalde hata olması beklenir ama well defined. Tanımsız davranış değil. 
+
+### Bir yazının karakterlerine nasıl erişebiliriz?
+
+- [] operator fonksiyonu ile yazının karakterlerine erişilebilir. Bu operatore fonksiyonu const overload edilmiş. 
+
+```CPP
+int main()
+{
+	string str{ "mert" };
+	str[0] = 's';
+}
+```
+> Yazı değişti.
+
+**Örnek:**
+```CPP
+int main()
+{
+	const string str{ "mert" };
+	cout << str[20] << '\n';
+}
+```
+> Tanımsız davranış. [] operatörü indeksi geçerliliğini sınamıyor.
+
+> string sıbıfında bir de at fonksiyonu var. Bu da [] operatorü ile aynı görevi görüyor ama indeksin geçersiz olduğu durumda exception throw ediyor. 
+
+```CPP
+int main()
+{
+	string str{ "mert" };
+
+	try {
+		auto c = str.at(20);
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+	}
+}
+```
+> Çıktı: exception caught:invalid string position
 
 
 
