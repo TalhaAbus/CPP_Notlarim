@@ -5128,8 +5128,46 @@ String sınıfı nasıl bir sınıf?
 > tanimsiz davranis olur.
 
 ### Tipik parametrik yapilar
+```CPP
+cstring parametre	const char*
+```
+> Sonunda null karakter bekliyor, eğer yoksa tanımsız davranış.
+```CPP
+data			const chat*	size_t n  (null karakterin bir önmemi yok)
+```
+> Bu adresten başlayarak bu kadar tane karakter. Taşma tanımsız davranış. Bull pointer tanımsız davranış
+```CPP
+fill			size_t char
+```
+> Bu kaadar tane bu karakterden
+```CPP
+char			char
+```
+> Doğrudan char
+```CPP
+std::initializer_list	{'a', ','}
+```
+>  initializer_list sınıfı türünden bir nesne istiyor.
+```CPP
+range	parameter	str	str + 5
+```
+> 2 tane adres istiyor.
+```CPP
+std::string parameter		std::string 
+```
+> Doğrudan başka bir string parametre istiyor.
+```CPP
+sub-string parameter		std::string, size_t idx
+```
+> Bu string'in bu indexinden başlayarak geriye kalan tüm karakterler. 
 
- 45
+>string s{"akif gulsoy"}(s,1) : k'dan başlayarak sonuna kadar tüm karakterlerin oluşturduğu yazıyı argüman aolarak gönderecek.
+```CPP
+substring parameter		std::string, size_t idx, size_t n
+```
+> Bu stringin bu indexinden başlayarak bu kadar tane karakter
+
+
 
 
 
