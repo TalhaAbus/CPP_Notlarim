@@ -5558,19 +5558,147 @@ int main()
 ```
 > Çıktı: exception caught:invalid string position
 
+- String türünden char* ya da const char* türüne örtülü dönüşüm yok. Şu kod her zaman sentaks hatası:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "mustafa" };
 
+	const char* p = str;
+}
+```
+> Fakat bunu legal hale getirebiliriz. c_str fonsksiyonu yazının adresinin cstring olarak veriyor:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "mustafa" };
 
+	const char* p = str.c_str();
+}
+```
+> Ama c_str char* değil const char* döndürüyor. Bu kod legal.
 
+### Atama Operator Fonksiyonları
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "murathan" };
+	string s;
 
+	s = str;		// copy assignment
+	s = move(str);	// move assignment
+	s = '+';		// char parametreli assignment
+	s = { 'a', 'k' };	//initializer_list parametreli assignment
+}
+```
 
+### String nesnesini değiştirecek diğer operasyonlar:
 
+- Sondan ekleme fonksiyonu pushback:
 
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "ali" };
+
+	cout << s << "\n";
+	s.push_back('m');
+	cout << s << "\n";
+}
+```
+
+- Sondan ekleme işlemi için += operator fonksiyonu da var.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "ali" };
+
+	cout << s << "\n";
+	s += 'm';
+	cout << s << "\n";
+	s += "can";
+	cout << s << "\n";
+
+	s += {'o', 'g', 'l', 'u'};
+	cout << s << "\n";
+}
+```
+- Diğer bir ekleme yapma yolu da **append** fonksiyonunu çağırmak:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "ali" };
+
+	s.append(10, 'x');
+}
+```
+
+**String sınıfının constexpr static bir veri elemanı var:** Bu veri elemanı size_type'ın en büyük değerini alıyor.
+
+```CPP
+int main()
+{
+	cout << "string::npos =" << string::npos << "\n";
+}
+```
+- Bu ne işe yarıyor? Neden string npos u kullanıyoruz?
+
+> 2 yerde kullnaılıyor:
+
+1. Arama fonksiyonları
+- C'nin arama  fonksiyonları adres döndürüyor. Aranan bulunursa adresinin bulunmazsa null pointer döndürüyorlar. Fakat string sınıfının arama fonksiyoınları adres değil indeks döndürüyor.
+
+```CPP
+string::size_type find(char)const;
+```
+> Aranan varlığı bulursa bulduğu yerin indeksini döndürüyor bulamazsa npos değerini döndürüyor. En büyük değer uızunluk değeri olabilir ama geçerli bir indeks olamaz. Dolayısıyla arama fopnksiyonlar npos döndürdüğünde o değer zaten geçerli olmayan bir indeks. Bu bir özel değer olarak kullanılıyor.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "nihatuygar" };
+
+	auto idx = str.find('k');
+
+	cout << "idx =" << idx << "\n";
+}
+```
+> npos değerini döndürecek. Yani buradan if kullanarak kodu düzenleyelim:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "nihatuygar" };
+
+	auto idx = str.find('k');
+
+	if (idx != string::npos) {
+
+	}
+}
+```
+> Bulunduysa veya bulunamadıysa if içine giriyoruz.
 
 
 
