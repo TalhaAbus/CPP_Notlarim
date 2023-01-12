@@ -5700,6 +5700,206 @@ int main()
 ```
 > Bulunduysa veya bulunamadıysa if içine giriyoruz.
 
+# Ders 20 
+
+### if with initializer
+
+- C++ 17 ile dile eklenen yeni if deyimi.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str;
+	cout << "bir yazı girin";
+	getline(cin, str);	// Yazının içindeki boşluk karakterleri ile birlikte standart inputtan gelen karakterlerden oluşan bir string haline getirecek bizim nesnemizi
+	cout << "[" << str << "]\n";
+	
+	if (auto idx = str.find('k'); idx != string::npos) {
+		cout << "bulundu idx =" << idx << '\n';
+	}
+	else {
+		cout << "bulunamadi\n";
+	}
+
+}
+```
+> if with initializer: noktalı virgülden önceki statementta bir değişken tanımlanabiliyor. Conditional expression, noktalı virgülden sonraki ifade. 
+
+> Scope leakage engelliyor.
+
+- Modern C++ ta if with initializer en sık kullanılan  kontrol deyimlerinden biri haline geldi. Scope daraltmak istediğimiz noktalawrda kullanabiliriz.
+
+### Reserve Fonksiyonu
+
+- Sınıfın reserve fonksiyonu kapasiteyi reserve eder. Reallocation minimize etmek veya bu ihtiyacı ortadan kaldırmak için kullanılabilecek bir fonksiyon. 
+
+- Bir yazının runtime'da büyüyeceğini düşünelim:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s;
+
+	for (int i = 0; i < 10000; ++i)
+	{
+		s += 'a';
+	}
+}
+```
+> Böyle yazarsak döngü bitene kadar defalarca reallocation olacak. Ben yazının büyüyeceğini zaten biliyorsam kodu değiştiriyorum:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s;
+
+	s.reserve(10000);
+	for (int i = 0; i < 10000; ++i)
+	{
+		s += 'a';
+	}
+}
+```
+> Kapasiteyi rezerve ettim. Size büyümeyecek. Yani bu kapasite yettiği sürece bir realocation yapılmayacak. 
+
+- Diyelim ki yazımız çok büyüdü 50000 karakter oldu. Daha sonra sildik ve 10 karakter oldu. Yazının uzunluğu düşünce kapasite otomatik düşmeyecek. Eğer yine de kapasitenin küçülmesini istiyorsak bile o kapasite bloke edilmiş durumda.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s(300'000u, 'a');
+
+	cout << "lenght =" << s.length() << '\n';
+	cout << "capacity =" << s.capacity() << '\n';
+
+	s.erase(1);
+	
+	cout << "lenght =" << s.length() << '\n';
+	cout << "capacity =" << s.capacity() << '\n';
+}
+```
+- **Çıktı:**
+
+```CPP
+lenght =300000
+capacity =300015
+lenght =1
+capacity =300015
+
+```
+
+- Fazla kapasiteyi geri vermek istersek:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s(300'000u, 'a');
+
+	cout << "lenght =" << s.length() << '\n';
+	cout << "capacity =" << s.capacity() << '\n';
+
+	s.erase(1);
+	
+	cout << "lenght =" << s.length() << '\n';
+	cout << "capacity =" << s.capacity() << '\n';
+
+	s.shrink_to_fit();
+}
+```
+
+> Kapasiteyi uygun bir değere büzüyor. (Kendi stratejisine göre)
+
+- STL containerlarında bir iterator interface var. Bu konum tutaun bir nesne. Pointerın üstünde daha yüksek seviyede bir soyutlama. Pointer adres tutan bir değişken ama bir iterator adres tutmak zorunda değil. iterator bir veri yapısından tutulan ögelerden birinin konumunu tutna bir varlık.
+
+- Containerların iterator sınıfları tipik olarak nested type. Örneğin vector bir container. Ama vectordeki ögelerin konumunu tutan bir değişkene ihtiyacım olduğunda vector'un int açılımının iteratorü türünü kullanıyorum. 
+
+```CPP
+vector<int>::iterator
+```
+
+- String sınıfı da bir container olduğundan strinhg sınıfı türünden bir nesnenin yine bize iterator veren fonksiyonları var.
+
+```CPP
+string s{"hakan ozer"};
+//string::iterator iter = s.begin();
+auto iter = s.begin();
+```
+
+> Container begin fonksiyonu çağırıldığında bu fonksiyon container boş değilse container'daki ilk ögenin konumunu veriyor. Yukarıda begin fonksiyonu string'deki ilk ögenin konumunu döndürdü.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "hakan ozer" };
+	auto iter = s.begin();
+	cout << *iter << '\n';
+}
+```
+> İlk karakter olan h çıktı. ++iter yapıtığımda tıpkı pointerlarda olduğu gibi iterator containerdaki kendisinden sonra gelen ögenin konumunu tutma durumuna geçiyor.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "hakan ozer" };
+	auto iter = s.begin();
+	cout << *iter << '\n';
+	++iter;
+	cout << *iter << '\n';
+}
+```
+> h ve a yazdı.
+
+- Bir başka sınıfın iterator veren fonksiyonunun ismi **end**. Son ögenin konumunu döndürmüyor. Sonuncudan sonraki olmayan ögenin konumunu döndürüyor. Böyle değerlere sentinal deniyor.
+- Yani begin fonksiyonunun döndürdüğü iteratorü döngüsel yapıda sürekli arttırırsak end fonksiyonunun döndürdüğü konuma eşit olacak.
+
+- Yani şöyle yazarsam yazının karakterlerini tek tek kullanmış olcağım:
+
+```CPP
+int main()
+{
+	string s{ "hakan ozer" };
+
+	for (auto iter = s.begin(); iter != s.end(); ++iter) {
+		cout << *iter << " ";
+	}
+}
+```
+> Aslında burada böyle bir döngü deyimi yazmak yerine derleyicinin bu döngü deyimini yazmasını sağlayacak bir döngü deyimi yazıyoruz. Bu da range based for loop. (İterator döngüsü)
+
+- Ve bunun gibi uzun yazmak yerine Kısaca şöyle yazıtyoruz.
+```CPP
+using namespace std;
+
+int main()
+{
+	string s{ "hakan ozer" };
+
+	for (auto c : s) {
+
+	}
+}
+```
+
+- <algorithm> başlık dosyasında ismine algoritma denilen global fonksiyon şablonları programlamada en sık ihtyaç duyulan algoritmaları implemente ediyorlar. (Algoritma C++ dilinde 2 ayrı anlamda kullnaılıyor. Birisi programlamadaki altgoritmanın karşılığı, diğeri standart kütüphanenin başlık dosyalarında verilen global fonksiyon şablonları)
+
+- Bu algoritmalar containerlar ütünde işlem yapan global fonksiyon şablonları. Ama algoritmalar argüman olarak container nesnesinin almak yerine range alıyorlar. (Yani 2 tane konum).
+
+
+
 
 
 
