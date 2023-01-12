@@ -5293,35 +5293,153 @@ int main()
 ```
 > Burada unspecified behaviour. Bu string literaller ile ilgili, karakter sabiti değil.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s;
 
+	cout << "s.size()=" << s.size() << "\n";
+	cout << "s.length()=" << s.length() << "\n";
+	cout << "s.empty()=" << s.empty() << "\n";
+}
+```
+> Array haricinde tüm containerlarların hepsininin defaıult constructor'ı boş bir container nesnesi oluşturur. Yani burada da boş bir yazı oluşuyor, empty true değer verecek.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s1{ "nacati ergin" };
+	string s2 = s1;
+}
+```
+> Copy constructor çağırılacak ve eski ile yeninin değerini aynı yapacak. Fakat move constructor diğer nesnenin hayatını çalıyor.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s1{ 100, 'A'};
+	string s2 = std::move(s1);
+}
+```
+> Burada = sağındaki X value expression dolayısıyla R value expression olduğu için move constructor çağırılacak s1 in kaynağımnı çalacak. Kaynağı çalınan nesne geçerli bir durumda olacak fakat durumunun ne olcağı konusunda bir garanti verilmeyecek. Ama genel olarak kaynağı çalınan bir string nesnesi default init edilmiş hale dönüyor. Tekrar atama yapılarak kullanılabilir. 
 
+**Soru:** String uzunluğunun veri sınırı var mı?
+> Var. Bütün containerların max_size isimli bir fonksiyonu var. Maksimuım öge miktarını döndüürüyor. 
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s;
+	cout << s.max_size() << "\n";
+}
+```
+> max yazı uzunluğunu döndürdü. Bu uzunluğun üzerinde yazı oluşturmaya yönelik bir işlem yaparsam ne olur? 
 
+> Tipik olarak exception throw ediyor (Length error).
 
+### Data constructor
 
+- Bir adres ve tam sayı istiyor o adresten başlayarak bu kadar karakterlik bir yazıyla başlatmak istiyoruz.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	char str[] = "ekrem kanberoglu";
 
+	string s1(str, 5);
+	cout << "|" << s1 << "|\n";
+	
+	string s2(str + 3, 2);
+	cout << "|" << s2 << "|\n";
+}
+```
 
+### range constructor 
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	char str[] = "polat ersoz";
 
+	string s(str, str + 5);
+	cout << "|" << s << "|\n";
+}
+```
 
+- Şu üçünü birbirine karıştırma 
 
+```CPP
+	const char* p;
+	const char* p, size_t n;
+	const char* p1, const char* p2;
+```
 
+### initializer_list constructor
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s{ 'a','l','i' };
+	cout << "(" << s << ")\n";
+}
+```
 
+> Virgüller ile ayırırsan birleşecek. Başka bir örnek:
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	string s{65,66,67,68};
+	cout << "(" << s << ")\n";
+}
+```
+> ABCD çıktısı alınır.
 
+### Few constructor
+```CPP
+int main()
+{
+	using namespace std;
 
+	size_t n;
+
+	cout << "kac tane:";
+	cin >> n;
+
+	cout << string(n, '*') << "\n";
+}
+```
+
+**Başka birt örnek:**
+
+```CPP
+int main()
+{
+	using namespace std;
+	
+	for (int i = 1; i < 100; ++i)
+	{
+		cout << string(i, '*') << '\n';
+	}
+}
+```
+> Her satıra bir fazla yıldız basmış olduk.
 
 
 
