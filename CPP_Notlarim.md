@@ -5167,10 +5167,131 @@ substring parameter		std::string, size_t idx, size_t n
 ```
 > Bu stringin bu indexinden başlayarak bu kadar tane karakter
 
+**Soru:*
+- Bir std::string nesnesi 20 null karakterden oluşan bir yazı tutabilir mi?
+> Evet
 
+### size fonksiyonu
 
+```CPP
+	string::size_type string::size()const;
+	string::size_type string::length()const;
+```
+- size veya length aynı değeri döndürecek aralarında fark yok. O zaman neden 2 tane fonksiyon var? Generic programlama paradigması ile ilgili. 
+> Containerların bir ortak arayüzü var, o arayüzün bir bileşeni size. Bir container haricinde tüm containerların size fonksiyonu var. Containerların size fonksiyonu containerlarda tutulan üye sayısını döndürüyor.
 
+> Yazının length'i olur ama container'in size'ı olur. Generic kodlarda sorun olmasın diye size eklemişler ama aynı zamanda length var. Generic programlama tarafında size kullanılmalı(Kullanılsa daha uygun). Ama yazılan kodu generic programlama ile alakası yoksa, amaç sadece yazının uzunluğunu elde etmek ise o zaman length.
 
+```CPP
+int main()
+{
+	using namespace std;
+
+	string s{ "levent ercan" };
+
+	auto len = s.length();
+	
+	cout << "uzunluk =" << s.length() << '\n';
+	cout << "uzunluk =" << s.size() << '\n';
+}
+```
+> Çıktılar aynı, uzunluğu tutmak için auto len.
+
+**Not:** size aynı zmaanda diğer STL container larında da olan bir arayüz. Bunun gibi olan bir başka fonksiyon "empty". Boş mu sorusunu soruyor.
+
+```CPP
+str.empty();
+str.size() == 0;
+```
+> Aynı anlamda 2 kod.
+
+**Örnek:**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	string s{ "ali yasar" };
+
+	cout << s.size() << 'n';
+	cout << s.capacity() << 'n';
+}
+```
+> Çıktılar 9 ve 15. Yani 6 karakter daha ekleyebilirim. 7. karakteri eklediğimde reallocation olacak demektir. 
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	string s{ "necati ergin" };
+	auto cap = s.capacity();
+
+	for (;;) {
+		s.push_back('.');
+		if (s.capacity() > cap) {
+			cout << "size =" << s.size() << "capacity =" << s.capacity() << '\n';
+			(void)getchar();
+			cap = s.capacity();
+		}
+	}
+
+}
+```
+> Bu kod ile reallocation'ı gözlemleyebiliriz. 
+
+- Reallocation takes time
+- Reallocation invalidates pointers
+
+> Reallocation olduğunda, eski bellek bloğunu gösteren pointerlar dangling duruma geliyor. 
+
+**Örnek:**
+```CPP
+std::string str(1000, 'A');
+
+int main()
+{
+	using namespace std;
+
+	std::string str(1000, 'A'); 
+}
+```
+> Main içindekine göre 1000 adet A karakteri free store'da (Dinamik bellek alanında) tutuluyor. str'nin kendisi stack'te tutuluyor, otomatik ömürlü bir nesne.
+
+> Globaldekinde ise yine A karakterleri dinamik bellek alanında tutuluyor olacaktı ama str nesnesi statik ömürlü olduğu için data segment'te tutulacaktı.
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	auto p = new string (1000, 'A'); 
+}
+```
+> Burada ise yine A karakterleri heap'te tutuluyor str nesnesinin kendisi de heap'te tutuluyor. Yani heap'teki string nesnesi ile yazının tutulduğu bellek alanı birbiri ile karıştırılmamalı.
+
+### Copy on write tekniği
+
+- Date x1;
+
+> Bu nesneden birçok sayıda olduğunu düşünün ve değerleri aynı. "Programın gözlenebilir davranışında değişiklik olmaz" fikri ile nesneden 1 tane oluşturup aynı değeri kullansın diye düşünebiliriz. Ama nesnelerden birisi değişirse  ozaman 2. nesneyi yaratın. **Bu teknik modern C++'ta kesinlikle yasaklanıyor** Yani Standartlar bunun kullanımını engelliyor.
+
+```CPP
+int main()
+{
+	const char* p1 = "nihat";
+	const char* p2 = "nihat";
+
+	if (p1 == p2)
+	{
+		std::cout << "evet dogru aynı adres\n";
+	}
+	else
+		std::cout << "hayır yanlıs farklı adres\n";
+}
+```
+> Burada unspecified behaviour. Bu string literaller ile ilgili, karakter sabiti değil.
 
 
 
