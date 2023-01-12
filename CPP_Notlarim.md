@@ -5893,13 +5893,203 @@ int main()
 	}
 }
 ```
+- **algorithm** başlık dosyasında ismine algoritma denilen global fonksiyon şablonları programlamada en sık ihtyaç duyulan algoritmaları implemente ediyorlar. (Algorithm sözcüğü C++ dilinde 2 ayrı anlamda kullnaılıyor. Birisi programlamadaki altgoritmanın karşılığı, diğeri standart kütüphanenin başlık dosyalarında verilen global fonksiyon şablonları)
 
-- <algorithm> başlık dosyasında ismine algoritma denilen global fonksiyon şablonları programlamada en sık ihtyaç duyulan algoritmaları implemente ediyorlar. (Algoritma C++ dilinde 2 ayrı anlamda kullnaılıyor. Birisi programlamadaki altgoritmanın karşılığı, diğeri standart kütüphanenin başlık dosyalarında verilen global fonksiyon şablonları)
+- Ama algoritmalar argüman olarak container nesnesi almak yerine range alıyorlar. Yani 2 tane konum.
 
-- Bu algoritmalar containerlar ütünde işlem yapan global fonksiyon şablonları. Ama algoritmalar argüman olarak container nesnesinin almak yerine range alıyorlar. (Yani 2 tane konum).
+- Diziyi büyükten küçüğe sıralayalım:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	int a[] = { 199, 3, 4123, 6,7,8, 13,788 };
+	sort(a, a + sizeof(a) / sizeof(*a));
+
+	for (auto i : a)
+		std::cout << i << " ";
+}
+```
+
+- string de bir STL container'ı. String'in de iterator, begin veren fonksiyonları var. O zaman ben bir string nesnesi üzerinden istediğim işlemi yapılmasını sağlayacak bir algoritmaya çağrı yapabilirim.
+
+- Yazı işlemlerinin tamamı string sınıfı ile yapılmıyor. Bu yüzden yazı işlemkleri ile alakalı fınksiyonların hepsi string sınıfında değil. Bir string nesnesini sıralayalım:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str;
+
+	std::cout << "bir yazı girin: ";
+	getline(cin, str);
+	cout << '|' << str << "|\n";
+
+	//sort(str.begin(), str.end());  // aynı anlamda
+	sort(begin(str), end(str));
+
+	cout << '|' << str << "|\n";
+}
+```
+
+- Yazıyı ters çevirmek istiyorum. string sınıfının reverse üye fonksiyonu yok ama reverse algoritması var.
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str;
+
+	std::cout << "bir yazı girin: ";
+	getline(cin, str);
+	cout << '|' << str << "|\n";
+
+	reverse(str.begin(), str.end());
+
+	cout << '|' << str << "|\n";
+}
+```
+> STL algoritmasıyla yaptık.
+
+**Not:** Reverse sadece string'ler için kullanılmadığından dolayı string sınıfında değil. Birçok reverse edilecek tür olduğu için. Generic zaten bu demek.
+
+- string aslında hem bir container hem de yazı tutan bir nesne. O yüzden string sınıfında kullanımı kolaylaştımak için bir index interface i var. ama diğer taraftan bir container olduğu içiçn index interface yanı sıra bir iterator interface'i var. Burada bir karışıklık var çünkü bazı işlemleri her iki interface ile de yapabiliyor. 
+
+## Insert İşlevleri
+
+- Insert işlevleri hem index interface hem iterator interface kullnaıyor.
+
+- Insert fonksiyonlarının iterator isteyen tüm overloadlarının özelliği, ilk parametreye iterator istiyor.
+
+```CPP
+#include <string>
+using namespace std;
+
+int main()
+{
+	string str{ "mustafa" };
+	
+	cout << str << "\n";
+	str.insert(str.begin(), '!');
+	cout << str << "\n";
+	str.insert(str.begin(), 5, 'A');
+	cout << str << "\n";
+	str.insert(str.begin(),{'x', 'y', 'z'});
+	cout << str << "\n";
+
+}
+```
+
+### Index Parametreli Insert Fonksiyonları 
+
+- 3 indeksine 5 tane x karakteri ekle
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "mustafa" };
+	cout << str << "\n";
+
+	str.insert(3, 5, 'X'); //3 indeksine 5 tane x karakteri ekle
+	cout << str << "\n";
+}
+```
+
+- Yazının başına sadece A karakteri ekle
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "mustafa" };
+	cout << str << "\n";
+
+	str.insert(0, 1, 'A'); 
+	cout << str << "\n";
+}
+```
+
+- s2'in bir kısmına s1'in tamamını insert et :
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s1{ "muratkaymaz" };
+	string s2{ "NECATI" };
+ 
+	cout << s2 << "\n";
+
+	s2.insert(5, s1);
+
+	cout << s2 << "\n";
+
+} 
+```
+- Bir tane daha argüman geçiyorum:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string s1{ "muratkaymaz" };
+	string s2{ "NECATI" };
+ 
+	cout << s2 << "\n";
+
+	s2.insert(3, s1, 7);
+
+	cout << s2 << "\n";
+}
+```
+> s2'nin 3 indeksine s1 stringinin 7 indeksinden başlayarak karakterleri yerleştirecek.
+
+- string sınıfının üye fonksiyonlarının bir kısmı **void**, bir kısmı **idx** döndürüyor, bir kısmı **string&**, bir kısmı da iterator döndürüyor.
+
+## Silme İşlemleri
+
+- İlk ögeyi siliyorum:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "mustafaaskopru" };
+
+	cout << str << "\n";
+
+	str.erase(str.begin());
+	cout << str << "\n";
+}
+```
+
+### Range Arrays
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "mustafa" };
+
+	cout << str << "\n";
+
+	str.erase(str.begin(), str.begin() + 3); // range
+	cout << str << "\n";
+}
+```
+> Belli bir aralığı sildik.
+
+1.25
 
 
-50.
 
 
 
@@ -5937,3 +6127,13 @@ int main()
 
 
 
+
+
+
+
+
+
+
+
+	
+	
