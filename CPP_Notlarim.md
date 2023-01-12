@@ -5899,8 +5899,7 @@ int main()
 - Bu algoritmalar containerlar ütünde işlem yapan global fonksiyon şablonları. Ama algoritmalar argüman olarak container nesnesinin almak yerine range alıyorlar. (Yani 2 tane konum).
 
 
-
-
+50.
 
 
 
