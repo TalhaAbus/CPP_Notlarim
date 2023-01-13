@@ -6793,14 +6793,159 @@ int main()
 
 > Yani sırayla **Der ctor - Base ctor - Der destructor - Base destructor**
 
+```CPP
+using namespace std;
 
+class Member {
+public:
+	Member()
+	{
+		std::cout << "Member Default ctor \n";
+	}
+	~Member()
+	{
+		std::cout << "Member destructor\n";
 
+	}
+};
 
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Der ctor\n";
+	}
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+};
 
+class Der : public Base {
+public:
+	Der()
+	{
+		std::cout << "Der ctor\n";
+	}
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+private:
+	Member mx;
+};
 
+int main()
+{
+	Der der;
+}
+```
 
+- Diyelim ki burada der'in default cosntructor yok. Sadece int parametreli var. Der sınıfını base sınbıfından elde edicem: 
 
+```CPP
+class Base {
+public:
+	Base(int)
+	{
+		std::cout << "Base(int)\n";
+	}
 
+};
+
+class Der : public Base {
+public:
+	Der()
+	{
+		std::cout << "Der ctor\n";
+	}
+};
+```
+> Sentaks hatası. Default etmedik. Kendimiz yazdık.
+
+![image](https://user-images.githubusercontent.com/75746171/212399476-7e5bfa0f-9514-46b2-b846-2993d8cb671e.png)
+
+**Soru:** Mercedes_S500'ün ctor'nı ben yazıyorsam constructor initlizer list ile var sınıfının constructorına çağrı yapabilir miyim?
+- Hayır. Doğrudan taban sınıfdının constructorını çağırmalıyım.
+
+**Kalıtımda Diğer Özel Fonksiyonların Durumu**
+
+- Sınıfın copy constructor'ı derleyici tarafından yazılırsa, Derleyicinin yazdığı copy contructor * this in içindeki taban sınıfı nesnesinin copy constructor'ını çağıracak.
+
+```CPP
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base default constructor\n";
+	}
+
+	Base(const Base& other)	//copy ctor
+	{
+		std::cout << "Base copy constructor\n";
+	}
+};
+
+class Der : public Base {
+
+};
+
+int main()
+{
+	Der d1;
+	Der d2 = d1;
+}
+```
+Çıktı:
+Base default constructor
+Base copy constructor
+
+> Der sınıfının copy constructorını derleyici yazdı. Bu constructor Der nesnesinin içindeki Base'i, Base'in copy constructor'ını çağırarak hayata getirdi.
+
+> Base default cosntructor, d1'in içindeki base için çağırıldı.
+
+> Base copy constructor, d2'in içindeki base için çağırıldı.
+
+- Ama türemiş sınıf için copy constructor'ı biz yazarsak:
+
+```CPP
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base default constructor\n";
+	}
+
+	Base(const Base& other)	//copy ctor
+	{
+		std::cout << "Base copy constructor\n";
+	}
+};
+
+class Der : public Base {
+public:
+	Der()
+	{
+		std::cout << "Der default ctor\n";
+	}
+	Der(const Der&)
+	{
+		// dikkat taban sınıf nesnesi için copy ctor değil defauult ctor çağırılacak.
+		std::cout << "Der copy ctor\n";
+	}
+};
+
+int main()
+{
+	Der d1;
+	Der d2 = d1;
+}
+```
+> D1 için önce içindeki base için base default ctor çağırılacak sonra der default ctor çağırılacak.
+
+> d2'nin içindeki base için base default ctor çağırılacak. 
+
+> Der için çağırılan copy cosntructor, der'in içindeki base nesnesi için copy ctor'ı çağırmadığından derleyici oraya base için çağırılacak olan default constructor çağrısını ekledi.
 
 
 
