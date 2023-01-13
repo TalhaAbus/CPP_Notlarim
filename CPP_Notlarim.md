@@ -6348,19 +6348,148 @@ string_view sv;
 
 - String sınıfının non-modifying bütün sınıfları aslında SV sınıfında da var. Yani biz string sınıfı türünden yeni bie nesne oluşturmak yerine SV sınıfı türünden oluşturduğumuzda aslında başka bir bellek alanı tarafından tutulan bir yazının belirli bir kısmını göslemci olarak kullanıyoruz. Gereksiz kopyalamanın önüne geçmiş oluyoruz.
 
+## Karşılaştırma İşlemleri
 
+- String neslelerini birbirleriyle ya da cstring nesneleriyle karşılaştırmak operator overloading ile mümkün. 
 
+```CPP
+int main()
+{
+	string str{ "necati ergin"};
 
+	str.compare("ali");
+}
+```
 
+**Bir örnek:**
 
+```CPP
+int main()
+{
+	string s1(100'000, 'a');
+	string s2(200'000, 'b');
 
+	auto temp = s1;
+	s1 = s2;
+	s2 = temp;
+}
+```
+> Bu çok kötü bir kod. Çünkü 2 string i bu şekilde swap ederseniz, temp için copy constructor çağırılır, s1 ve s2 için copy assignment cağırılır. Yani daha temp oluşurken 100bin byte lık bir bellek alanı alocate edip kopyalıyoruz. Buna gerek yok. 2 string i swap etmek istiyorsam içindeki pointerları swap edebilirim. Yani dinamik bellek bloğundaki karakterlere dokunmış oluıp sadece içindeki pointerları swap edicem. İşte üye fonksiyonu olan swap foınksiyonu çağırınca bu oluyor.
 
+```CPP
+int main()
+{
+	string str{ "tolgahan" };
+	cout << "[" << str << "]\n";
 
+	str.replace(2, 4, "XYZ");
+	cout << "[" << str << "]\n";
+}
+```
 
+### Toplama
 
+```CPP
+int main()
+{
+	string s1{ "hasan" };
+	string s2{ "can" };
 
+	cout << s1 + s2 << "\n";
+	// cout << operator+(s1, s2) << "\n";
+}
+```
+> Burada yapılan işlem aslında operator+'yı çağırıp ona s1 ve s2 yi argüman olarak gönderiyorum
 
+### Dönüştürme Fonksiyonları
 
+```CPP
+int main()
+{
+	string str{ "874325mehmet" };
 
+	auto ival = stoi(str);
+
+	cout << "ival = " << ival << "\n";
+}
+```
+
+```CPP
+int main()
+{
+	string str{ "12ali" };
+
+	size_t idx;
+
+	auto ival = stoi(str, &idx, 16);
+
+	cout << "ival = " << ival << "\n";
+	cout << "idx = " << idx << "\n";
+}
+```
+
+```CPP
+int main()
+{
+	int ival = 3567;
 	
-	
+	auto s = "necati" + to_string(ival) + ".jpeg";
+
+	cout << s << "\n";
+}
+```
+> int değerini string e dönüştürdük.
+
+** Örnek:** Yazıdaki ilk a karakterini silecek kodu yazın
+
+```CPP
+int main()
+{
+	string str;
+
+	cout << "biraz yazı girin";
+	getline(cin, str);
+
+	cout << "[" << str << "]\n";
+
+	if (const auto idx = str.find('a'); idx != string::npos) {
+		// str.erase(idx, 1);
+		str.erase(str.begin() + idx);
+		cout << "[" << str << "]\n";
+	}
+	else {
+		cout << "bulunamadi\n";
+	}
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
