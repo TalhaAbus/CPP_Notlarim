@@ -6481,6 +6481,325 @@ int main()
 
 - Car sınıfından Mercedes sınıfını kalıtım yoluyla elde ettiğimizde burada parent class var sınıfı. Yani artık araba gereken her yerde mercedes kullanılabilir diyebiliriz.
 
+- Kalıtım aracı 3 ana kategoriye ayrılıyor:
+
+1. public inheritance
+2. private inheritance
+3. protected inheritance
+
+- Kalıtımda kullanılacak taban sınıfın complete type olması gerekiyor.
+
+```CPP
+class Base {
+public:
+	void f1();
+	void f2();
+};
+
+class Der : public Base {
+
+};
+
+class Der : private Base {
+
+};
+
+class Der : protected Base {
+
+};
+```
+
+**Not:** Bir anahtar sözcük kullanmadığımız zaman default olarak private inherritance. 
+
+- Eğer kalıtımda oluşturğumuz sınıf class anahtar sözcüğü ile değil de struct ile oluşturulsaydı, kalıtım biçimi public olacaktı.
+
+```CPP
+class Base {
+public:
+	void f1();
+	void f2();
+};
+
+struct Der : Base { // public inheritance
+
+};
+```
+> Her **Der** nesnesi aynı zamanda **Base** türünden bir nesnedir. 
+
+![image](https://user-images.githubusercontent.com/75746171/212338569-6f77588c-f5ed-418a-9056-2d8d9476b8e3.png)
+
+- A'nın içinde bir B nesnesi var. Ya A'nın B türünden bir elemanı vardır ya da A, B sınıfından kalıtım yoluyla elde edilmiştir.
+
+**Eğer A'nın B türünden bir elemanı varsa:**
+
+```CPP
+class A {
+	int x, y;
+};
+
+class B {
+private:
+	A ma;
+};
+
+int main()
+{
+	constexpr auto sz = sizeof(B);
+}
+```
+> sizeof değerleri aynı.
+
+**A, B sınıfından kalıtım yoluyla elde edilmişse:**
+
+```CPP
+class A {
+	int x, y;
+};
+
+class B : public A {
+private:
+};
+
+int main()
+{
+	constexpr auto sz = sizeof(B);
+}
+```
+> Yine aynı değerdeler.
+
+- Taban sınıfın ve türemiş sınıfın scope'u ayrı. 
+
+```CPP
+class Base {
+public:
+	void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(double);
+};
+```
+> Function overloading yok. Scopelar farklı.
+
+- Nokta operatörünün ya da ok operatörünün sağında kullanılan isim eğer sol operand türemiş sınıf türünden ise önce türemiş sınıfta, bulunmaz ise taban sınıfta aranır.
+
+```CPP
+class Base {
+public:
+	void foo(int);
+};
+
+class Der : public Base {
+public:
+	void foo(int, int);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.foo(10);
+}
+```
+- İsim arama bittikten sonra fonksiyonun uygun olmadığı anlaşılıyor ve sentaks hatası veriyor.
+
+```CPP
+using namespace std;
+
+class Base {
+public:
+	void foo(int);
+};
+
+class Der : public Base {
+public:
+	void foo(int, int);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.foo(12, 34);
+	myder.Base::foo(12);
+}
+```
+> Maskelemeyi bu şekilde aşabiliriz.
+
+```CPP
+using namespace std;
+
+class Base {
+public:
+	void foo();
+};
+
+class Der : public Base {
+public:
+	void func()
+	{
+		foo();  // Base::foo();
+	}
+};
+```
+> İki türlü de çağırabliriz.
+
+- Car > Mercedes > Mercedes_S500 
+
+> Mercedes sınıfı mercedes_S500 ün direct base class'ı
+
+> Car sınıfı mercedes_S500'ün indirect base base class
+
+**Hatırlatma:** Taban sınıfının üye fonksiyonu ile türemiş sınıfın üye fonksiyonu birbirini overload etmiyor.
+
+### Erişim kontrolü
+- Türemiş sınıf taban sınıfın public ve protected bölümüne erişebilir. Ama private bölümüne erişemez.
+
+**Public:** Her koda açık
+**Protected:** Kalıtım yoluyla elde edilecek sınıflara açık
+**Private:** TÜm kodlara kapalı.
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	void foo(int);
+};
+
+class Der : public Base {
+private:
+	void foo(double);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.foo(12);
+}
+```
+> Hatanın sebebi erişim kontrolü. Der sınıfında isim bulundu fakat erişim kontrolüne takıldı.
+
+- Türemiş sınıf türünden bir nesne aynı zamanda taban sınıfı türünden kabu ledildiği için, türemiş sınıf türünden taban sınıf türüne örtülü dönüşüm var. 
+
+**Upcasting:** Türemiş sınıftan taban sınıfa yapılan dönüşüm. Örtülü.
+
+**Örnek:**
+
+```CPP
+class Base {
+
+};
+
+class Der : public Base {
+
+};
+
+int main()
+{
+	Der myder;
+
+	Base* ptr = &myder; //upcasting
+	Base& basaref = myder;  /aynısını referans ile yaptık
+}
+```
+
+**Downcasting:** Taban sınıftan türemiş sınıfa yapılan dönüşüm.
+
+**Türemiş sınıf nesnesi içindeki taban sınıf nesnesinin hayata gelme ve sonlanma durumu:**
+
+- Bir türemiş sınıf nesnesi hayata geldiğinde önce onun taban sınıf nesnesi hayata geliyor. 
+
+- Eğer türemiş sınıf default ctor'ı derleyici tarafından default ediliyor ise derleyici türemiş sınıf nesnesi içindeki taban sınıf nesnesi için default ctor çağıracak. 
+
+```CPP
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Base default ctor\n";
+	}
+};
+
+class Der : public Base {
+public:
+
+};
+
+int main()
+{
+	Der myder;
+}
+```
+
+> Der sınıfı için defaukl ctor'ı derleyici yazdı. Derleyici yazdığı default constructorda der içindeki alan sınıfı nesnesini, base sınıfının default ctor'ına çağrı yaparak hayata getirdi.
+
+- Base'in default değil de int parametreli constructor olsaydı:
+
+```CPP
+class Base {
+public:
+	Base(int)
+	{
+		std::cout << "Base(int) ctor\n";
+	}
+};
+
+class Der : public Base {
+public:
+
+};
+
+int main()
+{
+	Der myder;
+}
+```
+> Hatalı kod. Eğer derleyici bir sınıf için bir special member function yazıyor ise ve yazdığında sentaks hatası oluşuyorsa derleyici default etmesi gereken special member function'ı delete ediyordu. 
+
+```CPP
+class Base {
+public:
+	Base()
+	{
+		std::cout << "Der ctor\n";
+	}
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+};
+
+class Der : public Base {
+public:
+	Der()
+	{
+		std::cout << "Der ctor\n";
+	}
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+};
+
+int main()
+{
+	Der der;
+}
+```
+> Der default ctor çağırıldı. Ama programın akışı Der'in ana bloğunun içine girmeden Base default ctor çağırılacak. Der nesnesinin hayatı bittiğinde destructor'ı çağırılacak. Önce destrcutor ana bloğu içinmdeki kodlar çalışacak. Bundan sonra derleyicinin eklediği taban sınıfın destructor'ına yapılan çağrı var.
+
+> Yani sırayla **Der ctor - Base ctor - Der destructor - Base destructor**
+
+
+
+
+
+
+
+
 
 
 
