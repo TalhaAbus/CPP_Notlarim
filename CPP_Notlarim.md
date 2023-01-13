@@ -6087,13 +6087,105 @@ int main()
 ```
 > Belli bir aralığı sildik.
 
-1.25
+### Index ile silme işlemi:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "ABCDRFGHI" };
+	
+	cout << "|" << str << "|\n";
+	
+	str.erase();
+	cout << "|" << str << "|\n";
+}
+```
+> Tümünü sildi. Kodu değiştirelim:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "ABCDRFGHI" };
+	
+	cout << "|" << str << "|\n";
+	
+	str.erase(4);
+	cout << "|" << str << "|\n";
+}
+```
+> 4 indeksinden sonuna kadar sildi. Yine dğeiştirelim:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str{ "ABCDRFGHI" };
+	
+	cout << "|" << str << "|\n";
+	
+	str.erase(3, 4);
+	cout << "|" << str << "|\n";
+}
+```
+> Indeks 3'ten başlayıp 4 karakter sildi.
+
+### Bir stringi tamamen silmek 
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str{ "ABCDRFGHI" };
+	cout << str.size() << "\n";
+
+	str.erase(str.begin(), str.end());
+	str.erase();
+	str.clear();
+	str.resize(0);
+	str = "";
+	str = {};
+	str = string{};		// default init edilmiş bir string boyutu sıfırdır.
+}
+```
+
+**Örnek:**
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str;
+
+	cout << "bir yazi gir";
+
+	getline(cin, str);
+
+	cout << "[" << str << "]\n";
+}
+```
+> Newline gelene kadar tüm karakterleri string'e alacak. Buna bir parametre daha girersek: 3. parametre ile karşılaştırğında tamamlanacak:
+
+```CPP
+using namespace std;
+
+int main()
+{
+	string str;
+
+	cout << "bir yazi gir";
+
+	getline(cin, str, ',');
+
+	cout << "[" << str << "]\n";
+}
+```
 
 
 
