@@ -6236,23 +6236,117 @@ int main()
 
 **Not:** Find geçen tüm fonksiyonların aranan değer bulunamazsa döndürdüğü değer npos. Başarılı olursa Index döndürecek.
 
+**Örnek:**
+```CPP
+int main()
+{
+	string str{ "can dedi ki bana can dedi ki bana can dedi" };
 
+	cout << str.length() << "\n";
+	cout << str.rfind("can") << "\n";
+}
+```
+> Uzunluk 42 ve bulunduğu yer 37 olarak döndü.
 
+**Örnek:**
+```CPP
+int main()
+{
+	string str{"cemtopkaya"};
 
+	cout << str.find_first_of("mxytz") << "\n";
+}
+```
 
+**Örnek:**
+```CPP
+int main()
+{
+	string str{"cemtopkaya"};
 
+	cout << str.find_first_not_of("mxycetz") << "\n";
+}
+```
 
+**Örnek:**
+```CPP
+int main()
+{
+	string str{"cemtopkaya"};
 
+	cout << str.find_last_of("mxycetz") << "\n";
+}
+```
+**Örnek:**
+```CPP
+int main()
+{
+	string str{"cemtopkaya"};
 
+	cout << str.find_last_not_of("pyaku") << "\n";
+}
+```
+**Örnek:** Dosya ismi ali ile başlıyormu?
 
+```CPP
+int main()
+{
+	string filename;
 
+	cout << "bir dosya ismi girin:";
+	cin >> filename;
 
+	if (filename.starts_with("ali"))
+		cout << "evet\n";
+	else
+		cout << "hayır\n";
+}
+```
 
+**Örnek:** Dosya ismi jpg ile bitiyor mu?
 
+```CPP
+int main()
+{
+	string filename;
 
+	cout << "bir dosya ismi girin:";
+	cin >> filename;
 
+	if (filename.ends_with(".jpg"))
+		cout << "evet\n";
+	else
+		cout << "hayır\n";
+}
+```
 
+### substring operations
 
+- Stringlerde en fazla ihtiyaç duyulan işlemlerden biri, bir yazının belirli bir kısmını (substring'ini) elde edip o substring üzerinde işlemler yapmak. Ama bu pahalı bir operasyon, büyük yazılar için doğrudan substr fonksiyonu ile yapmayın.
+
+```CPP
+int main()
+{
+	string str{ "murathan aksoycan"};
+
+	cout << "|" << str.substr(5, 5) << "|\n";
+}
+```
+> 9 indeksinden başlayarak 5 karakterlik bir substring elde edeceğim. Burada 2. parametre default argüman olarak string-npos alıyor. Yani tek argüman ile çağırırsam verdiğim endeksten sonuna kadar elde ediyorum.
+
+- Burada str nin çok uzun bir string olduğunu varsayalım. 
+
+```CPP
+cout << "|" << str.substr(4000, 1000) << "|\n";
+```
+> Burada aslında 1000 kakrakterlik yeni bir string oluşturuyoruz. Bunun ciddi bir maliyeti var. Eğer bu substring üzerinde salt okulmaya yönelik bir işlem yapılacaksa: bir string view nesnesi oluşturuyoruz.
+
+```CPP
+string_view sv; 
+```
+> Aslında içinde 2 tane pointer tutuyor. Bu pointerlar bellek alanındaki pointerlar. 
+
+- String sınıfının non-modifying bütün sınıfları aslında SV sınıfında da var. Yani biz string sınıfı türünden yeni bie nesne oluşturmak yerine SV sınıfı türünden oluşturduğumuzda aslında başka bir bellek alanı tarafından tutulan bir yazının belirli bir kısmını göslemci olarak kullanıyoruz. Gereksiz kopyalamanın önüne geçmiş oluyoruz.
 
 
 
