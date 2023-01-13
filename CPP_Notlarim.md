@@ -6186,14 +6186,55 @@ int main()
 	cout << "[" << str << "]\n";
 }
 ```
+> 3. bir karakter var ve bu newline karakteri gibi..
 
+- Yazının her döngüde bir karakterini silelim:
 
+```CPP
+using namespace std;
 
+int main()
+{
+	string str;
 
+	cout << "bir yazi gir";
 
+	getline(cin, str);
 
+	cout << "[" << str << "]\n";
 
+	while (!str.empty()) {
+		cout << str << "\n";
+		str.erase(str.begin());
+	}
+}
+```
+## String Sınıfının Arama Fonksiyonları
 
+```CPP
+		str.find
+		str.rfind
+		str.rfind_first_of
+		str.rfind_first_not_of
+		str.find_last_of
+		str.find_not_last_of
+		str.starts_with	//C++20
+		str.ends_with	//C++20
+		str.contains	//C++23
+```
+
+- **str.find**: Doğrudan bir varlığı arıyor. Bu varlık karakter, cstring, başka bir string, data parametre, substring parametre olabilir.
+- **str.rfind**: Aramayı sondan başa doğru yapıyor. Find ile aynı işi yapıyor.
+- **str.rfind_first_of**: Yazının içinde bir karakter grubundaki karakterlerden ilkini buluyor. Örneğin yazıdaki ilk sesli harfi bulacaksak fonksiyona ariou karaktewrlerinin argüman olarak geçeriz.
+- **str.rfind_first_not_of**: Find first of'un tersi. Karakterlerden birinin olmadığı ilk konumu döndürecek.
+- **str.find_last_of:**: Karakterlerden biriyle karşılaşılan son konumu verecek.
+- **str.find_not_last_of:** Find first not of'un sondan başa çalıştırılmış hali.
+
+- **str.starts_with:** Boolean döndürüyor. Başlangıçta veya sonda var mı?
+- **str.ends_with**
+- **str.contains:** Var mı yok mu? Yazıda ali yazısı var mı yok mu? Boolean döndürüyor
+
+**Not:** Find geçen tüm fonksiyonların aranan değer bulunamazsa döndürdüğü değer npos. Başarılı olursa Index döndürecek.
 
 
 
