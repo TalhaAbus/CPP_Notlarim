@@ -6948,7 +6948,7 @@ int main()
 > Der için çağırılan copy cosntructor, der'in içindeki base nesnesi için copy ctor'ı çağırmadığından derleyici oraya base için çağırılacak olan default constructor çağrısını ekledi.
 
 
-
+2.29
 
 
 
