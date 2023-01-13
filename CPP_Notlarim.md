@@ -6463,6 +6463,24 @@ int main()
 }
 ```
 
+# Ders 21 
+
+## Inheritance (Kalıtım)
+
+- C++ dilinde kalıtım, nesne yönelimli programlamadaki kalıtımı aşan bir kavram çünkü farklı amaçlarla da kulanılıyor. Nesne yönelimli programlamada kalıtım sınıflar araısndaki ilişkiyi implemente eden araç olarak ele alınmalı. 
+
+**Kalıtım:** Bir sınıf aynı zamanda başka bir sınıf türünden kabul edilecek. Bir sınıf başka bir sınıfın public interface'ini tamamen kendisine katmış olacak. Yani her varlığıun aynı zamanda daha genelleştirilmiş bir varlık cinsinden olduğunu belirtiyoruz aslında. (Her mercedes bir arabadır, Her C++ programcısı bir programcıdır.) {Is a relationship}
+
+- Nesne yönelimli programlamada kalıtım programın çalışma zamanıytla ilgili. Fakat C++ ta kalıtımı generic programlama tarafında, Programın çalışma zamanından bağımsız, derleme zamanına yönelik te kullanıyoruz. 
+
+**C++ dilinde kalıtım:** 
+1. Eski kodların değişiklik yapılmadan yeni kodları kullanabilmesi. Yani kod sisteminde bir değişiklik yapılması gerektiğinde eski kodları değiştirmeden yeni kodların eski kodları kullanabilmesini sağlamak. Yani eski kodları daha alt seviyedeki kodlara bağımlı değil. C gibi bir dilde eski kodlar daha alt seviyedeki kodları kullanmak zorunda.
+2. Kodların yeniden kullanımı (Code reuse) 
+
+- Kalıtımda kaynak olarak kullanacağımız sınıf: parent class, super class.
+
+- Car sınıfından Mercedes sınıfını kalıtım yoluyla elde ettiğimizde burada parent class var sınıfı. Yani artık araba gereken her yerde mercedes kullanılabilir diyebiliriz.
+
 
 
 
