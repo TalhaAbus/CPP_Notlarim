@@ -7693,7 +7693,24 @@ public:
 ```
 > Böyle bir fonksiyon olmadığından sentaks hatası veriyor.
 
+> Yani override leyword eklememek sentaks hatası değil ama eklenirse böyle sorunların yaşanma ihtimali ortadan kalkıyor.
 
+**Başka bir örnek:**
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int) override;
+};
+```
+Aşağıdaki func işlevinde virtual kullansam da kullanmasam da o fonksiyon virtual olacak. Func taban sınıfın fonksiyonunu override eden bir fonksiyon olduğu için func'ın kendisi de virtual.
+
+**Örnekler:**  Car.h dosyası -> [Car.h dosyası]https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Car.md
 
 
 
