@@ -7123,12 +7123,80 @@ class Boeing : public Airplane {
 - **fly** Senin kodun değil benim istediğim kod çalışsın.
 - **land** boeing'in inişi için gerekli kodu ver. Land fonksiyonu override edilmek zorunda.
 
+# Ders 22
 
+- Taban sınıfın en az bir virtual fonksiyonu varsa böyle sınıflara polimorfik sınıf diyoruz. 
+- Eğer bir sınıfın en az 1 subsanal fonksiyonu varsa ya da en az 1 sana fonksiyıonu olan sınıftan kalıtım yoluyla elde edilmişse ama onun subsana fonksiyonlarının hepsini override etmemişse abstract class deniyor:
 
+```CPP
+class Airplane {
+public:
+	void take_off();
+	virtual void fly() = 0;
+};
+```
 
+> Airplane şu anda abstract class. Subsanal fonksiyonu var.
 
+```CPP
+class Airplane {
+public:
+	void take_off();
+	virtual void fly() = 0;
+};
 
+class Boeing : public Airplane {
 
+};
+
+```
+> Boeing sınıfı Airplane sınıfının fly fonksiyonunu override ettiğini varsayarsak o zaman boeing de abstract class. Abstract olmaması için taban sınıfın bütün sanal-subsanal fonksiyonlarını override etmemiz gerekiyor.
+
+- Abstract olmayan sınıflar : Concrete Sınıflar (Somut)
+
+> Abstract sınıflar türünden nesne oluşturmak sentaks hatası.
+
+```CPP
+class Airplane {
+public:
+	virtual void fly() = 0;
+	virtual void take_off() = 0;
+	virtual void land() = 0;
+};
+
+class Boeing : public Airplane {
+
+};
+
+int main()
+{
+	Airplane a;
+}
+```
+> object of abstract class type is not allowed 
+
+```CPP
+class Airplane {
+public:
+	virtual void fly() = 0;
+	virtual void take_off() = 0;
+	virtual void land() = 0;
+};
+
+class Boeing : public Airplane {
+
+};
+
+int main()
+{
+	Airplane b;
+}
+```
+> Aynı hatayı verdi. Çünkü Boeing sınıfı Airplane sınıfının Pure virtual fonksiyonlarını override etmedi.
+
+### Virtual Functions
+
+- 
 
 
 
