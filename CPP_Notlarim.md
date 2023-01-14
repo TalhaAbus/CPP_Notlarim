@@ -7918,7 +7918,7 @@ int main()
 
 > Normalde girmesi gerekir. 
 
-
+2.23
 
 
 
