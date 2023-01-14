@@ -7712,6 +7712,226 @@ Aşağıdaki func işlevinde virtual kullansam da kullanmasam da o fonksiyon vir
 
 **Örnekler:**   [Car.h dosyası](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Car.md)
 
+```CPP
+#include <iostream>
+#include "car.h"
+
+
+void car_game(Car* p)
+{
+	p->start();
+	p->run();
+	p->stop();
+}
+
+int main()
+{
+	for (int i = 0; i < 100; ++i)
+	{
+		car_game(create_random_car());
+		(void)getchar();
+	}
+}
+```
+
+- Bu örnek üzerinden yeni araçları öğrenelim:
+
+- cargame fonksiyonunun parametreisni referans yapalım ve sana fonksiyona çağıroılan fonksiyonları bu referans isimle yapsaydım virtual dispatch mekanizmasında herhangi bir farklılık olmayacak:
+
+```CPP
+#include <iostream>
+#include "car.h"
+
+
+void car_game(Car &r)
+{
+	r.start();
+	r.run();
+	r.stop();
+}
+
+int main()
+{
+	for (int i = 0; i < 100; ++i)
+	{
+		car_game(*create_random_car());
+		(void)getchar();
+	}
+}
+```
+- Referansı kalşdırıdğımda ise object slicing olacak:
+
+```CPP
+#include <iostream>
+#include "car.h"
+
+
+void car_game(Car r)
+{
+	r.start();
+	r.run();
+	r.stop();
+}
+
+int main()
+{
+	for (int i = 0; i < 100; ++i)
+	{
+		car_game(*create_random_car());
+		(void)getchar();
+	}
+}
+```
+> Çıktı:
+
+car has startedÚ
+car is running now!
+car has just stapped!
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	virtual void vfunc()
+	{
+		std::cout << "Base::vfunc()\n";
+	}
+};
+
+class Der : public Base {
+private:
+	void vfunc()override;
+};
+```
+> Sentaks hatası yok.
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	virtual void vfunc()
+	{
+		std::cout << "Base::vfunc()\n";
+	}
+};
+
+class Der : public Base {
+private:
+	void vfunc()override
+	{
+		std::cout << "Der::vfunc()\n";
+	}
+};
+
+void gf(Base& r)
+{
+	r.vfunc();
+}
+int main()
+{
+	Der myder;
+	gf(myder);
+}
+```
+> Sentaks hatası yok. Virtual dispatch mekanizması devreye girer ve türemiş sınıfın vfunc fonksiyonu çağırılır. Neden hata yok?
+
+- Eğer bir verinin türü derleyicinin koda bakmasıyla anlaşılıyorsa, yani türe ilişkin her şey compile time'da belli oluyorsa bu tür diller static tür kavramına sahip diller. 
+- Türün ne olduğu çalışma zamanında belli oluyorsa dinamik tür kavramına sahip türler.
+> C++, C#, Java static tür kavramına sahip türler. Ama belirli ölçüde dinamik tür kavramına da destek veriyorlar.
+
+```CPP
+void car_game(Car& r)
+{
+	r.start();
+	r.run();
+	r.stop();
+}
+```
+> Bu fonksiyonunu parametre değişkeni türünün Car olduğunu derleyici koda bakarak anlıyor. Bu türlere static tür denir. Ama r nesnesinin programın çalışma zamanı açıosında türü, bu nesnenin programıun çalışma zamanındaki davranışını belirliyor. Yani r = Bmw ise, Bmw'nin start fonksiyonu çağırılacak.
+
+- Dinamik türden bahsedebilmemiz için o sınıfın polimorfik sınıfo olması gerekir.
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	virtual void func(int x = 10)
+	{
+		std::cout << "Base::vfunc(int x) x =" << x << '\n';
+	}
+};
+
+class Der : public Base {
+public:
+	virtual void func(int x = 20)
+	{
+		std::cout << "Der::vfunc(int x) x = " << x << '\n';
+	}
+
+};
+
+void gf(Base& br)
+{
+	br.func();
+}
+int main()
+{
+	Der myder;
+	gf(myder);
+}
+```
+> Çıktı == Der::vfunc(int x) x = 10
+
+**Önemli Bir kural:**
+
+```CPP
+class Base {
+public:
+	Base()
+	{
+		vfunc();
+	}
+	virtual void vfunc()
+	{
+		std::cout << "Base::vfunc()\n";
+	}
+};
+
+
+class Der : public Base {
+public:
+	virtual void vfunc()override
+	{
+		std::cout << "Der::vfunc()\n";
+	}
+};
+
+int main()
+{
+	Der myder;
+}
+```
+> Türemiş sınıf nesnesi içinde bir taban sınıf nesnesi var. Dolayısıyla bir türemiş sınıf nesnesini construct ederken önce onun taban sınıf nesnesi construct olur. Taban sınıfın constructorının parametresi Base*. O zaman burada da sanallık mekanizmasının devreye girmesi gerekir.
+
+> Normalde girmesi gerekir. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
