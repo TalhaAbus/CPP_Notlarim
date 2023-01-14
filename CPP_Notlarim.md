@@ -6947,10 +6947,181 @@ int main()
 
 > Der için çağırılan copy cosntructor, der'in içindeki base nesnesi için copy ctor'ı çağırmadığından derleyici oraya base için çağırılacak olan default constructor çağrısını ekledi.
 
+- Türemiş sınıf için copy ctor'ı veya move ctor'ı siz yazıyorsanız, taban sınıfı nesnesinin copy ya da move construct edilmesinden siz sorumlusunuz.
 
-2.29
+**Örnek:**
 
+```CPP
+class Base {
+public:
+	void func(int);
+};
 
+class Der : public Base {
+public:
+	void func(double);
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(12.5);
+	myder.func(45);
+}
+```
+> Burada function overloading yok ama function overloading etkisi yaratmak istiyorsam: Türemiş sınıfa int parametreli bir fonksiyon ekleriz ve bunu taban sınıf fonksiyonunu çağrımasını sağlarız:
+
+```CPP
+class Base {
+public:
+	void func(int)
+	{
+		std::cout << "Base::func(int x) x =" << x << "\n";
+	}
+};
+
+class Der : public Base {
+public:
+	void func(double);
+	{
+		std::cout << "Der::func(double)\n";
+	}
+
+	void func(int x)
+	{
+		Base::func(x);
+	}
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(12.5);
+	myder.func(45);
+}
+```
+> Şimdi fuction overload resolutionda int parametreli fonksiyn çağğırılacak ve o da taban sınıfın fonksiyonunu çağıracak.
+
+- Diğer bir yol: Sınıf tanımı içinde yapılan using bildirimi:
+
+```CPP
+class Base {
+public:
+	void func(int x)
+	{
+		std::cout << "Base:func(int x) x =" << x << "\n";
+	}
+};
+
+class Der : public Base {
+public:
+	using Base::func;
+	void func(double)
+	{
+		std::cout << "Der::func(double)\n";
+	}
+};
+
+int main()
+{
+	Der myder;
+
+	myder.func(12.5);
+	myder.func(45);
+}
+```
+
+### Inherited Contructor
+
+- Aslında inherited constructor, diğer üye fonksiyonlar için using bildiriminin yapılması ile aynı anlamda.
+
+```CPP
+class Base {
+public:
+	Base(int);
+	Base(int, int);
+	Base(double);
+
+};
+
+class Der : public Base {
+public:
+
+};
+
+int main()
+{
+	Der myder(12);
+}
+```
+> Bir sınıfı bir başka sınıftan kalıtım yoluyla elde ettiğimiz zaman, türemiş sınıfın cosntructorları taban sınıfın constructorlarını çağırmak zorunda. Bunu yapmanın yolalrında biri:
+
+> Biz ctor yazıcaz. Bu ctor taba sınıfın ctor ına constructor initilazer list ile çağrı yapacak.
+
+### Runtime Polymorphism (Çalışma zamanı çok biçimliliği)
+
+- Taban sınıfın üye fonksiyonlarını nesneye yönelik programlamasında belirli kategorilere ayırıyoruz.
+- İlk sınıf taban sınıfın öyle bir metotu ki türemiş sınıflara hem bir arayüz hem de kod veriyor. Yani eğer taban sınfın öyle birmetotundan bahsediyorsak bu metot kalıtımla elde edilmiş  sınıflara metodun kodlarını veriyor. Yani o fonksiyon çağırıldığında aslında onun kodları çalışacak. He mbir interface hem de bir implementasynon veriyor. 
+- Diğer bir sınıf türemiş sınıflara hem bir arayüz hem de default implementasyon veriyor. Yani default bir kod veriyor, isterse o kodu kullanır, isterse kendi bir kod oluşturur.
+
+**Örnek:**
+- Airplane -> fly isimli fonksiyonu  (boeing uçağı)
+
+> Kalıtım yolu ile elde edilecek sınıflar airplane'in verdiği kod ile uçabilir veya kendisi ayrı bir kod da oluşturabilir. Bunu biz ayarlyırouz.
+
+- Eğer taban sınıf türemiş sınıfa bir arayüz vermiş aynı zamanda default implementasyon vermişse (Yani implementasyonu istemiyorum, kendim kod oluşturacağım) buna nesne yönelimli programlamada türemiş sınıfın, taban sınıfın o fonksiyonunu override etmesi deniyor.
+
+**Örnek:**
+- Taban sınıfın fly fonksiyonunu, türemiş sınıf olan boeing sınıfı override ederse ne demiş oluyor:
+
+> Taban sınıfının fly fonksiyonunun kodu var ama ben o kodu istemiyorum, boeing uçması gereken yerde, boeing'in sağladığı fly fonksiyonunun kodu çalışacak.
+
+**C++ dilinde bunun karşılığı:**
+
+```CPP
+class Airplane {
+public:
+	void take_off();
+};
+
+class Boeing : public Airplane {
+
+};
+```
+> Normalde boeing client'ları take_off u çağırabilecekler ama airplane'in sağladığı kod çalışacak.
+
+```CPP
+class Airplane {
+public:
+	void take_off();	//interface var, implementasyon da aldım
+	virtual void fly();	// interface aldım ama default olarak da bir implementasyon aldım.
+};
+
+class Boeing : public Airplane {
+
+};
+```
+> Airplane, kalıtım yolu ile elde edilecek sınıflara fly'ı veriyor. Onlara bir şans tanıyor. İsterseniz bunu kullanın isterseniz kendi kodunuzu kullnaıın. Boeing eğer Airplane'in sağladığı kodu tercih ediyorsa o zaman override etmeyecek. 
+
+```CPP
+class Airplane {
+public:
+	void take_off();	//interface var, implementasyon da aldım
+	virtual void fly();	// interface aldım ama default olarak da bir implementasyon aldım.
+	virtual void land() = 0; // pure virtual function
+
+};
+
+class Boeing : public Airplane {
+
+};
+```
+> Bu da **pure virtual function**.  Burada interface aldım, implementasyonm almadım. Ben ancak land için bir kod yazarsam boeing'ler iniş yapabilecekler.
+
+- **fly** Senin kodun değil benim istediğim kod çalışsın.
+- **land** boeing'in inişi için gerekli kodu ver. Land fonksiyonu override edilmek zorunda.
 
 
 
