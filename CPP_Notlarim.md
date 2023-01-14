@@ -7918,7 +7918,7 @@ int main()
 
 > Normalde girmesi gerekir. 
 
-2.23
+- Eğer taban sınıfın consturctor2ı içinde bir sanal fonksiyona çağrı yaparsanız virtual dispatch mekanizmasına bağlanmaz. Her zaman çağırılan taban sınıfn kendi fonksiyonudur. Constructor için virtual dispatch mekanizması devreye girmiyor. Eğer girseydi felaket olurdu. 
 
 
 
