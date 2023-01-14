@@ -7710,7 +7710,7 @@ public:
 ```
 Aşağıdaki func işlevinde virtual kullansam da kullanmasam da o fonksiyon virtual olacak. Func taban sınıfın fonksiyonunu override eden bir fonksiyon olduğu için func'ın kendisi de virtual.
 
-**Örnekler:**  Car.h dosyası -> [Car.h dosyası]https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Car.md
+**Örnekler:**   [Car.h dosyası](https://github.com/TalhaAbus/CPP_Notlarim/blob/main/Car.md)
 
 
 
