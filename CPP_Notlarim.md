@@ -7196,7 +7196,510 @@ int main()
 
 ### Virtual Functions
 
-- 
+```CPP
+class Car {
+public:
+	void start()
+	{
+		std::cout << "car has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "car is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "car has just stopped!\n";
+	}
+
+};
+
+class Fiat : public Car {
+public:
+	void start()
+	{
+		std::cout << "fiat has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "fiat is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "fiat has just stopped!\n";
+	}
+};
+
+
+class Audi : public Car {
+public:
+	void start()
+	{
+		std::cout << "audi has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Audi is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "audi has just stopped!\n";
+	}
+};
+
+class Mercedes : public Car {
+public:
+	void start()
+	{
+		std::cout << "Mercedes has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Mercedes is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "Mercedes has just stopped!\n";
+	}
+};
+
+void car_game(Car& cr)
+{
+	cr.start();
+	cr.run();
+	cr.stop();
+
+}
+
+int main()
+{
+	Mercedes m;
+	Audi a;
+	Fiat f;
+
+	car_game(m);
+	car_game(a);
+	car_game(f);
+}
+```
+> Çıktılar :
+
+car has started!
+car is running now!
+car has just stopped!
+car has started!
+car is running now!
+car has just stopped!
+car has started!
+car is running now!
+car has just stopped!
+
+
+- Bu fonksiynoların bildiriminde virtual kullanalım:
+
+```CPP
+class Car {
+public:
+	virtual void start()
+	{
+		std::cout << "car has started!\n";
+	}
+
+	virtual void run()
+	{
+		std::cout << "car is running now!\n";
+	}
+
+	virtual void stop()
+	{
+		std::cout << "car has just stopped!\n";
+	}
+
+};
+
+class Fiat : public Car {
+public:
+	void start()
+	{
+		std::cout << "fiat has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "fiat is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "fiat has just stopped!\n";
+	}
+};
+
+
+class Audi : public Car {
+public:
+	void start()
+	{
+		std::cout << "audi has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Audi is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "audi has just stopped!\n";
+	}
+};
+
+class Mercedes : public Car {
+public:
+	void start()
+	{
+		std::cout << "Mercedes has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Mercedes is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "Mercedes has just stopped!\n";
+	}
+};
+
+void car_game(Car& cr)
+{
+	cr.start();
+	cr.run();
+	cr.stop();
+
+}
+```
+> Çıktılar: 
+
+Mercedes has started!
+Mercedes is running now!
+Mercedes has just stopped!
+audi has started!
+Audi is running now!
+audi has just stopped!
+fiat has started!
+fiat is running now!
+fiat has just stopped!
+
+> Bu sefer bizim sınıfların fonksiyonları çağırıldı. Burada mercedes, audi ve fiat sınıfları taban sınıfın sanal fonksiyonlarını overeride etti.
+
+- Biz fonksiyon çağırısını Car referan ya da poniterıyla yaptığımızda hangi fonksiyoınun çağırılacağı artık derleme zamanında değil, programın çalışma zamanında anlaşılacak.
+
+- Derleyici fonksiyon çğaırısı koduna bakarak hangi fonksiyoınun çağırıldığını anlıyorsa (Derleme zamanında) static binding denir. (Early binding)
+
+**Not:** Function overloading'te derleyici 10 tane overload'dan hangisinin çağırılacağını koda bakarak anlıyor. Bu static binding tir. Yani runtime maliyeti yok. 
+
+- Fakat programın çalışma zamanıdna kşan bir kod ile bu anlaşılıyorsa buna dynamic binding (late binding) denir. Az önceki bir dynamic binding durumuydu. 
+
+**Örnek:** Programın çalışma zamanında nesnenin ne olduüğuınu seçelim:
+
+```CPP
+class Car {
+public:
+	virtual void start()
+	{
+		std::cout << "car has started!\n";
+	}
+
+	virtual void run()
+	{
+		std::cout << "car is running now!\n";
+	}
+
+	virtual void stop()
+	{
+		std::cout << "car has just stopped!\n";
+	}
+
+};
+
+class Fiat : public Car {
+public:
+	void start()
+	{
+		std::cout << "fiat has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "fiat is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "fiat has just stopped!\n";
+	}
+};
+
+
+class Audi : public Car {
+public:
+	void start()
+	{
+		std::cout << "audi has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Audi is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "audi has just stopped!\n";
+	}
+};
+
+class Mercedes : public Car {
+public:
+	void start()
+	{
+		std::cout << "Mercedes has started!\n";
+	}
+
+	void run()
+	{
+		std::cout << "Mercedes is running now!\n";
+	}
+
+	void stop()
+	{
+		std::cout << "Mercedes has just stopped!\n";
+	}
+};
+
+void car_game(Car& cr)
+{
+	cr.start();
+	cr.run();
+	cr.stop();
+
+}
+
+Car* create_random_car()
+{
+	switch (rand() % 3) {
+	case 0: return new Mercedes;
+	case 1: return new Audi;
+	case 2: return new Fiat;
+	default: return nullptr;
+	}
+}
+int main()
+{
+	srand(static_cast<unsigned>(time(0))); // Her defasında farklı bir sayı zinciri için
+	for (;;) {
+		Car* cp = create_random_car();
+		car_game(*cp);
+		(void)getchar();
+	}
+}
+```
+> Derleme zamanında derleyicinin runtime'da üretebileceği rastgele sayıları bilemeyeceğinme göre öyle bir mekanizma var ki hangi fonksiyonun çağırılıdığı programın çalılma zamanında anlaşılıyor.
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	int func(int);
+};
+```
+> Fonksiyon sanal olduğundan artık türemiş sınıfın aynı imzaya farklı geri dönüş türüne sahip bir fonksiyon bildirmesi sentaks hatası. (Bunun bir istisnası var)
+
+> Taban sınıfın sanal fonksiyonunu override etmek için ismi, imzası, geri dönüş değeri türü aynı olan bir fonksiyon bildirilmek zorunda. 
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int);
+};
+```
+> Doğru kod.
+
+- Modern C++ ile dile yeni bir anahtar sözcük kategorisi daha eklendi. Contextual keyword. (Bağlamsal anahtar sözcük)
+
+> Yani belirli bir alanda anahtar sözcükl etkisi yapıyor ama o context dışında identifier olarak kullanılabiliyor. Neden böyle bir araç eklendi? 
+
+> Eğer contextual kewword kavramı eklenmeseydi, override direkt keyword yapılsaydı daha eskiden yazılmış kodlarda override identifier olarak kullanılmışsa o  kodlar yeni derleyiciler ile derlendiğinde sentaks hatası verecekti.  Override ve final keyword leri.
+
+- Sanal fonksiyonu overriede etmenin yolu sadece buydu:
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int);
+};
+```
+- Override ekliyoruz:
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int)override;
+};
+```
+Sentakjs açısından mecburiyet değil ama kullanın.
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+	virtual void func(int, int);
+	virtual void func(double);
+};
+
+class Der : public Base {
+public:
+	virtual void func(int, int);
+};
+```
+> Yukarıdaki 3 fonksiyon function overloading var ve aşağıda sadece bunlardan 1 tanesinin overriding'i var.
+
+- Eğer türemiş sınıfın sanal olmayan bir fonksiyonu taban sınıfın sanal fonksiyonuna çağrı yapıyorsa virtual dispatch mekanizması devreye girecek. Yani foo fonksiyonu hangi türden sınıf nesnesi ile çağırılmışsa onun override'ı çalışacak: 
+
+**Örnek:**
+
+```CPP
+class Base {
+public:
+	void foo()
+	{
+		func();
+	}
+	virtual void func()
+	{
+		std::cout << "Base::func()\n";
+	}
+};
+
+class Der : public Base {
+public:
+	void func()
+	{
+		std::cout << "Der::func()\n";
+	}
+};
+
+int main()
+{
+	Der myder;
+	myder.foo();
+}
+```
+> Taban sınıfın sanal olmayan fonksiyonlarını türemiş sınıf nesneleri ile çağırıyoruz.  Ama o fonksiyon taban sınıfın taban fonksiyonunu çağırıyor.
+
+### Override olmasaydı yapılabilecek hatalar
+
+```CPP
+class Base {
+public:
+	void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int);
+};
+```
+> Hata ile taban sınıfın sanal olmayan fonksiyonunu sanalmış gibi algılayıp bir fonksiyon bildiriyor ve override ettiğini sanıyor. Bu override veya overload değil ama sentaks hatası da değil. 
+
+```CPP
+class Base {
+public:
+	virtual void func(unsigned int);
+};
+
+class Der : public Base {
+public:
+	void func(int);
+};
+```
+> Parametreler unsigned int olsaydı override etmiş olacaktı. Ama şuan ikisi de ayrı fonksiyon. 
+
+**Bir başka yapılan hata:**
+
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+```
+- Bu taban sınıfından birçok override yapıldığını düşünelim. Eğer func'ın parametreleri değiştirilirse tüm override lar iptal olcak. Ama sentaks hatası olmayacak. Bu da tehlikeli bir durum.
+
+- Türemiş sınıfta override keyword kullandığım zaman derleyici bu fonksiyonun override'ı olup olmadığını kontrol etmek zoruında.
+```CPP
+class Base {
+public:
+	virtual void func(int);
+};
+
+class Der : public Base {
+public:
+	void func(int) override;
+};
+```
+> Şuanda bir hata yok. Ama parametreyi değiştyirseydik derleyici sentaks hatası verecekti:
+
+```CPP
+class Base {
+public:
+	virtual void func(unsigned int);
+};
+
+class Der : public Base {
+public:
+	void func(int) override;
+};
+```
+> Böyle bir fonksiyon olmadığından sentaks hatası veriyor.
+
+
+
+
+
+
+
+
 
 
 
