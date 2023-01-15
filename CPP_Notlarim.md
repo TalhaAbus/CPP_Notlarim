@@ -7920,6 +7920,353 @@ int main()
 
 - Eğer taban sınıfın consturctor2ı içinde bir sanal fonksiyona çağrı yaparsanız virtual dispatch mekanizmasına bağlanmaz. Her zaman çağırılan taban sınıfn kendi fonksiyonudur. Constructor için virtual dispatch mekanizması devreye girmiyor. Eğer girseydi felaket olurdu. 
 
+### Clone idiomu 
+
+- Bir fonksiyonun sanal olması için non static ye fonksiyonu olması gerekiyor. Ama sınfıların constructorları sanal olamaz. Ama bazı programlama dillerinde constructor virtual olabiliyor. 
+
+- Taban sınınfa bir fonksiyon yazıyorum.
+
+```CPP
+class Car {
+public:
+	virtual void start() = 0;
+	virtual void run() = 0;
+	virtual void stop() = 0;
+	virtual Car* clone() = 0;
+};
+```
+> Burada clone fonksiyonu virtual olduğuna göre Car sınıfından kalıtım yoluyla elde edilen sınıflar clone fonksiyonunu override edeblirler.
+
+```CPP
+class Fiat : public Car {
+public:
+	void start() {
+		std::cout << "Fiat has startedé\n";
+	}
+	void run() {
+		std::cout << "Fiat is running now!\n";
+	}
+	void stop() {
+		std::cout << "Fiat has jsut stapped!\n";
+	}
+	Fiat* clone()override
+	{
+		return new Fiat(*this);
+	}
+};
+```
+> Clone diğer nesnenin tıpatıp aynısı. Bu yüzden copy constructor'ı çağırmalıyım. Bunun için new ifadesi ile oluşturduğum nesnenin ctor'ına *this* argüman olarak gödnermeliyim. 
+
+```CPP
+return new Fiat;
+```
+> Böyle yazsaydı msentaks hatası olmazdı ama default constructt etmiş olurdum. Yani bizimki diğer nesnenin aynısı değil. 
+
+```CPP
+void car_game(Car* p)
+{
+	Car* carptr = p->clone();
+	p->start();
+	carptr->start();
+}
+
+int main()
+{
+	for (;;)
+	{
+		car_game(create_random_car());
+		(void)getchar();
+	}	
+}
+```
+Bmw has startedÚ
+Bmw has startedÚ
+
+> İkisi de aynı. Runtime'da belli olan polimorfik bir nesnenin kopyasını oluşturmamız gerekirse bunu doğrudan yapacak bir araç yok ,clone idiomu kullanıyoruz.
+
+### Virtual Destructor
+
+```CPP
+void car_game(Car* p)
+{
+	Car* carptr = p->clone();
+	p->start();
+	carptr->start();
+}
+
+int main()
+{
+	for (;;)
+	{
+		car_game(create_random_car());
+		(void)getchar();
+	}	
+}
+```
+> Birçok durumda polimorfik nesneleri bu örnekteki gibi taban sınıf pointerı ile yönetiyoruz ve bunlar büyük çoğunlukla dinamik ömürlü nesneler. Burada clone fonksiyonu new ifadesi ile nesneyi oluturdu.
+
+> İşim bittiğinde carptr nesnesini delete etsem: Derleyici delete ifadesindeki pointer'ın ilişkin olduğu türe bakıyor ve bu adresi this pointer olarak kullanıp sınıfın destructor ına çağrı yapıyor. Yani şimdi kar sınıfının destructor'ı çağırılacak.
+
+```CPP
+void car_game(Car* p)
+{
+	Car* carptr = p->clone();
+	p->start();
+	carptr->start();
+	delete carptr;
+}
+
+int main()
+{
+	for (;;)
+	{
+		car_game(create_random_car());
+		(void)getchar();
+	}	
+}
+```
+> Fakat eğer buraya gelen bir Bmw ise bmw nin destructor'ının çağırılması gerekir. Eğer bmw yerine car sınıfının destructor ını çağırırsak bu tanımsız davaranış. Aynı zamanda resource leak'e neden olacak.
+
+**Örnek:**
+```CPP
+class Base {
+public:
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+};
+
+class Der : public Base {
+public:
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+};
+
+int main()
+{
+	Base* baseptr = new Der;
+	delete baseptr;
+}
+```
+Der destructor
+Base destructor
+
+> Base destructor çağırılmasını sağlayan Der destructor.
+
+- Polimorfik sınıfların destrcutorları ya **public virtual** olacak ya da **protected non-virtual** olacak.
+
+```CPP
+class Base {
+public:
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+	// virtual void foo() = 0;   // base'in polimorfik olduğunu düşünelim.
+};
+
+class Der : public Base {
+public:
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+};
+
+int main()
+{
+	Base* baseptr = new Der;
+	delete baseptr;
+}
+```
+> Base türündene bir poniter a dinamik ömürlü türemiş sınıf nesnesi adresi koyarsanız ve base pointer ile onu delet eederseniz tanımsız davranıştır.
+
+```CPP
+class Base {
+public:
+protected:
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+};
+
+class Der : public Base {
+public:
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+};
+
+int main()
+{
+	Base* baseptr = new Der;
+	delete baseptr;
+}
+```
+> Protected yaptığımızda artık delete operatorünü taban sınıf pointerı ile kullnaığımızda sentaks hatası verecek. Çünkü delete operatörünün operandı taban sınıf türünden pointer, bu durumda taban sınıfın protected destrcutor'ını çağırıyoruz ve access control'e takılıyor. 
+
+- ama türemiş sınıf pointerı ile bunu yaparsam:
+
+```CPP
+class Base {
+public:
+protected:
+	~Base()
+	{
+		std::cout << "Base destructor\n";
+	}
+};
+
+class Der : public Base {
+public:
+	~Der()
+	{
+		std::cout << "Der destructor\n";
+	}
+};
+
+int main()
+{
+	Der* derptr = new Der;
+	delete derptr;
+}
+```
+> Sentaks hatası ollmayacak. Çünkü derptr'nin türü der*. Der'in destrcutor'ı public ama der'in destructor'ının base destructor ını çağırması bir sentaks hatası değil çünkü protected. Çünkü türemiş sınıflar taban sınıfın protected ögelerini kullanabiliyorlar.  
+
+**Özet:** Polimorfik sınıfların destructor'ı ya virtual ve public olacak ya da non-virtual ve protected olacak.
+
+- Global bir fonksiyon doğrudan virtual olamıyor. Taban sınıf parametreli bir global fonmksiyon yazıp, bu global fonksiyonun taban sınıf türünden pointer veya referans parametreye sahip olmasını sağlayıp, fonksiyonun içinde de bu nesne için bu sanal fonksiyona çağrı yaparsak bu durumda virtual dispatch global fonk. için devreye girmeyecek ama çağırılan sanal fonksiyon içn devreye girecek.
+
+# Ders 23
+
+## Virtual Dispatch
+**Virtual dispatct mekanizması nasıl implemente ediliyor?**
+
+- Java, C# gibi dillerde tüm nesneler dinamik ömürlü. Tüm fonksiyon çağırları için virtual dispatch yapılıyor. Biz sadece gerektiği yerde virtual dispatch kullanıyoruz. Bu ciddi bir verim farkıdır. 
+
+**Ben bunu C'de yapabilir miydim?**
+- Evet fakat C++ derleyicisinin ürettiği kodun benezerini C'de kendinizin yazması gerekiyor. 
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << "\n";
+}
+```
+> Bizim sizeoıf değerimiz 8 byte çıktı. Bu sınıfa iye fonk ekleyelim:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	void func();
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << "\n";
+}
+```
+> sizeof değerimizde bir değişiklik olmadı. Üye fonksiyonların sınıf nesnesinin bellek alanıyla bir ilgisi yok.  Bu fonksiyonu virtual yapalım:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	virtual void func();
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << "\n";
+}
+```
+> Sizeof değerimiz arttı. Peki birden fazla virtual function eklersem artmayacak:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	virtual void f1();
+	virtual void f2();
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << "\n";
+}
+```
+> Kalitim yoluyla bir sınıf elde edelim:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	virtual void f1();
+	virtual void f2();
+};
+
+class Der : public Base {
+
+};
+
+int main()
+{
+	std::cout << "sizeof (Base) = " << sizeof(Base) << "\n";
+	std::cout << "sizeof (Der) = " << sizeof(Der) << "\n";
+}
+```
+> Sizeof değerleri aynı. 
+
+- Derleyici virtual dispatch mekanizmasını implemente etmek için aslında taban sınıf nesnesinin içine bizim koyduğumuz memberların dışında bir de pointer ekliyor. Yani aslında sınıf nesnesi 16 byte ise derleyicinin yaptığı ekleme ile 1 pointer size fazla olacak. 
+- Derleyici bunu taban sınıfı nesnesinin içine koyduğuna göre türemiş sınıf nesnelerinin içinde de bir tabana sınıf nesnesi olduğuna göre kalıtım ile elde eddilen tüm sınıflar içinde sıbıf hiyerarşisi var. Bu hiyaerarşi içindeki tüm sınıflar içinde bir tawban sınıfd nesnesi var onuın içnde de bir pıinter var. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
