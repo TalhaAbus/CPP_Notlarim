@@ -8231,9 +8231,9 @@ int main()
 
 - Derleyici virtual dispatch mekanizmasını implemente etmek için aslında taban sınıf nesnesinin içine bizim koyduğumuz memberların dışında bir de pointer ekliyor. Yani aslında sınıf nesnesi 16 byte ise derleyicinin yaptığı ekleme ile 1 pointer size fazla olacak. 
 - Derleyici bunu taban sınıfı nesnesinin içine koyduğuna göre türemiş sınıf nesnelerinin içinde de bir tabana sınıf nesnesi olduğuna göre kalıtım ile elde eddilen tüm sınıflar içinde sıbıf hiyerarşisi var. Bu hiyaerarşi içindeki tüm sınıflar içinde bir tawban sınıfd nesnesi var onuın içnde de bir pıinter var. 
+- Bu pointera virtual function table poniter deniyor. 
 
-
-
+**Virtual function table pointer:** bu pointer bir sınıf nesnesi haya ta getirildiğinde 
 
 
 
