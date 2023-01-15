@@ -8235,52 +8235,231 @@ int main()
 
 **Virtual function table pointer:** bu pointer bir sınıf nesnesi haya ta getirildiğinde 
 
+**Ders 23:**
+
+**Sorular:**  Virtual dispatch olmadan bir çözüm oluştursaydım, programım daha hızlı çalışabilir miydi, daha verimli olabilir miydi?
+Eğer ortada ciddi bir verim sorunu varsa, kullanılan bellek alanı azalır mıydı? Eğer ortada bir bellek alanı problemi varsa, değerli içler virtual dispatch mekanizmasını nasıl implemente ediyorlar?
+
+- Bir tane taban sınıfımız olsun. Taban sınıfımıza iki tane intürden eleman koyalım, data member koyalım. Ve bu sınıfın size of değerini, storage ihtiyacını yazdıralım.
+
+```CPP
+using namespace std;
+
+class Base {
+	int x{};
+	int y{};
+};
+
+int main()
+{
+	std::cout << "sizeof(Base) = " << sizeof(Base) << '\n';
+}
+```
+- Şimdi buna bir üye fıonksiyonu ekleyelim. Üya fonksiyonların sınıf nestesinin bellek alanı ile doğrudan bir ilgisi yok.  
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	void func();
+};
+
+int main()
+{
+	std::cout << "sizeof(Base) = " << sizeof(Base) << '\n';
+}
+```
+> Kaç tane non- statik data member eklersem ekleyeyim size of değeri yine aynı olacak. Eklediğimiz fonksiyonu sanal fonksiyonu yapalım ve tekrar size of değerine bakalım:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	virtual void func();
+};
+
+int main()
+{
+	std::cout << "sizeof(Base) = " << sizeof(Base) << '\n';
+}
+```
+> Gördünüz size of değeri arttı, 12 oldu. Yani dört byte arttı. Peki acaba ben birden fazla virtual function eklersem Daha da artacak mı size of değeriyoksa 12 olarak mı kalacak?
+
+- Bir de kalıtım yapalım:
+
+```CPP
+class Base {
+	int x{};
+	int y{};
+	virtual void func();
+};
+
+class Der : public Base {
+
+};
+
+int main()
+{
+	std::cout << "sizeof(Base) = " << sizeof(Base) << '\n';
+	std::cout << "sizeof(Der) = " << sizeof(Der) << '\n';
+}
+```
+> Yine 12 byte olduğunu görüyorsunuz. Neden 12 byte oldu? Virtual function olmadığı zaman artmadı da neden virtual function eklediğim zaman arttı?
+
+- En az bir tane virtual function olan sınıflara polymorphik class dendiğini söylemiştik. Polymorphik sınıflar için sınıf türünün storage ihtiyacı beklediğimiz değerin 4 byte 1 pointer fazlısı oldu. Bunun nedeni şu:
+
+> Derleyici virtual dispatch mekanizmasını implemente etmek için aslında taban sınıf nesnesinin içine bizim koyduğumuz memberlerin dışında bir de pointer ekliyor. Yani aslında sınıf nesnesinin örneğin 16 bytes'a derleyicinin yaptığı eklemeyle bir pointer daha fazla örneğin pointer size of 4 bytes'a 20 byte olacak.
+
+> Bütün sınıfların poymorfik sınıfların kalıtımda hangi levelde olursa olsun içinde bir pointer var. Her şey bu pointer'a dayanıyor. Bu pointer'a popüler olarak virtual function table pointer deniyor.
+
+> Bu pointer bir veriyapısının adresini tutuyor.  Siz bir sınıf nesnesine hayata getirdiğinizde eğer bu sınıf nesnesi polimolfikse sizin yazdığınız konstraktör, sınıf nesnesinin elemanlarının ilk değerini veriyor. Ama derleyicinin eklediği kodla o derleyicinin eklediği v pointer'da yine derleyicinin oluşturduğu bir veriyapısının adresini tutuyor.
+
+> Bu pointer programın çalışma zamanında ilk değerini alıyor, programın çalışma zamanında oluşturuluyor.
+
+- Derleyici sınıf yer arşisindeki her sınıf için bir veriyapısı oluşturuyor. Bu veriyapısında sanal fonksiyonların adresleri var.
+
+![image](https://user-images.githubusercontent.com/75746171/212567824-9ebe2eb1-0ec5-400d-9c55-c1b2bc2038cd.png)
+
+- Şimdi soru, kaç tane Toyota nesnesi hayatta olursa olsun hepsinin içinde birer vptr var mı? Ama sanal fonksiyon tablosu bir tane o sınıf için. Yani 10 tane Toyota nesnesi hayattaysa 10 unun içinde de bir pointer var ve hepsinin içindeki pointer da aynı veriyapısının adresini tutuyor. 10 tane polymorfik sınıf varsa her bir sınıf için birer sanal fonksiyon tablosu veriyapısı var. Ama dikkat, Aynı indekste aynı sanal fonksiyonunun override'ının adresi var. 
+- Yani Toyota'nın tablosunun iki indeksinde Toyota'nın stop override'ının adresi var iken Volvo'nun sanal fonksiyon tablosunun iki indeksinde Volvo'nun stop fonksiyonunun adresi var. Derliyeci nasıl bu veriyapısını oluşturur da bunun indekslerine aynı overrideların adreslerini yazar?
+
+> Derliyeci bu adresleri zaten koda bakarak görüyor. İndeksi de koda bakarak statik olarak elde ediyor.
+
+**Virtual Dispatch:**  : Bizim virtual dispatch dediğimiz mekanizma aslında derdeyicinin sınıf nesnesinin içindeki sanal fonksiyon tablo göstericisine eriştiren ve oradaki belirli bir indeks'teki fonksiyon adresine  erişimi sağlayan ve o adresdeki fonksiyonu çağıran bir kod.
+
+**Yukarıdaki resimde**: 
+- Diyelim ki fiattan elde edilen fiat 124, fiyat sınıfının start fonksiyonunu override etmemiş. Bu durumda yine fiat 124 sanal fonksiyon tablosunda startın adresi olmalı değil mi? Ama o adres Fiat 124'ün override'ının değil de fiatın override'ının adresi olacak. 
+
+- Şimdi gerçekçi bir şekilde maliyeti düşünelim:
+
+> Bir sanal fonksiyon çağırısı bir dereferensing içermek zorunda. Çünkü o nesnenin taban sınıf nesnesinin içindeki sanal fonksiyon tablosunun adresine erişmesi lazım. Ve bir dereferencing daha. Neden? O tablonun da bir dizi olduğunu düşünün, o dizinin bir elemanına erişmek de bir dereferencing.
+
+- Yani normal fonksiyon çağrısına göre sanal fonksiyon çağrısı, herhangi bir optimizasyon olmazsa iki tane ilave D referensin maliyeti içeriyor. Başka maliyetler neler?
+
+- Nasıl elemanlara ilk değer vermek için işlem kolu üretiliyorsa o pointerların initialize edilmesinin de bir maliyeti var. 
+
+Kısaca maliyetler:
+
+1. sınıf nesnesinin içindeki pointer'ın initialize edilmesi
+2. sanal fonksiyon tabloların oluşturulması.
+3. sanal fonksiyon çağrısı yapıldığında iki kez D referensin yapılması.
 
 
+- Her sınıf için bir sanal fonksiyon tablosu olacağına göre her sınıf için bir sanal fonksiyon tablosu bellek alanı gerekiyor. Diyelim ki böyle bir veri yapısı için 100-bytlık bir bellek alanı gerekiyorsa bu 100-bytlık bellek alanı her sınıf için alocate edilmek zorunda. **Ama asıl kritik problem şu:**
+
+- Bu nesneler birçok uygulamadı dinamik ömürlü olmak zorunda. Dinamik ömürlü nesne demek, Dinamik ömürlü nesnenin kendisinin de bellek alanı alocate edilmesi demek. Bu ciddi bir maliyet. Otomatik ömürlü bir nesneye  oluşturma maliyetiyle dinamik ömürlü bir nesneyi oluşturma maliyeti arasında 50 kata yakın maliyet fark olduğunu düşünün.
+```CPP
+	std::vector<Car*> cvec;
+```
+> container denilen sınıf nesneleri ya da sınıflar pointer tutabiliyor. Ama referans tutamıyor. Ama referance wrapper  sınıfı ile referansı sarmalayarak vectorun vectorlar ile referans  kullanılabiliyor. Bunu öğreneceğiz. 
+
+**smart pointer'la pointer arasında buradaki kullanım uçasından ne fark var?**
+
+- Normal pointer'la dinamik ömür nesneleri yönettiğinizde dinamik ömür nesnenin dili tedilmesinden onun hayatının sonlandırılmasından siz sorumlusunuz. Ama dinamik ömür nesneyi smart pointer'la kontrol ettiğiniz zaman (örneğin bir unique ptr nesnesi ile kontrol ettiğiniz zaman) onun hayatını kontrol etmek artık sizin sorumluluğunuzda değil. unique ptr nesnesinin hayatı bitince hayatını kontrol ettiği nesneyi de delete edecek.
+
+- Mesela şimdi bu vektör nesnesinin hayatı biterse o vektörün tuttuğu pointerlar delete edilmeyecek:
+
+```CPP
+	vector<Car*> cvec;
+```
+> Ama vektör eğer Car* değil de unique ptr'e tutsaydı vektör nesnesinin hayatı bittiğinde vektör nesnesi destruct olduğunda vektörün tuttuğu sınıf nesnelerinin destructorleri çağrılacaktı. Vektörün tuttuğu sınıf nesneleri de unique_ptr olduğu için unique_ptr'nin destructor'u çağrılacaktı. Unique_ptr'nin destructor'u de  hayatını kontrol ettiği nesneyi delete edecekti.
+
+```CPP
+#include <iostream>
+#include "car.h"
+#include <vector>
+
+using namespace std;
+
+for (int i = 0; i < 1000; ++i)
+{
+	cvec.push_back(create_random_car());
+}
+for (auto p : cvec) {
+	cout << *p << '\n';
+	p->start();
+	p->run();
+	p->stop();
+	(void)getchar();
+}
+```
+> Benim vector ile işim bittiğinde bu kod ççok kötü durumda. Çünkü bu dinamik ömürlü nesnelerin hiçbiri delete edilmeyecek, resource leak oluşacak.
+
+## Memory leak ve resource leak kavramları:
+
+- **Memory leak:** bir allocator'ın bellek alanı elde etmesi fakat o bellek alanı kullanımına ihtiyaç kalmamasına karşın o alanın geri verilmemesi. Geri veremediği sürece o bellek artık başka kodlar tarafından kullanılma potansiyelinde olmayacak. Biz orayı bloke etmiş olacağız.
+
+- **Resource Leak:** Sadece bir bellek alanı olmak zorunda değil.  Örneğin bir veri tabanı bağlantısı, bir dosya, bir kilit sistemi, bunların hepsi birer resource olabilir. Constructor tarafından edinilen kaynaklar, destructor tarafından geri veriliyor. 
+- Dolayısıyla bir sınıf nesnesini hayata getirdiğimizde konstraktörü çağrılıyor, tipik olarak kaynaklar ediniliyor. Ama o sınıf nesnesinin destraktörünün çağrılmasını engelleyen bir durum söz konusuysa destraktör çağrılmadığı için sınıf nesnesi için ayrılan kaynak geri verilmeyecek.
+
+**Örnek:**  Destraktörün bir dosyayı kapatması gereksin. Destraktör çağrılmazsa dosya kapatılmayacak . Destraktörün bir Muteks unlock etmesi gereksin destraktör çağrılmazsa edilmeyecek. Destraktörün server bağlantısını kapatması gereksin, destraktör çağrılmazsa server bağlantısı kapatılmayacak. **İşte bu resource leak**
+
+## Final Keyword 
+
+- Contextual keyword kavramanın modern C++'la dileğe eklendiğini ve C++11 standardlarıyla başlangıçta iki tane contextual keyword eklendiğini söylemiştik. Bunlar final ve overwrite sözlüklerimiz. Biz override'ı gördük.
+
+- İki tane ayrı kavram var, programlama dilinden bağımsız.  Biri bir sınıfın Final olması, Final Class. Diğeri overwrite edilmiş bir sanal fonksiyonun Final olması.
+
+**Final Class:**: öyle bir sınıf ki artık tasarım açısından, bu sınıftan yeni bir sınıfın kalıtım yoluyla elde edilmesi istenmiyor.
+
+**Final Overrider:** Öyle bir sanal fonksiyon ki override edilmiş ama o override'a sahip sınıftan yeni bir sınıf kalıtımla elde edildiğinde onların override edilmesi istemiyor, yasaklanmış. Yani diyor ki ben bu fonksiyonu override ettim ama benden kalıtım yoluyla elde edecek sınıflar benim implementasyonumu kullanacaklar.
+
+**Örnek:**
+```CPP
+using namespace std;
+
+class Base {
+public:
+};
 
 
+class Der final : public Base {
+
+};
+
+class Nec : public Der {
+
+};
+```
+> Hata mesajı: a 'final' class type cannot be used as a base class
+
+```CPP
+class Base {
+public:
+	virtual void func();
+};
 
 
+class Der : public Base {
+public:
+	virtual void func()final override;
+};
 
+class Nec : public Der {
+public:
+	virtual void func()override;
+};
+```
+> cannot override 'final' function
+- Final'ın bir başka faydası da,  Derliyci bazı durumlarda sana virtual dispatch uygulaması gereken yerde hangi fonksiyonun çağrıldığını koda bakarak anlayabiliyorsa virtual dispatch kodu üretmek yerine doğrudan o fonksiyonu çağıracak kod üretiyor.
 
+## Private - Protected Inheritance
 
+- Normalde nesne yönelimini programlamada kalıtım; "is a relationship" dediğimiz ilişki biçimini
+temsil ediyor, onu implement etmek için kullanıyor. (Her mercedes bir arabadır, her üçgen bir şekildir, her müdür bir çalışandır.) Fakat C++'da kalıtım, sadece "is a relationship, is a" ilişkisini
+göstermeye yönelik, temsil etmeye yönelik, implement etmeye yönelik bir araç değil. C++'da kalıtım daha geniş bir araç seti.
 
+**C++'da kalıtıma bakarsak:** kalıtım üç ayrı kategoriye ayrılıyor:
+1. public inheritance,
+2. private inheritance 
+3. protected inheritance.
 
+- Bunlardan sadece public inheritance, C++'daki javadaki kalıtımın karşılığı,
+private ve protected inheritance daha az kullanılan daha özel araçlar. Şimdi bunları incelemeye başlayacağız.
 
+### Private Inheritance 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- Public inheritance'ta, sizin taban sınıfınızın public fonksiyonları sizin public bölümünüze ekleniyordu. Taban sınıfınızın protected fonksiyonları, protected bölümünüze ekleniyor.
 
 
 
