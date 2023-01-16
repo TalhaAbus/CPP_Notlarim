@@ -9195,7 +9195,7 @@ void f()
 ```
 > Bir nesne kullanarak kaynağı doğrudan pointerlara bağlamak yerine böyle bir sınıf olarak sarmaladığınız zaman elde ettiğiniz avantajlardan biri de artık bu nesnenin kaynağını geri vermesi garanti altında. 
 
-
+# Ders 25
 
 
 
