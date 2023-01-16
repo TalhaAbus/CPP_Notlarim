@@ -8368,6 +8368,377 @@ private ve protected inheritance daha az kullanılan daha özel araçlar. Şimdi
 
 - Public inheritance'ta, sizin taban sınıfınızın public fonksiyonları sizin public bölümünüze ekleniyordu. Taban sınıfınızın protected fonksiyonları, protected bölümünüze ekleniyor.
 
+- Private kalıtımında artık haban sınıfın public bölümü türemiş sınıfın public bölümüne eklenmiyor. Bu ne demek?
+
+```CPP
+class Base {
+private:
+	void pri();
+protected:
+	void pro();
+public:
+	void pub();
+};
+
+class Der : private Base {
+public:
+
+};
+
+int main()
+{
+	Der myder;
+	myder.pub();
+}
+```
+> Public kalıtım olsaydı kod geçerliydi ama şimdi erişim kontrolüne takılacak. Her Der bir Base dir diyemeyiz.
+
+```CPP
+class Base {
+private:
+	void pri();
+protected:
+	void pro();
+public:
+	void pub();
+};
+
+class Der : private Base {
+public:
+
+};
+
+class Nec : public Der {
+	void foo()
+	{
+		pro();
+	}
+};
+```
+> Der sınıfı base sınıfının protected bölümünü kendi protected bölümüne değil yine kendi private bölümüne eklemiş oldu. Geçersiz
+
+
+**Örnek:**
+```CPP
+class A {
+public:
+	void foo();
+};
+
+class B {
+public:
+	void func()
+	{
+		ma.foo();
+	}
+private:
+	A ma;
+};
+```
+> Eğer B, A'nın elemanlarını kullansın istiyorsam böyle yapabilirim. B sınıfı, A sınıfı türünden bir eleman sahibi olabilir. Burada hiçbir şekilde her B bir A değildir. Üye fonksiyonları içinde de bu elemanı kullanabilir. Peki aynı durum acaba private kalıtımıyla yapılabilir mi:
+
+```CPP
+class A {
+public:
+	void foo();
+};
+
+class B : private A{
+public:
+	void func()
+	{
+		foo();
+	}
+
+};
+```
+> Burada her B bir A'dır. diyebiliriz (Her zaman olmasa da) 
+
+### Protected Inheritance
+```CPP
+class Base {
+protected:
+	void foo();
+};
+
+class Der : private Base {
+	void bar()
+	{
+		foo();
+	}
+};
+
+class SDer : public Der {
+	void baz()
+	{
+		foo();
+	}
+};
+```
+
+> SDer sınıfı taban sınıfın protected bölümündeki fonksiyonu çağıramaz çünkü private inheritance'ta taban sınıfın protected fonksiyonu türemiş sınıfıhn protected bölümüne eklenmiyor, private bölümüne ekleniyor.
+
+## Multiple Inheritance
+
+- Multiple inheritance ile Multi-level inheritance'ı birbirinden ayıralım. Multi-level inheritance dendiğinde kast edilen Bir sınıftan başka bir sınıfı kalıtım yoluyla elde ediyoruz
+
+- Ama kalıtım yoluyla elde ettiğimiz sınıftan da başka sınıfları kalıtım yoluyla elde ediyoruz, Burada multi-level inheritance söz konusu. Multi-level inheritance, bir sınıfı doğrudan tek bir kalıtım ile birden fazla taban sınıftan oluşturmak. Yani kalıtımda birden fazla taban sınıfımızın olması.
+
+![image](https://user-images.githubusercontent.com/75746171/212627354-b4c2e138-26cd-42fa-8a0f-cce63bbe423a.png)
+
+> Her der nesnesi aynı zamanda bir BaseX, Her der nesnesi aynı zamanda bir BaseY olarak kullanılabilecek.
+
+```CPP
+class A {
+
+};
+class B {
+
+};
+
+class C : public A, public B {
+
+};
+```
+
+- Var olan bir sınıfa belirli özellikler eklemek için oluşturduğumuz sınıflara programlamada mixing-class'da deniyor. Mixing-class oluşturmanın bir takım teknikleri var Bunlardan bir tanesi de multiple inheritance.
+
+- Şimdi çoklu kalıtımda en önemli noktalardan biri isim çakışması.
+
+```CPP
+class A {
+public:
+	void foo(int);
+};
+class B {
+	void foo(double);
+};
+
+class C : public A, public B {
+
+};
+int main()
+{
+	C cx;
+
+	cx.foo(12);
+}
+```
+> Sentaks hatası, Ambiguity var. İsim arama önceliği yok. Hepsinde birden aranıyor.  Derleyici sentaks hatasını foo'nun ne olduğunu daha kararını vermeden veriyor. Çünkü her ikisinde birden arıyor.
+
+```CPP
+class A {
+public:
+	int foo{};
+};
+class B {
+	void foo(double);
+};
+
+class C : public A, public B {
+
+};
+int main()
+{
+	C cx;
+
+	cx.foo(12);
+}
+```
+> Yine sentaks hatası. Çünkü problem hangi fonksiyonun çağrılıldığı vesaire değil, varlığın ismin hangi varlığa ilişkin olduğu anlaşılamıyor. Taban sınıfın ismiyle nitenemeden ambigüiti olacak. Niteleyerek kullandığım zaman hiçbir problem yok.
+
+```CPP
+class A {
+public:
+	int foo(int);
+};
+class B {
+public:
+	void foo(double);
+};
+
+class C : public A, public B {
+	void func()
+	{
+		A::foo(12);
+		B::foo(1.2);
+	}
+};
+```
+> Hatasız. Peki  A'daki foo yu çağırmanın başka yolu olabilir mi?
+
+```CPP
+class A {
+public:
+	int foo(int);
+};
+class B {
+public:
+	void foo(double);
+};
+
+class C : public A, public B {
+	void func()
+	{
+		((B*)this)->foo(2.3);
+		((A*)this)->foo(3.4);
+	}
+};
+```
+> Hatasız.
+
+```CPP
+class A {
+public:
+	int foo(int);
+};
+class B {
+public:
+	void foo(double);
+};
+
+class C : public A, public B {
+public:
+	using A::foo;
+	using B::foo;
+};
+int main()
+{
+	C cx;
+	cx.foo(12);
+}
+
+```
+> function overloading
+
+```CPP
+class A {
+public:
+	A()
+	{
+		std::cout << "A constructor\n";
+	}
+};
+class B {
+public:
+	B()
+	{
+		std::cout << "B constructor\n";
+	}
+};
+class C : public A, public B {
+public:
+
+};
+int main()
+{
+	C cx;
+}
+```
+> Bildirildiği sıra ile hataya geliyor. Burada önce A hayata gelecek.
+
+### Diamond formation (DDD) (Dreadful Diamond of Derivation)
+
+- Şöyle bir durum olduğunu düşünün:  Taban sınıftan public kalıtımıyla elde edilen iki tane ayrı sınıf var.
+
+![image](https://user-images.githubusercontent.com/75746171/212632709-7f04ce81-564a-4c0c-91e1-7ea496de3b8b.png)
+
+- Bunların içinde de birer base var. Bu durumda Emder sınıfı türünden nesnenin içinde iki tane ayrı base nesnesi olacak. Biri Mder'in içindeki Der1 içindeki Base diğeri Mder'in içindeki Der2 nesnesinin içindeki base.
+
+- Mder içinde Base'den gelen bir nesne kullandığımda, niteleme yapmadığımda derleyici ambiguity hatası verecek.
+
+```CPP
+class Base {
+public:
+	void foo();
+};
+
+class Der1 : public Base {
+
+};
+
+class Der2 : public Base {
+
+};
+
+class MDer : public Der1, public Der2 {
+
+};
+
+int main()
+{
+	MDer md;
+
+	md.foo();
+}
+```
+> Sentaks hatası. Derleyici Der1 içindeki Base mi yoksa Der2 içindeki base'in adresi mi gelecek bilemez. Ambiguity.
+
+```CPP
+int main()
+{
+	MDer md;
+
+	md.Der1::foo();
+	md.Der2::foo();
+}
+```
+> Böyle yazılabilirdi.
+
+**Virtual Inheritance:**
+
+- Çoklu kalıtım yapacağım. Ama çoklu kalıtımda ortak bir taban sınıf varsa, çoklu kalıtımla elde edilecek sınıf türünden nesnelerin içinde o taban sınıfların ortak taban sınıfı türünden bir tane nesne olmasını istiyorsam virtual inheritance denilen aracı kullanmalıyım.
+
+![image](https://user-images.githubusercontent.com/75746171/212640019-214e4776-d38b-4e50-b626-0fb3acc12541.png)
+
+- Standart kütüphanede mirtual inheritance ve multiple iheritance örnekleri. Bizim cout değişkenimiz basic_ostream türünden. Cin nesnemiz basic_istream türünden. (cin cout global)
+- Şimdi eğer buradaki kalıtım virtual olmasaydı yukarıdaki taban sınıflardan ikişer tane olacaktı. Oysa bu taban sınıf içindeki operasyonlar okuma ve yazmadan bağımsız her ikisi içinde kullanılıyor.
+- Yani çoklu kalıtımla elde edilmiş sınıf nesneleri içinde sadece bir tane basic_ios var.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Exception Handling
+
+
+
+
+
 
 
 
