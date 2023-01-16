@@ -9005,33 +9005,195 @@ int main()
 **Catch blocklarının oluşturulma sırası önemli mi?**
 - Çünkü derleyicinin ürettiği kodda sınama yukarıdan başlayarak aşağı doğru yapılıyor. Catch all bloğunu en üste koysaydım eğer derleyici buna ilişkin bir diagnostic vermeseydi (ki derleyiciler bu durumda tipik olarak diagnostic verirler) gönderilen hata nesnesi int türden olsa da Catch all bloğu yakalardı:  (handler is masked by default handler) Hatası 
 
+**exception'ı yakaladığımızda neler yapabiliriz exception'ı yakalayıp ne hangi biçimlerde müdahale edebiliriz?**
+- Eğer sizi ilgilendirmiyorsa doğrudan yapacak bir şeyiniz yoksa bir exception'ı yakalamaya çalışmayın
+
+> Bir takım işlemler yapıp exit fonksiyonlu çağırabilirsiniz ya da belki duruma göre abort fonksiyonluğa çağırabilirsiniz
+
+> Exception'ı yakalarım ve bir takım işlemleri yapabilirim. Exception'ı tekrar yukarı gönderebilirim. (Aynı exception nesnesi) İşte bu işleme  retroll statement deniyor. 
+
+> Exception'ı yakalayıp bir takım işlemler yaparak ya da yapmadan başka bir türden exception göndermek. Buna da popüler olarak exception'ı translate etmek deniyor.
 
 
+## Stack Unwinding (Yığının geri sarımı)
 
+- Diyelim ki f1'den 19 a kadar birbirini çağırdı.  f19 fonksiyonu exception trove etti. Peki bu exception f1 fonksiyonunda yakalansa bu arada onlarca yüzlerce sınıf nesnesi hayata gelmiş olabilir. Birçok sınıf nesnesi (string sınıfında olduğu gibi vektor sınıfında olduğu gibi) edindiği kaynağı destructorla geri veriyor. En tehlikeli senaryo bir sınıfın constructor yoluyla edindiği kaynağı destraktıra yapılan çağrıyla geri vermesi yerine destructor'ın hiç çağrılmaması, ve kaynağın geri verilmemesi. Buna gene olarak resource leak dendiğini bir hatırlatalım. 
+- Bu durumda exception'ı gönderen kodla exception'ı yakalayan kod arasında onların destraktırılarının çağrılması gerekiyor ki bir kaynak sızıntısı olmasın.
 
+**Örnek:**  Tüm fonksiyonlar birbirini çağırdı ama her fonksiyonun stack frame'inde çeşit çeşit sınıf nesneleri oluşturuldu. Programın akışı exception'ı handle eden koda geldi. Bir daha o sınıf nesnelerini kullanma şansım yok, onlar otomatik ömürlü ama onların da destraktırları çağrılmadı. Destructorlarının çağrılmaması demek onların kaynaklarını geri verememesi demek.
 
+- İşte exception handling mekanizmasının bize sunduğu en büyük nimetlerden biri stack unwinding diye isimlendirilen süreçle, exception'ı gönderen kodla exception'ı handle eden kod arasında farklı stack frame'lerde 
+oluşturulan hayata getirilmiş nesnelerin destraktırlarının çağrılma garantisi.
 
+- Yani bütün otomatik sınıf nesneleri için destraktırlar çağrılacak ama bu garanti exception'ın yakalanması durumunda var. 
 
+- Exception yakalanmadığı zaman problem problem sadece programın sonlanmaması değil aynı zamanda farklı stack frame'lerde
+oluşturulan sınıf nesnelerinin destraktırlarının çağrılmaması. Belki de o destraktırların çağrılmaması
+kalıcı zarar da oluşturabilir. 
 
+- Dolayısıyla program bitirilmek istense de sonlandırılmak istense de program çalıştırılmaya devam ettirilmek istense de bizim bir şekilde stack frame'lerde tekrar kapatılan stack frame'lerde oluşan otomatik ömürlü nesnelerin destraktırlarının çağrılmasını sağlamamız gerekiyor işte bu derliyicinin ürettiği kodla otomatik olarak gerçekleştiriliyor.
 
+```CPP
+#include <iostream>
 
+class ResourceUser {
+public:
+	ResourceUser()
+	{
+		std::cout << ". kaynak edinildi\n";
+	}
+	~ResourceUser()
+	{
+		std::cout << ". kaynak geri verildi\n";
+	}
+};
 
+void f4()
+{
+	ResourceUser();
+}
+void f3()
+{
+	f4();
+	ResourceUser();
+}
+void f2()
+{
+	f3();
+	ResourceUser();
+}
+void f1()
+{
+	f2();
+	ResourceUser();
+}
+int main()
+{
+	f1();
+}
+```
+> Kaynak edinilip veri verildi. Çünkü scope bittiğinde resourceUser için destructor çağırıldı.
 
+- Şimdi burada f4 fonksiyonu içinde bir exception throw edilse: bu exception yakalanamadığı zaman artık programın akışı buradan çıktığı için ve buralara geri dönmeyeceği için bu nesnelerin destraktörları çağırılmayacak:
 
+```CPP
+#include <iostream>
 
+class ResourceUser {
+public:
+	ResourceUser()
+	{
+		std::cout << ". kaynak edinildi\n";
+	}
+	~ResourceUser()
+	{
+		std::cout << ". kaynak geri verildi\n";
+	}
+};
 
+void f4()
+{
+	ResourceUser();
+	throw 1;
+}
+void f3()
+{
+	f4();
+	ResourceUser();
+}
+void f2()
+{
+	f3();
+	ResourceUser();
+}
+void f1()
+{
+	f2();
+	ResourceUser();
+}
+int main()
+{
+	f1();
+}
+```
+> Kaynakları edinilecek ama bu kaynaklar geri verilmeden program sonlandırılmış olacak. Kodü düzenleyelim:
 
+```CPP
+#include <iostream>
 
+class ResourceUser {
+public:
+	ResourceUser()
+	{
+		std::cout << ". kaynak edinildi\n";
+	}
+	~ResourceUser()
+	{
+		std::cout << ". kaynak geri verildi\n";
+	}
+};
 
+void f4()
+{
+	ResourceUser();
+	throw 1;
+}
+void f3()
+{
+	f4();
+	ResourceUser();
+}
+void f2()
+{
+	f3();
+	ResourceUser();
+}
+void f1()
+{
+	f2();
+	ResourceUser();
+}
+int main()
+{
+	try {
+		f1();
+	}
+	catch (int) {
+		std::cout << "catch int";
+		(void)getchar();
+	}
+}
+```
+> Tek tek her bir stack frame'den çıktığımda destraktörün çağırıldığını göreceğim. Yani programın akışı catch bloğuna girdiği zaman o stack frame'deki bütün otomatik ömürlü nesneler destruct edilecek.
 
+**stack unwinding neden önemli ve bunun rayı idiomuyla ilgisi ne?**
 
+```CPP
+void f()
+{
+	FILE* f = fopen("ali.txt", "w");	// kaynak edinildi
 
+	//code   // ya burada çalışan kodlar exception throw ederse?
 
+	fclose(f);   // kaynak geri verildi.
+}
+```
+> normalde bu fonksiyon çağrıldığında kaynak edinilecek dosya açılacak. Belki dosyaya ilgili işlemler gerçekleştiren kodlar var. Ve en sonda artık o dosyayla işin bittiğimde dosyayı kapatıyorum. Görünmeyen şöyle bir risk var: ya burada çalışan kodlar exception throw ederse? O zaman programın akışı fclose çağrısını görmeyecek, bu kod yürütülmeyecek.
 
+- Bunun yerine ne yapıyoruz, 
+```CPP
+class File {
+	//ctor
 
+	//dtor
+};
 
-
-
+void f()
+{
+	File f("ali.txt");
+}
+```
+> Bir nesne kullanarak kaynağı doğrudan pointerlara bağlamak yerine böyle bir sınıf olarak sarmaladığınız zaman elde ettiğiniz avantajlardan biri de artık bu nesnenin kaynağını geri vermesi garanti altında. 
 
 
 
