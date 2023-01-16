@@ -8695,6 +8695,244 @@ int main()
 - Şimdi eğer buradaki kalıtım virtual olmasaydı yukarıdaki taban sınıflardan ikişer tane olacaktı. Oysa bu taban sınıf içindeki operasyonlar okuma ve yazmadan bağımsız her ikisi içinde kullanılıyor.
 - Yani çoklu kalıtımla elde edilmiş sınıf nesneleri içinde sadece bir tane basic_ios var.
 
+# Ders 24
+
+## Exception Handling
+
+- Program çalışırken, bir takım hatalar olabilir. Bunun programı çalışırken işini yapamamasının iki farklı nedeni olabilir. 
+
+1. Kodun yanlış olması.
+2. Programın çalışma zamanında beklenmeyen bazı durumlarının oluşması nedeniyle programın işini yapamaması
+
+- Eğer amaçımız, programın çalışamaması, işini yapamamasının nedeni olan kodlama hatalarını bulmaksa, onlar için kullandığımız araçlar farklı.  Ama kodda bir hata olmamasına karşın, programın çalışma zamanında başka nedenlerden program işini yapamıyorsa, onlarla mücadele etmek için kullandığımız araçlar farklı.
+
+- Kendi hatalarımızı bulmaya yönelik kodlara programlamada popular olarak assertion kodları deniyor.
+
+1. static assertion 
+2. Dynamic assertion
+
+Örnek: Benim progrmaının çalışması için int türünün 2 byte tan daha büyük olması gereksin. Bunu derleme zamanında derleyicinin kontrolüne bırakabiliriz ve derleyici sizeof int 2 byte olduğunu gördüğünde bana bir hata mesajı verebilir. Bu static assertion.
+
+- C' de statik assertion önemli ama C++'ta olduğu kadar değil. Çünkü bizim önümüzdeki günlerde tanışacağımız generic programlama paradigması var.
+
+**Dynamic assertion:**  Program çalışma zamanında yapılan doğrulamalar. 
+
+**Exception Handling:**  Dilin içine gömülü, programın çalışma zamanına yönelik hatalarla başa çıkmaya yönelik dilin sağladığı araç seti. Bir fonksiyonun işini programın çalışma zamanında oluşan koşullar nedeniyle gerçekleştirememesi.
+
+- **C gibi bir dilde programın çalışma zamanına yönelik hataları yönetme, kontrol etme:** fonksiyonlar kendisini çağıran koda işlerini yapamadıkları zaman bir şekilde işlerini yapamadıklarını belli eden bir bilgi iletiyorlar. Bu geleneksel hata işleme yöntemleri. Exception handling araçlarının avantajlarını anlayabilmek için önce geleneksel hata işleme yöntemlerinin dezavantajlarını konuşmamız gerekiyor. Geleneksel hata işleme yöntemleri derken ne kastediriyor?
+
+**Bir yöntem:** Fonksiyonun geri dönüş değeriyle işini yapamayacağı bilgisini çağıran koda iletmek. En çok kullanılan yöntem: fonksiyonun geri dönüş değeri mekanizmasıyla işini yapamadığı durumunu çağıran koda iletmesi.
+
+- Aslında gelenenksel yöntemlerin ortak noktası, çağıran koda bir değer iletilmesi. C++ dilinde bu bazı durumlarda mümküno lmayabilir (Constructor'ın geri dönüş değeri yok)
+
+
+> f1 => f2 => f3 => F4 => F5 .....  iç içer fonksiyonlarda hata olduğu bilgisinin geri döndürülme aşamaları buna benzer.
+- **Burada verimli olan yöntem:** 
+> Programın akışı, programın çalışma zamanında hatayı tespit eden, işini yapamayacağını anlayan koddan o hataya müdahale etme isteği yetkisi olan koda aktarılması.  Yani aradaki fonksiyonlar adeta devre dışı kalacak. Bir hata oluşması durumunda programın akışını hatayı tespit eden koddan doğrudan hatayı işleyen koda çekebileceğiz.
+
+- Bu durum C'de yapılamaz değil, ama hazır bir araç yok. 
+
+- Edxception handling ile ilgili 3 tane anahtar sözcüğümüz var:
+
+1. thwrow: throw statement oluşturulmasına kullanılıyor
+2. try
+3. catch
+
+- Beni hangi fonksiyonlar çağırmışsa, (beni çağıran, beni çağıranı çağıran) ben işimi yapamıyorum. İşimi yapamadığıma ilişkin bir bilgiyi oluşturdum size gönderiyorum. Kim ki bu hataya müdahale etmek isterse bunu yakalasın ve o hataya müdahale etsin.
+
+```CPP
+try{
+	foo();
+}
+```
+**Try:**  Bir block olmak zorunda. **Bu bloğun anlamı:** Sevgili derliyeci, sevgili okuyucu, bu block içinde çalışan kodlardan herhangi biri bir hata nesnesi gönderdiğinde ben o hatayı yakalayıp ona müdahale etmeye adayım demiş oluyorsunuz.
+
+**Catch:** Catch blockları hatayı işleyecek, ona müdahale edecek kodu içeren blocklar. (exception'ı handle edecek kod)
+
+```CPP
+catch (int x) {
+
+}
+```
+> eğer try block'unun içinde çalışan kodlardan gönderilen hata nesnesinin türü int ise programın akışı bu catch block'una çekilecek yani catch parametresi olan tür aslında bizim müdahale etmek istediğimiz hatayı temsil eden tür.
+
+- Her tyr bloğundan sonra bir catch bloğu olmak zorunda. 
+
+```CPP
+int x = 10;
+
+throw x;
+```
+> throw statement'daki throw expression kendisi bir l value expression olsa da yukarıya gönderilen nesne bu nesnenin kendisi değil. Derliyici trove expression'dan faydalanarak kendisi bir nesne hayata getiriyor. Yani aslında yukarıya gönderilen nesne derliyicinin oluşturduğu nesne. Throw ifadesinde yer alan nesne değil.
+
+```CPP
+void foo()
+{
+	int x = 13;
+	throw x;
+}
+```
+> eğer gönderilen nesne x'in kendisi olsaydı bu nesnenin hayatı bittiğinde hatayı yakalayacak kod, hayatı bitmiş bir nesneyi kullanma girişimin de bulunacaktı. Bu bir tanımsız davranış. 
+
+```CPP
+void foo()
+{
+	throw ???
+}
+
+```
+> İşinizi yapamamanızın nedeninin ne olduğunu tipik olarak yukarıdaki koda iletmek istiyorsunuz. Çoğu durumda işinizi yapamamanızın nedeninin ne olduğunu yukarıya bildiriyorsunuz ki yukarıdaki kodlar bu nedenlerin neler olduğuna bağlı olarak hataayı yakalayıp müdahale etmek istiyor. Mesela bir kod **bellek yetersizliği** hatasına müdahale etmek isterken bir başka kod **matematiksel bir hata** söz konusuysa ona müdahale etmek isteyebilir. İşte burada hatayla ilgili bilgi vermenin iki tane önemli aracı var.
+
+1. Doğrudan true ifadesinin türü:
+
+- Mesela **"date exception"** isimli bir sınıf tarih işlemleriyle ilgili oluşan bir hatayı temsil etmek için tanımlanmışsa sizin true ifadenizin date exception sınıfı türünden olması, **ben tarih işlemleriyle ilgili bir hata olduğu için işimi yapamadım** bilgisini iletiyor. İşinizi yapamamanızın nedeni bambaşka bir hata ise o zaman ona yönelik bir tür kullanıyorsunuz. Türün kendisi hatanın genel niteliğini belirtiyor ve kalıtımdan faydalanarak bunu hiyerarşik bir şekilde yapılandırabiliyorsunuz. 
+
+**Örnek:**
+
+```CPP
+NecException
+
+MathError
+
+DivideByZero
+```
+
+- NecException sınıfımız var. Bu hata sınıfından yapılan kalıttımlarla elde ettiğim sınıflardan biri **MathError** sınıfı olsa, meterör sınıfından da daha detaylı hata bitimlemeleri için divide by zero error sınıf oluşturursam.
+
+> O zaman diyeceğiz ki her divide by zero error aynı zamanda bir MathError dur. Ama her MathError de aynı zamanda bir
+set exception türüdür. 
+
+**throw statement yürütüldüğünde ne oluyor?**
+
+- Programın akışı o fonksiyondan çıkacak hatayı yakalayan koda yönlendirilecek. Ya bu hata yakalanmazsa? Buna uncot exception deniyor. Bir exception gönderilmişse fakat yakalanmamışsa, (yani uncot exception durumu oluşmuşsa) derleyicinin oluşturduğu kod standard kütüphanenin terminate isimli bir fonksiyonunu çağırıyor. Terminate fonksiyonunun default davranışı, yine standard kütüphanenin abort fonksiyonunu çağırmak. Yani yakalanamayan bir hata söz konusu olduğunda abort çağırılır, programın çalışması sonlandırılır. Hata akımına Abortun çağırıldığını gösteren bir yazı da yazılacak. 
+
+- Terminate fonksiyonun dışında bir de ismi set_terminate olan ikinci bir fonksiyon var. Bu terminate'in default davranışını değiştiriyor. Yani siz eğer terminate'in abortu çağırması yerine sizin belirlediğiniz bir fonksiyonu çağırmasını istiyorsanız, set_terminate fonksiyonuna (argüman olarak) çağırılmasını istediğiniz fonksiyonun adresini geçiyorsunuz. 
+
+```CPP
+#include <iostream>
+
+#define		st()	(std::cout << __func__ << "starts\n")
+#define		end()	(std::cout << __func__ << "ends\n")
+
+void f4()
+{
+	st();
+	end();
+}
+void f3()
+{
+	st();
+	f4();
+	end();
+}
+void f2()
+{
+	st();
+	f3();
+	end();
+}
+void f1()
+{
+	st();
+	f2();
+	end();
+}
+
+int main()
+{
+	f1();
+	end();
+}
+```
+> Çıktılar:
+
+f1starts
+f2starts
+f3starts
+f4starts
+f4ends
+f3ends
+f2ends
+f1ends
+mainends
+
+```CPP
+void f4()
+{
+	st();
+	throw 1;
+	end();
+}
+```
+> Eğer böyle yazsaydık runtime'da progrmaın akışı f4'ten çıkacak ve abort fonksiyonu çağırılacak. Ama abortu çağıran aslında kim? Standart kütüphanenin terminate isimli fonksiyonu.
+
+```CPP
+using terminate_handler = void(*)(void);
+```
+- Bu durumda terminate handler. Hangi türün eşismi? Geri dönüş değeri olmayan, parametresi olmayan fonksiyon adresi türünün eş ismi.
+
+```CPP
+terminate_handler set_terminate(terminate_handler);
+```
+> Set terminate diyor ki, bana bir fonksiyonun adresini gönder, ben adresini gönderdiğim fonksiyonu kayıt edeceğim. Böylece terminate fonksiyonu abortu çağırmak yerine senin, adresini gönderdiğin fonksiyonu çağıracak. Geri dönüş değeride bu işlem yapılmadan önce default olarak hangi fonksiyon çağırılıyorsa ya da önce hangi fonksiyonu set edilmişse onun adresi.
+
+**Bu nasıl implemente ediliyor?**
+- Global bir değişken var. Terminate_handler. Abortun adresiyle ilk değer verilmiş.
+
+```CPP
+terminate_handler gfp = &abort;
+
+void terminate()
+{
+	gfp();
+}
+```
+- Siz terminate'i çağırdığınızda terminate'in abortu çağırmasının nedeni terminate'in fonksiyon çağırısında kullandığı fonksiyon pointer'ının değerinin abortun adresi olması. 
+
+**Set terminate ne yapıyor?**
+```CPP
+terminate_handler set_terminate(terminate_handler f)
+{
+	auto ftemp = gfp;
+	gfp = f;
+	return ftemp;
+}
+```
+
+> Set terminate parametresine gelen adresi, bu global fonksiyon göstericisini set etmek için kullanıyor. Global fonksiyon göstericisinin değerini bir pointer'da saklıyor. Global fonksiyon göstericisinin değerini set ediyor ve eski değeri get ediyor.
+
+- Exception yakalanmadığı zaman çağırılan fonksiyon olan terminate'in abortu çağırması yerine sizin istediğiniz bir fonksiyonu çağırmasını istiyorsanız o zaman set terminate fonksiyonuna çağrı yaparak fonksiyonunuzu kayda alacaksınız. İşte böylece set terminate aslında terminate'in çağıracağı fonksiyonu sizin kayıt ettiğiniz fonksiyon yapacak. Böylece terminate çağırdığınızı da sizin istediğiniz fonksiyonu çağıracak.
+
+**Örnek:**
+
+```CPP
+void myabort()
+{
+	std::cout << "myabort function called!!!\n";
+	std::exit(EXIT_FAILURE);
+}
+
+int main()
+{
+	set_terminate(myabort);
+	// Bu noktadan sonra terminate çağırılırsa abort'u çağırmak yerine, 
+	// benim fonksiyonum olan my abort'u çağıracak.
+	st();
+	f1();
+	end();
+}
+```
+
+- Bizim birinci amacımız uygulamada herhangi bir şekilde bir exception gönderildiğinde o exception'a müdahale etmek.
+
+**exception safety:** Ne şekilde exception gönderilirse gönderirsin bu exception yakalanıyor.
+
+- Birçok durumda exception'ın yakalanması resumtif olarak kullanıyor. Yani resume etmek için. Yani siz exception'ı yakalıyorsunuz, gerekenleri yapıyorsunuz ve programın çalışması devam ediyor. Üstelik kalıcı bir zarar olmadan, bir kaynak sızıntısı olmadan devam ediyor. Tamamen durumun ne olduğuna bağlı olarak, stratejinin ne olduğuna bağlı olarak exception yakalandığında bir takım önlemler alınıp program sonlandırılabilir ya da çoğu zaman olduğu gibi resumtif bir mekanizma söz konustur. Exception yakalanır, handle edilir. Ama herhangi bir kayıp olmadan, hiçbir kaynak sızıntısı olmadan işini görmeye devam eder.
+
+- Öyle programlar var ki, programın sonlandırılıp tekrar başlatılması ya kabul edilebilir bir durum değil ya da bu durumda ciddi kayıplar oluşuyor. Mesela bir borsayı yönlendiren programın çalışırken sonlandığını düşünün. Tekrar başlatılacak ama o süre içinde işlemler yapılamayacak.  O işlemlerin yapılamaması milyonlarca hatta duruma göre milyarlarca dolar zarar verebilir.
+ 
+- Ya da öyle yerler var ki exception handling araçları kullanılmıyor. Çünkü onların kullanılması durumundaki
+işlemlerin zaman almasından dolayı kabul edilebilir bir yapı değil. Mesela gerçek zamanlı programlama sistemlerinde bir çok durumda exception handling kullanılması tamamen devredişi bırakılıyor, yasaklanıyor. 
 
 
 
@@ -8704,36 +8942,6 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Exception Handling
 
 
 
