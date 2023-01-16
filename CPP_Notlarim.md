@@ -8934,6 +8934,116 @@ int main()
 - Ya da öyle yerler var ki exception handling araçları kullanılmıyor. Çünkü onların kullanılması durumundaki
 işlemlerin zaman almasından dolayı kabul edilebilir bir yapı değil. Mesela gerçek zamanlı programlama sistemlerinde bir çok durumda exception handling kullanılması tamamen devredişi bırakılıyor, yasaklanıyor. 
 
+**Bir exception yakalamak için nasıl try bloğu oluşturuyoruz:**
+
+- Bir exception'ı yakalamak için öncelikle bir try bloğu oluşturmak zorundayız. Oluşturduğumuz try bloğu bildiğimiz bir blok. Örneğin bir try bloğu içinde bir değişken tanımlarsanız bu değişken yine blok scope kurallarına uyuyor.
+
+- Exception'ın yakalanması ve programın akışının try balloonu izleyen catch bloklarından birine çekilebilmesi için gönderilen exception'ın türüyle catch balloonun parametresinin türünün tamamen aynı olması gerekiyor. Yani burada tür dönüştürme kuralları geçer de değil.
+
+- İstisnaî bazı dönüşümler var. Onun dışında hiçbir örtürü dönüşüm yok. Türemiş sınıftan,
+taban sınıfa doğru yapılan dönüşüm. Yani ben türemiş sınıf türünden bir exception gönderirsemi is a relationship ile public kalıtımında her türemiş sınıf nesnesi aynı zamanda taban sınıf türünden kabul edildiği için onu taban sınıf türünden bir catch parametresine sahip catch bloğuyla yakalayabilirim.
+
+**Özet:** gönderilen bir hata nesnesini yakalamak için ya aynı türden bir catch parametresine ihtiyacımız var ya da tür dönüşümü yapılmıyor.  Örneğin int türden bir hata nesnesi gönderilirse parametresi double olan bir catch bloğu parametresiyle yakalayamıyoruz. Ama publik kalıtımında türemiz sınıf türünden gönderdiğimiz bir hata nesnesini onun taban sınıflarından biri türünden referans parametreye sahip bir catch bloğu ile yakalamamız mümkün.
+
+**Notlar:** Eğer çok özel bir durum yoksa hemen her zaman catch parametrelerini referans türü yapıyoruz. Bunun iki tane nedeni var. 1. Eğer referans türü yapmazsak object slicing devreye girer. Virtual dispatch mekanizması
+çalışmaz. 2. amacınız virtual dispatch uygulamak olmasa da bu durumda catch parametresi için de copy constructor çağrılacak ve bu durumda copy construct'rın kendisinin de tekrar bir exception gönderme, ihtimali söz konusu olacak.
+
+- O yüzden programın akışının catch bloğuna çekilmesinde catch parametresi için copy construct'rın çağrılması yerine  referans semantiği kullandığımızda çağrılan bir copy construct'r olmayacak. Öyle bir risk almamış olacağız. Bir diğer yandan runtime polymorphizminden faydalanmış olacağız.
+
+```CPP
+int main()
+{
+	set_terminate(myabort);
+
+	try {
+		f1();
+	}
+	catch (int) {
+		std::cout << "int\n";
+	}
+	catch (double) {
+		std::cout << "double\n";
+	}
+	catch (char) {
+		std::cout << "char\n";
+	}
+}
+```
+> Gönderilen hata nesnesi int, double,char türden olmasına bağlı programın akışı yönlendiriliyor. Bunlardan biri dğeilse de exception yakalanmayacak. 
+
+**Bütün hataları yakalamak teorik olarak mümkün mü?**
+
+- Belirli istisnalar dışında mümkün. Ben en kötü ihtimalle main fonksiyonunun tamamını bir try bloğu için alabilirim. Bu durumda main fonksiyonu içinde çalışan kodlardan gönderilen bütün hataları yakalayabilirim. Ama: 
+- Global değişkenler statik ömürlü, aynı şekilde sınıfların statik veri elemanları statik ömürlü. Dolayısıyla global bir sınıf nesnesi oluştursanız ve o sınıf nesnesini hayata getirmek için çağrılan constractor exception throw ederse main fonksiyonunun tamamını bir tryblow içine alsanız dahi o exception'ı yakalama şansınız yok.
+
+**Hangi türden olursa olsun bir exception'ı yakalama şansım var mı?**
+
+- Bunun özel bir sentaksı var. Catch anahtar sözcünü yazdıktan sonra catch parametresi içine elipsiz otomu koyarsanız bu bütün gönderilen hata nesnelerini yakalayacak bir catch bloğudur. Böyle catch bloğuna ingilizcede catch all bloğu deniyor.
+
+```CPP
+int main()
+{
+	set_terminate(myabort);
+
+	try {
+		f1();
+	}
+	catch (int) {
+		std::cout << "int\n";
+	}
+	catch (double) {
+		std::cout << "double\n";
+	}
+	catch (char) {
+		std::cout << "char\n";
+	}
+	catch (...) {
+		std::cout << "catch all\n";
+	}
+}
+```
+**Catch blocklarının oluşturulma sırası önemli mi?**
+- Çünkü derleyicinin ürettiği kodda sınama yukarıdan başlayarak aşağı doğru yapılıyor. Catch all bloğunu en üste koysaydım eğer derleyici buna ilişkin bir diagnostic vermeseydi (ki derleyiciler bu durumda tipik olarak diagnostic verirler) gönderilen hata nesnesi int türden olsa da Catch all bloğu yakalardı:  (handler is masked by default handler) Hatası 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
