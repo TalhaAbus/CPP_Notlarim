@@ -9197,36 +9197,333 @@ void f()
 
 # Ders 25
 
+**Konular:**
+- rethrow statement
+- ctor'dan exception gönderilmesi
+- destructor ve exception
+- noexcept operatörü
+- nmoexcept specifier
+- function try block
+- exception dispatcher
 
+**bir exception'ı yakaladığımız zaman tipik araçlarımızdan biri o exception'ı tekrar yukarı göndermek.**
 
+- Tipik olarak exception'ı yakalıyoruz. Kısmı müdahale de bulunuyoruz. Yani kendimiz için gerekli işlemleri gerçekleştiriyoruz. Bunlar loglama işlemleri olabilir, kaynak geri verme vesaire olabilir. Ama daha yukarıdaki kodların da müdahalesini mümkün kılmak için biz de aynı exception'ı yukarıya geri gönderiyoruz. 
 
+**Diyelim ki bir fonksiyon var bu fonksiyon bir exception trove ediyor:**
 
+```CPP
+void func()
+{
+	// code
+	throw std::out_of_range{ "aou_of_range" };
+}
 
+void foo()
+{
+	try {
+		func();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+		//code
+	}
+}
+```
+> Bu hatanın kendisini göndermek için arkadaşlar rethrow statement kullanıyoruz. Retro statement şöyle oluşturuluyor: rethrow sözcüğü var ve rethrow sözcüğünden sonra hiçbir ifade yok.
 
+- throw ve throw ex farkı
 
+```CPP
+throw ex; 
+```
+> Burada yazdığımız deyim retro statement değil kesinlikle. Peki fark ne?
 
+> Derleyici exception throw edildiğinde bir exception nesnesi oluşturuyor değil mi? Bu nesne yani derleyicinin oluşturduğu exception nesnesi yukarıya gönderildi. Biz şimdi "const std::exception& ex" Böyle bir referans ile bunu yakalarsak derleyicinin gönderdiği exception nesnesini kullanmış oluyoruz. Ve rethrow ettiğimizde ayno nesneyi gönderiyor.
 
+> Yani şimdi foo'yu çağıran bir fonksiyonda ben buradan rethrow edilen exception'ı yakalarsam yine aynı nesneyi mi yakalayacağım? Evet. Ama böyle yazarsam:
 
+```CPP
+throw ex;
+```
+> Eğer böyle yazarsam bu durumda buradaki (const std::exception& ex) nesnenin hayatı bitecek. O destroy edilecek. Ama o destroy edilmeden önce copy constructor çağrılarak derleyici yeni bir exception nesnesi oluşturacak.
 
+**Özetle:**
 
+```CPP
+throw;
+```
+> Burada ilk buraya gelen exception nesnesinin kendisi kullanılıyor.
 
+```CPP
+throw ex;
+```
+> Fakat burada ise ilk gönderilen exception nesnesinin hayatı bitmeden copy constructor  yoluyla yeni bir exception nesnesi oluşturuluyor. Yani siz exception sınıfının copy constructor'ını çağırmış oluyorsunuz.
 
+**İkinci bir fark ise:**  
+```CPP
+throw ex;
+```
+> Böyle bir kopyalama yaptığınız zaman dinamik tür bilgisini kaybetmiş oluyorsunuz. Yani object slicing oluyor. 
 
+**Object slicing olması ne demek:**
+```CPP
+const std::exception& ex
+```
+> Mesela ben bunu exception referansla yakaladım ama buraya gelen aslında out of range değil mi? **throw ex** ile out of range'in kopyasını çıkarttım. Out of range'i göstermesine rağmen **throw ex** ile oluşan nesne artık out of range nesnesi değil. Artık onun arkadaşlar türü std exception. foo'dan gönderilen hatayı out of range'de yakalamak istesem yakalayamayacağım. Çünkü artık o dinamik tür bilgisi kaybedildi.
 
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
 
+void func()
+{
+	// code
+	throw std::out_of_range{ "aou_of_range error" };
+}
 
+void foo()
+{
+	try {
+		func();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+		std::cout << &ex << '\n';
+		//code
+		throw;	//rethrow
+	}
+}
 
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "exception caught in main: " << ex.what() << '\n';
+		std::cout << &ex << '\n';
+	}
+}
+```
+**Çıktı:**
 
+```CPP
+exception caught:aou_of_range error
+000000D1A04FF888
+exception caught in main: aou_of_range error
+000000D1A04FF888
+```
+> İki nesnenin adresi aynı çıktı. Ama şimdi rethrow statement yerine throw ex yazdım:
 
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
 
+void func()
+{
+	// code
+	throw std::out_of_range{ "aou_of_range error" };
+}
 
+void foo()
+{
+	try {
+		func();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+		std::cout << &ex << '\n';
+		//code
+		//throw;	//rethrow
+		throw ex;
+	}
+}
 
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "exception caught in main: " << ex.what() << '\n';
+		std::cout << &ex << '\n';
+	}
+}
+```
+**Çıktı:**
+```CPP
+exception caught:aou_of_range error
+000000A6E74FF5A8
+exception caught in main: aou_of_range error
+000000A6E74FF6F8
+```
+> Nesne'nin adresinin farklı olduğunu görüyorsunuz
 
+- Main fonksiyonu içinde bir catch bloğu daha ekledim. Bu catch bloğunun parametresi const out of range. Ve rethrow statement kulanıyorum:
 
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
 
+void func()
+{
+	// code
+	throw std::out_of_range{ "aou_of_range error" };
+}
 
+void foo()
+{
+	try {
+		func();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+		std::cout << &ex << '\n';
+		//code
+		throw;	//rethrow
+		//throw ex;
+	}
+}
 
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::out_of_range) {
+		std::cout << "exception caught in main: std::out_of_range " << ex.what() << '\n';
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "exception caught in main: std::exception& " << ex.what() << '\n';
+	}
+}
+```
+**Çıktı:**
+```CPP
+exception caught:aou_of_range error
+00000040844FFA18
+exception caught in main: std::out_of_range
+```
+> Exception foo'da yakalandı. Yakalanan exception Out of range türünden. Exception rethrow  edildi. Main'de yakaladığında out of range yakaladı. Demek ki dinamik tür korundu. Şimdi alttaki kodu devreye sokalım:
 
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+
+void func()
+{
+	// code
+	throw std::out_of_range{ "aou_of_range error" };
+}
+
+void foo()
+{
+	try {
+		func();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught:" << ex.what() << '\n';
+		std::cout << &ex << '\n';
+		//code
+		//throw;	//rethrow
+		throw ex;
+	}
+}
+
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::out_of_range) {
+		std::cout << "exception caught in main: std::out_of_range\n ";
+	}
+	catch (const std::exception& ex)
+	{
+		std::cout << "exception caught in main: std::exception& " << ex.what() << '\n';
+	}
+}
+```
+**Çıktı:**
+```CPP
+exception caught:aou_of_range error
+0000003DEF2FF778
+exception caught in main: std::exception& aou_of_range error
+```
+> Az önce main'de yakalayan Out of range parametreye sahip catch bloğuydu. Fakat şimdi main'de yakalayan Exception parametreli catch bloğu. 
+
+> rethrow statement Demek ayrı bir sentaks kuralına tabi.
+
+**Özetle:**
+throw: İfadesi olmayan statement. Exception nesnesi. Aynı nesne yukarıya gönderilecek. Burada dinamik türü kaybetmiyoruz. 
+throw ex; Exception sınıfının Copy constructları çağrılıyor. Çünkü Derleyici yeni bir nesne oluşturmak zorunda.
+
+**Örnek:**
+
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+
+class NecException {
+
+};
+class ErgException {
+
+};
+class CSDException {
+
+};
+
+void handle_exception()
+{
+	try {
+		throw;
+	}
+	catch (NecException& e) {
+
+	}
+	catch (ErgException& e) {
+
+	}
+	catch (CSDException& e) {
+
+	}
+}
+void func()
+{
+	try {
+		//hata
+	}
+	catch (...) {
+		handle_exception();
+	}
+}
+```
+> Ben öyle bir yapı oluşturdum ki sadece bu exceptionları işliyorum. Gönderilen hata bu türlerdense bunları yakalayıp handle edeceğim. Yani bu catch blocklara çalışacak ama yakalamazsam  bu da ne demek? Gönderilen hatalar bu türlerden değilse yükselmeye devam edecek. (daha yukarıdaki katmanlar tarafından yakalanma ihtimali olacak)
+
+> Eğer bu yapı birkaç yerde tekrar ediyor olsaydı ben o yerlerin hepsinde catch blocklarını tek tek oluşturmam gerekecekti. Ama şimdi bu ortak kodu bir yerde toplayıp bu şekilde handle exception fonksiyonunu çağırarak birden fazla kaynak kod noktasında aynı şekilde bu hataları yakalamaya çalışabilirim.
+
+### Constructor'dan Exception gönderilmesi
+ 
+- Constructor Exception gönderme ihtimali en yüksek olan fonksiyonlardan biri. Peki ya Constructor kendi koduyla nesneyi hayata getiremeyeceğini anlasa (Runtime'da oluşan istisnaî durumlardan ötürü) bu durumda geleneksel hata işleme yolları da devra dışı kalıyor Çünkü Constructor'ın geri dönüş değeri de yok. Peki Constructor binesneyi hayata getiremeyeceğini anladığında ne yapsın?
+- Bu durumda ideali bir exception göndermek. Ama öyle bir domain olabilir ki, öyle bir ortam olabilir ki exception handling araçlarının kullanılması kısıtlanmış olabilir.
+
+- Exception handling olmasa Constructor exception gönderemeyeceğine göre programın akışı bir şekilde Constructor'dan çıkacak, anabloğunun sonuna geldiğinde. Bu durumda nesne oluşmamış olmasına rağmen çağıran kod eğer bunun farkında olmazsa o nesneyi kullanma girişiminde bulunacak. Nesne aslında teknik olarak hayata gelmiş oldu ama fiili olarak kullanabilir durumda değil. Böyle nesneler için kullanılan bir yakıştırma var: **Zombie object**
+
+- Bu durumda şunu yapabiliriz:  Nesnenin aslında Boolean bir veri elemanı olur ya da bir Boolean getiren fonksiyonu olur. Böylece nesneyi oluşturan kodlar nesneyi oluşturduktan sonra onun predicate fonksiyonunu çağırır, (burning is alive, usable vesaire gibi bir isim verebilirsiniz.) O şekilde nesneyi kullanma girişiminde bulunabilir.
+
+- Kullanıcı kodları zombie nesneleri kullanmaya zorlamak yerine üretimde çok daha sık karşılaşacağımız duruma bakalım. **Constructor'ın exception throw etmesi.**
+
+1.42 örnek yazcak
 
 
 
