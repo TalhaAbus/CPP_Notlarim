@@ -9723,6 +9723,128 @@ int main()
 
 - Böyle durumlarda destraktır çalışmasa da konstraktırdan exception gönderildiğinde bu exception yakalandığında operatör delete fonksiyonu çağırılıyor.
 
+- **Destraktır hiçbir şekilde exception göndermemeli.**
+> Exception'ın throw edilmesi başka, throw edilen exception'ın bu fonksiyondan çıkması, daha yukarıdaki katmanlara doğru yükselmesi başka. İşte İngilizce'de burada iki tane feel kullanıyor:
+
+1. Exception'ın fonksiyonun emit etmesi.
+2. Exception'ın fonksiyondan ilgili koldan propagat etmesi
+
+- Bir sınıfın destraktörü hiçbir şekilde exception göndermemeli derken, kast edilen burada ne? Emit etmemeli. Bu da ancak şöyle mümkün: 
+> Ya hiç exception göndermeyecek ya da gönderilen bütün exceptionlar destraktör içinde lokal olarak handle edilecek. Yani exception dışarı sızmayacak. Destraktörden bir exception'ın dışarı sızmamasını engellemeniz gerekiyor.
+
+**Destructor neden exception göndermemeli?**
+- Bir sınıfın destraktörü iki nedenle çağrılıyor olabilir.
+
+1. bir nesnenin normal olarak hayatı bittiği için
+2. Bir exception handle ediliyordur. Programın akışı bir catch close'a girerken stack unwinding sürecinde stack frame'deki nesneler teker teker destru ediliyordur. Yani onların destraktörü çağrılıyordur.
+
+- Eğer bir exception yakalanma süreci içinde stack unwinding gerçekleşirken çağrılan bir destraktör
+exception trove ederse o zaman sevgili arkadaşlar terminate çağrılıyor. Biz zaten her şeyi terminate çağrılmasın, programımız ölmesin, çalışmaya devam etsin, abortla program sonlandırılmasın diye yapmıyor muyuz? O zaman bu garanti tamamen kaybedilmiş oluyor. O yüzden destraktörün hiçbir şekilde exception'ı emit etmemesi gerekiyor.
+
+- Geçmişte olan modern C++'da önce deprekeyt edilen, sonra da tamamen dilden kaldırılan bazı araçlar var.  Şimdi önce deprekey edilen ve sonra da dilden tamamen kaldırılan o araç takımını İngilizce'de Dynamic Exception Specification deniyordu. Dynamic Exception Specification Bir fonksiyonun bildiriminde ve veya tanımında o fonksiyonun çalışacak kodunun hangi tür ya da türlerden Exception gönderme ihtimali olduğunu anlatan bir bildirimdi.
+
+```CPP
+void func(int) throw(std::out_of_range, std::bad_alloc);
+```
+> Modern C++ öncesinde exception specification ya da dynamic exception
+specification denilen syntax bu şekildeydi. Eğer birden fazla türden hata gönderme ihtimali var ise bunları virgülerle ayrılan listeyle yazıyordunuz. Bu kod Funk fonksiyonunun out of range ya da bad_alloc sınıfları türünden exception
+gönderme ihtimalini belirtiyordu.
+
+- Eğer fonksiyonun bildiriminde dynamic exception specification kullanılmamışsa
+bu da şu anlama geliyordu: Bu fonksiyonun exception gönderme ihtimali konusunda bir bildirim yapılmıyor. Yani bu exception göndermeme garantisi değil.
+
+- Şimdi artık günümüzde bunların hepsi dilden kapı dışarı edildi. Yani ne dynamic exception specification var.  Ne unexpected fonksiyonu var. Ne de set unexpected fonksiyonu var. Bu konu tamamen bir yanlış deneyimi olarak değerlendirildi ve onun yerine yeni bir araç seti geldi. Bunun yerine gelen bir keyword var. Bu keyword no except keyword.
+
+### noexcept keyword
+
+**noexcept dilim kurallarına göre hem bir specifier hem de bir operatör.**
+
+- Bir fonksiyonun bildiriminde no except specifierini kullanırsanız, bu fonksiyon exception throw etmeme garantisini veriyor demek.
+
+```CPP
+void func()noexcept;
+```
+> No throw guarantee. exception gönderme ihtimali yok.
+
+```CPP
+void func();
+```
+> Fonksiyonu bu şekilde bildirirsem bu exception gönderme ihtimali var demek.
+
+```CPP
+void func()noexcept(true);
+void func()noexcept;
+```
+> Bu ikisi aynı anlamda.
+
+```CPP
+void func()noexcept(false);
+void func();
+```
+> Bu ikisi dew aynı anlamda. Exception gönderebilir demek.
+
+```CPP
+void func()noexcept(sizeof(int) > 2);
+```
+> Derleyicimde sizeof int 2 den büyük ise burada exception göndermeme garantisi taşıyor. 
+
+- Neden böyle bir araç var?  Compile time'da genelik programlama paradigmasıyla ilgili. Yani yukarıdakiş kodların çok fazla ifadesi olamaz ama generic programlama paradigması söz konusu olduğunda (yani bunlar funksiyon değil de örneğin funksiyon şablonu olsaydı) exception throw etme ihtimalinin olup olmaması, türün ne olduğuna bağlı olarak
+derleme zamanda anlaşılacaktı.
+
+```CPP
+void f1(); // exception throw edebilir
+void f2()noexcept; // exception throw etmeme garantisi
+void f3()noexcept(true); // exception throw etmeme garantisi
+void f4()noexcept(false); // exception throw edebilir
+```
+
+- noexcept aynı zamanda bir operator ve bir compile time operatorü.
+
+```CPP
+noxcept(expr);
+```
+> Bu operatörün parantezi içindeki ifade eğer exception throw etmeme garantisi olan bir ifade ise operatörümüz true değer döndürüyor.
+
+```CPP
+void foo();
+constexpr bool b = noexcept(foo());
+```
+> False dönecek.
+
+```CPP
+void foo()noexcept;
+
+void func()noexcept(noexcept(foo()));
+```
+> foo no except garantisi veriyorsa  func'ta veriyor anlamına gelen kod.
+
+**noexcept unevaluated context**
+
+**Bir fonksiyonun no exit garantisi vermesi neden önemli?**
+- Bir bilgi iletiyor. Yani her ne yazmak istiyorsan, bu fonksiyonun bir exception göndermeyeceğine güvenebilirsin. Fakat bir de resmin doğrudan görünmeyen bir tarafı var: Derleyicinin Kod seçmesine yardımcı oluyor.
+
+**Örnek:** Öyle durumlar var ki, Örneğin derliyici kod üretirken, Bir fonksiyonun no exit garantisi vermesi ya da vermemesine bağlı olarak Alternatif iki koddan birini seçebiliyor. Örneğin noexcept garantisi varsa taşıma semantini kullanırken, noexcept garantisi yok ise kopyalama semantini kullanabiliyor.
+
+**Örnek:**
+![image](https://user-images.githubusercontent.com/75746171/213817892-ef99c67e-7add-4466-9715-ab96da36ff35.png)
+
+> Diyelim ki dinamik dizide  biz Myclass sınıfı türünden nesneler tutuyoruz. Diyelim ki vektorumuzun kapasitesi dörtgen, size da dört. Ben bu vektöre bir eleman daha eklesem Realocation olmak zorunda. Vektör sınıfının ilgili kodu, daha büyük bir bellek alanı alocate etti Ve şimdi artık vektördeki nesnelerin aktarılması lazım.
+
+> Vektörde tutulmakta olan Myclass nesnelerinin buraya aktarılması için iki tane ihtimal var. Biri Taşıma semantinin kullanılması. Diğeri Myclass sınıfının copy konstraktörünün çağrılması. Kaynağın çalınması ile buradaki nesnelerin oluşturulması ciddi bir maliyet farkı yaratır.
+
+- Ya move konstraktör exception throw etme ihtimali taşıyorsa? Bu durumda bu işi yapan fonksiyonun belirli garantileri vermesi için taşıma yapma şansı kalmayacak çünkü taşıma yapması durumunda exception throw etme ihtimali var. Eğer exception throw ederse strong garanti sağlayamayacak. B
+- Bu durumda derliyice gidiyor Myclass isimli sınıfın move konstraktörünün exception throw etme garantisi olup olmadığına bakıyor. Exception throw etme garantisi varsa bu taşıma kodunu oluşturuyor. Ama exception throw etmeme garantisi varsa taşıma kodunu kullanıyor.
+- Yani burada oluşturulacak nesneler için move konstraktörün çağrılacağı bir kod üretirken eğer my class sınıfının move konstraktörü exception throw etme ihtimalini taşıyorsa o zaman copy konstraktörü kullanıyor.
+
+> Copy konstraktör exception throw ederse eski durumuna geri döndürebilecek bir şekilde kod yazıyor. Ama move konstraktör exception throw ederse artık diğer nesnenin kaynağını çaldığı için eski duruma geri getirmek ihtimali yok.
+
+**Özet:** bir fonksiyonun no except garantisi vermesi aslında hem okuyucuya hem de derliyeceği verilen bir bilgi olduğu için derliyeci bu bilgiden faydalanarak daha uygun daha etkin kod üretme şansına sahip.
+
+- Destructor no except belirteci olmasa da no except belirtecine sahip kabul ediliyor. Yani Destructorun artık modern c++ da default durumu no except. No except belirteceni yazsınız da yazmasanız da.
+
+**Exception göndermeme garantisini taşıyan bir fonksiyonun code runtime'da çalışırken o fonksiyonun çalışan kodundan bir exception gönderilirse stut terminate çağırılıyor.**
+
+
 
 
 
