@@ -9523,7 +9523,223 @@ void func()
 
 - Kullanıcı kodları zombie nesneleri kullanmaya zorlamak yerine üretimde çok daha sık karşılaşacağımız duruma bakalım. **Constructor'ın exception throw etmesi.**
 
-1.42 örnek yazcak
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <stdexcept>
+
+class Nec {
+public:
+	Nec()
+	{
+		///
+		if (true)
+		{
+			throw std::runtime_error{ "nec exception" };
+		}
+	}
+	~Nec()
+	{
+		std::cout << "Nec destructor\n";
+	}
+};
+
+void foo()
+{
+	Nec x;
+}
+
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught: " << ex.what() << '\n';
+	}
+}
+```
+> exception caught: nec exception
+
+> Destructor çağırılmadı. Çünkü Destructor çağırılması için nesnenin hayata gelmiş olması gerekiyor. Hayata gelmedi. C++'ın en önemli kurallarından biri nesnenin hayata gelmiş kabul edilebilmesi için
+konstraktırının ana bloğunun kodunun tamamının çalışması.
+
+- Constructordan exception trove ediyorsanız bu exception'ın yakalanması durumunda herhangi bir şekilde hayata gelmemiş neslinin destraktırı çağrılmayacağı için exception'ın gönderildiği noktaya kadar çalışmış kodlar herhangi bir şekilde bir kaynak ediniyorlarsa ve bu kaynak pointerlar ile ya da referanslarla handle ediliyorsa destraktır da bunları geri veremeyecek ve böylece kaynak sızıntısı olacak.
+
+**Örnek:** Programın akışı catch bloğuna çekildiğinde Member'ın destraktörü çalışır mı? Nec destrcutor çalışır mı?
+
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <stdexcept>
+
+class Member {
+public:
+	Member()
+	{
+		std::cout << "Member ctor\n";
+		throw std::out_of_range{ "hata......" };
+	}
+	~Member()
+	{
+		std::cout << "Member destructor\n";
+	}
+};
+
+class Nec {
+public:
+	~Nec()
+	{
+		std::cout << "Nec destrcutor";
+	}
+private:
+	Member mx;
+};
+
+void foo()
+{
+	Nec nx;
+}
+
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught: " << ex.what() << '\n';
+	}
+}
+```
+
+> İkisini de destructor'ı çağırılmaz çünkü ikisi de hayata gelmedi. Ne eleman hayata geldi, ne de programın akışı konstraktörün ana bloğunun sonuna kadar gelmediği için elemana sahip sınıf nesnesi olacak olan, nec nesnesi de hayata gelmedi.
+
+- Şimdi senaryoyu biraz değiştirelim. Ve exception'ın member sınıfının konstraktörü tarafından değil nec sınıfının konstraktörü tarafından gönderildiğini düşünelim.
+
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <stdexcept>
+
+class Member {
+public:
+	Member()
+	{
+		std::cout << "Member ctor\n";
+		
+	}
+	~Member()
+	{
+		std::cout << "Member destructor\n";
+	}
+};
+
+class Nec {
+public:
+	Nec()
+	{
+		std::cout << "Nec constrıuctor\n";
+		throw std::out_of_range{ "hata......" };
+	}
+	~Nec()
+	{
+		std::cout << "Nec destrcutor";
+		
+	}
+private:
+	Member mx;
+};
+
+void foo()
+{
+	Nec nx;
+}
+
+int main()
+{
+	try {
+		foo();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught: " << ex.what() << '\n';
+	}
+}
+```
+```CPP
+Member ctor
+Nec constr²uctor
+Member destructor
+exception caught: hata......
+```
+
+> Programın akışı, konstraktörün ana bloğuna girmişse, sınıfın veri elemanları hayata gelmiş demektir. Member hayatta. Dolayısıyla stack unwinding sürecinde memberin destraktörü çağrılacak bu durumda.
+
+**Örnek:** Burada oluşturulan dinamik ömürlü binesine nasıl oluşturuluyor?
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <stdexcept>
+
+class Myclass {
+public:
+	Myclass()
+	{
+		std::cout << "Myclass ctor\n";
+		throw std::runtime_error{ "hata....." };
+	}
+private:
+	char buffer[1024]{};
+};
+
+void foo()
+{
+	Myclass* p = new Myclass;
+
+	delete p;
+}
+
+int main()
+{
+	std::cout << "sizeof(Myclass) =" << sizeof(Myclass) << '\n';
+
+	try {
+		foo();
+	}
+	catch (const std::exception& ex) {
+		std::cout << "exception caught" << ex.what() << '\n';
+	}
+}
+```
+
+> New ifadesi aslında derleyici tarafından adeta iki kademeli bir koda dönüştürülüyor. Birinci aşamada aslında derleyici Operator New fonksiyonunu çağırıyor. (Operator New fonksiyonu mallok benzeri bir fonksiyondu, Void * döndüren parametre size_t olan). Ve aslında o fonksiyon bellek alanı elde ediyor. Sonra derleyici Operator New'in elde ettiği bellek adresi ile konstraktörü çağırıyor. Yani onu dispointer olarak kullanıyor.
+
+> Myclass'ın Constructor'ı exception trove ettiğinde delete edilmeyecek çünkü programın akışı çıkacak. Delete operatörü koduna gelmediği için destraktörü çağırılmayacak.
+
+- Programın akışı delete operatörü ifadesine gelseydi, Delete için derleyici nasıl bir kod üretiyordu? Önce destraktörü çağıracak. Destraktörün kodu çalıştıktan sonra da bu delete operatörün operandı olan adresi operatör delete fonksiyonuna gönderecek.
+
+- Böyle durumlarda destraktır çalışmasa da konstraktırdan exception gönderildiğinde bu exception yakalandığında operatör delete fonksiyonu çağırılıyor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
