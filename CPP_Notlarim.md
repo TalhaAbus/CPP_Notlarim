@@ -9846,11 +9846,19 @@ void func()noexcept(noexcept(foo()));
 
 # Ders 26
 
-25
+**Hangi fonksiyonlar noexcept olmalı?**
 
+- destrcutor - noexcept
+- move ctor - (Aksi yönde bir engel yoksa noexcept yapılmalı, nothrow garantisi vermeli)
+- swap - (Aksi yönde bir engel yoksa noexcept yapılmalı, nothrow garantisi vermeli)
+- memory dealocate fonksiyonlar
 
+- C++'ın Terminolojisinde Herhangi bir fonksiyonun Exception safety Açısından Verdiği güvenceler var. 
+> Bir fonksiyon Eğer Çalışan kodundan Exception-Gönderildiğinde Bir Kaynak Sızıntısı Oluşturma Riski'ni taşıyorsa Bu fonksiyon Hiçbir şekilde bir garanti vermiyor demektir. 
 
+- Bir fonksiyon çağırıldığında Bir Exception-Gönderilirse Fakat Bu fonksiyon içinde Edinilmiş bir kaynak Geri verilmiyor ise Bu durumda bir kaynak sızıntısı var. Bu durumda program exception safe değil. 
 
+47
 
 
 
