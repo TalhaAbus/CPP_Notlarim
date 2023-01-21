@@ -9844,6 +9844,19 @@ void func()noexcept(noexcept(foo()));
 
 **Exception göndermeme garantisini taşıyan bir fonksiyonun code runtime'da çalışırken o fonksiyonun çalışan kodundan bir exception gönderilirse stut terminate çağırılıyor.**
 
+# Ders 26
+
+25
+
+
+
+
+
+
+
+
+
+
 
 
 
