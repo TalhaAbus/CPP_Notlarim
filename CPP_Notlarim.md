@@ -9858,7 +9858,7 @@ void func()noexcept(noexcept(foo()));
 
 - Bir fonksiyon çağırıldığında Bir Exception-Gönderilirse Fakat Bu fonksiyon içinde Edinilmiş bir kaynak Geri verilmiyor ise Bu durumda bir kaynak sızıntısı var. Bu durumda program exception safe değil. 
 
-47
+**Basic Guarantee:** Bir fonksiyonun kodu çalıştığı zaman, Bir kaynak edinildiği zaman, O kaynak Mutlaka geri veriliyor. Hiçbir şekilde resource leak olmuyor. Basic Garanti sağlamak zorundasınız
 
 
 
