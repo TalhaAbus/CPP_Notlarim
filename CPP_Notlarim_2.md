@@ -2,6 +2,6 @@
 
 - This program prints Hello World! to the standard output stream:
 
-'''CPP
+```CPP
 int
-'''
+```
