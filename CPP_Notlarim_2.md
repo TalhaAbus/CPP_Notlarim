@@ -3,5 +3,9 @@
 - This program prints Hello World! to the standard output stream:
 
 ```CPP
-int
+#include <iostream>
+int main()
+{
+std::cout << "Hello World!" << std::endl;
+}
 ```
