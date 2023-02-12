@@ -9858,7 +9858,20 @@ void func()noexcept(noexcept(foo()));
 
 - Bir fonksiyon çağırıldığında Bir Exception-Gönderilirse Fakat Bu fonksiyon içinde Edinilmiş bir kaynak Geri verilmiyor ise Bu durumda bir kaynak sızıntısı var. Bu durumda program exception safe değil. 
 
-**Basic Guarantee:** Bir fonksiyonun kodu çalıştığı zaman, Bir kaynak edinildiği zaman, O kaynak Mutlaka geri veriliyor. Hiçbir şekilde resource leak olmuyor. Basic Garanti sağlamak zorundasınız
+**Basic Guarantee:** Bir fonksiyonun kodu çalıştığı zaman, Bir kaynak edinildiği zaman, O kaynak Mutlaka geri veriliyor. Hiçbir şekilde resource leak olmuyor. Basic Garanti sağlamak zorundasınız. 
+
+**Strong Guarantee:** Görevli olduğu işi gerçekleştirmiş olacak,  Eğer o işi gerçekleştiremezse ilk konuma geri döndürecek.
+
+## Generic Programlama Paradigması
+
+- Derleyici bizim için kod yazabilen bir program.
+
+1. bizim doğrudan yazdığımız kodlar
+2. Öyle bir kodu yazıyoruz ki Yazdığımız kodun Amacı derleyiciye kodu yazdırmak (Template)
+
+- Template aracıyla biz derleyiciye kod yazdırabiliyoruz. Yani eğer bir kodun Template olduğunu söylüyorsam O kodun amacı Derleyiciye kod yazdırmak. 
+
+1. Function template: Varlık nedeni derleyiciye bir fonksiyonun kodunu yazdırmak.
 
 
 
