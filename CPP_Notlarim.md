@@ -10017,7 +10017,7 @@ int main()
 
 **Özet:** non-type parametre bir sabite kaşılık geliyor, type parameter ise bir türe karşılık geliyor.
 
-
+2
 
 
 
