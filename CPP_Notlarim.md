@@ -10017,7 +10017,58 @@ int main()
 
 **Özet:** non-type parametre bir sabite kaşılık geliyor, type parameter ise bir türe karşılık geliyor.
 
-2
+**Template instantiation:** Derliyici Compile Time'da Bir template kodu kullanarak O template koddan Gerçek kodu üretecek. Örneğin bir fonksiyon şablonundan Bir fonksiyonun kodunu yazacak. Burada fonksiyon şablonu template, Ama Derliyicinin fonksiyon şablonundan Gerçek fonksiyonun kodunu yazması O template'i  etmesi instantiate etmesi.
+
+### Fonksiyon Şablonları
+
+```CPP
+template <typename T>
+void func(T x);
+```
+> Böyle bir fonksiyon şablonundan t'yi int olarak alırsa derliyici template argümanının int olduğunu öğrenirse derliyicinin yazdığı fonksiyon böyle bir fonksiyonu olacak:
+
+```CPP
+void func(int);
+```
+
+> Dolayısıyla aynı fonksiyon şablonundan farklı template argümanlarıyla oluşturulmuş fonksiyonlar doğal olarak birbirlerinin overloadlarıdır. Yani fonksiyon şablonu kullanarak function overloading'de oluşturmuş olabiliriz.
+
+**fonksiyon şablonları overload edilebilir mi?**
+
+```CPP
+template <typename T>
+void func(T x);
+
+template <typename T>
+void func(T x, T y);
+```
+> bu fonksiyon şablonlarından elde edecek fonksiyonlarda birbirini overload etmiş olacak.
+
+2.38
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
