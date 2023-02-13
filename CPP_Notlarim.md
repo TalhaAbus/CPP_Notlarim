@@ -9872,25 +9872,150 @@ void func()noexcept(noexcept(foo()));
 - Template aracıyla biz derleyiciye kod yazdırabiliyoruz. Yani eğer bir kodun Template olduğunu söylüyorsam O kodun amacı Derleyiciye kod yazdırmak. 
 
 1. Function template: Varlık nedeni derleyiciye bir fonksiyonun kodunu yazdırmak.
+2. Class Template: Sınıf kodu yazdırmak için kullandığımız kod
 
+- Modern C++'a kadar Templetlerin sadece bu iki kategorisi vardı. Fakat Modern C++'a birlikte 2 tane daha Şablon kategorisi eklendi
 
+3. Variable Template (Derğişken şablonu)
+4. Alias Template (Tür eş ismi şablonu)
 
+- C++ stanbdart kütüphanesinin neredeyse tamamına yakını template kodlardan oluşuyor. Mesela string diye bir sınıf yok, aslında bu bir sınıf şablonu. Biz böyle bir nesne tanımladığımızda derleyici o sınıf şablonunun kodundan bir sınıf kodu yazıyor. Yani String Sınıfının kodu Compile Time'da Derlayıcı tarafından yazılıyor.
 
+**Neden böyle bir araç var?**
 
+- Fonksiyonların önemli bir kısmı Algoritmaları implement ediyor. Algoritmalar Çoğunlukla türe bağlı değil
 
+**Mesela iki değişkeni nasıl swap ediyoruz?**
 
+- Bir tanesinin değerini Bir değişkende tutarım, Birinciye ikinciye atarım İkinçye o değişkende tutulmuş Değeri atarım.
+> Burada betimlenen algoritmada swap edilecek değişkenlerin türünün ne olduğunun bir farkı yok. Ama kod, c++ c# ve java gibi dillerde statik olarak türebağlı. Dolayısıyla biz aynı algoritmayı farklı türler işçin implemente etmek zorunda kalıyoruz.
 
+- Peki her defasında aynı algoritmayı tekrar türe bağlı olarak yazmak yerine bunu nasıl daha kolay hale getirebiliriz? Generic programlamada bununla ilgili farklı araç setleri var.
 
+1. Nesnelerin türünü göz önüne almayıp onları salt bellek bloıkları olarak görmek. Yani foınksiyonunu aslındatürü bilmeden işi gerçekleştirmesini sağlamak.
 
+**Mesela C dilinde generic bir swap fonksiyonu yazarlım:**
 
+```CPP
+void gswap(void* vpx, void* vpy, size_t sz);
+```
+> Ben bu fonksiyona Swap edilecek nesnelerin adresleri Ve onların bellekte Kaç bytes yer kapladıkları Bilgisini gönderirsem Bu fonksiyon türü bilmeden O iki bellek bloğundaki byte ları takas eder. Böylece bu foksiyonu çağıran kod, double veya int nesnei takas etmek için de çağırabilir. Bunun en tipik örneği C standart kütüphanesinde stdlib stdlib başlık doyasında bildirilen **qsort** fonksiyonu. 
 
+**qsort** fonksiyonu türden bağımsızo larak bir diziyi sarmalıyor.
 
+```CPP
+qsort(void *_Base, size_t _NumOfElements, size_t _SizeOfElements,     _CoreCrtNonSecureSearchSortCompareFunction _CompareFunction)
+```
+> Görüldüğü gibi, ilk parametresi void*, ikinci parametresi sıralanacak dizinin boyutu, üçüncü parametresi bir elemanının sizeof değeri, dördünüc parametresi dizinin iki elemanını karşılaştıracak fonksiyonun adresini istiyor. Qsort işi yapıyor ama sıraladığı dizinin elamanlarının türünün ne olduğunu bilmeden yapıyor. Çünkü ona göre aslında bunlar birer bellek blokları. 
 
+**Diğer bir generic yapı:**
+- Ortak bir kodun olması Fakat bu kodun Ortak bir interface i desteklediğini düşünerek yazılması.
 
+**Not:**
+- İki tane int nesneyi takas eden Funksiyonun kodunu yazarken Derliyici int* int* Ya da int& int& Parametreyle fonksiyon yazacak. Double türden iki tane nesneyi Takas eden kodu yazmak için Bu seferde derliyici Double&  double& Parametreyle fonksiyon yazacak. Yani derliyicimin yazdığı fonksiyon Compiletime'da O türün ne olduğuna bağlı Olarak, İngilizcesiyle TaylorMade Olarak yazılacak.
 
+**Sınıf şablonu için düşünün:**
+- Vektörün int açılımı Dediğimizde derliyici İçinde intler tutulan Bir dinamik dizi Sınıfı kodu yazarken, Vektörün string açılımı Dediğimizde Bu seferde derliyici İçinde stringlerin tutulduğu Bir dinamik dizi sınıfı Kodu yazacak. 
 
+> Derliyicinin Compiletime'da bu kodları yazmasının Bir takım Faydaları da var. (Belki dezavantaj oluşturulan noktalar da var, Örneğin KomparTime'ın uzaması gibi) 
 
+> En önemli avantajlardan biri Çarılmayan fonksiyonların Kodlarının yazılmaması.
 
+**Mesela string sınıfını düşünün:**
+- String sınıfının Overloadlarını da düşünürseniz belki 200'e yakın Üye fonksiyonlar. Ama string sınıfı Bir sınıf şablon olduğu için, Siz örneğin String nesnesini tanımladığınız zaman Derliyici sadece Constructor'ın ve destructor'ın kodunu yazıyor. 
+
+```CPP
+int main()
+{
+	using namespace std;
+	string str{ "ali" };
+}
+```
+> Örneğin böyle bıraksaydım derleyici sadece const char* parametreli constructor ve destructor yazacaktı. Ama diyeim ki bir başka fonksiyon çağırdık:
+
+```CPP
+int main()
+{
+	using namespace std;
+	string str{ "ali" };
+
+	str.length();
+}
+```
+> Bu sefer de length fonksiyonunun kodunu yazıyor.
+
+**Özetle:**
+
+Ben içinde int tutan bir bağlı listeyi nasıl implemente ederim demek yerine, ben bir bağlı listeyi naasıl implemente ederim diye sorguluyoruz. Daha yüksek düzeyde bir soyutlama.
+
+**Buradaki c++ gücü:** Nesni yönelimli programlamaya Destek veriyor, Procedüel programlamaya da destek veriyor, Funksiyonel programlamaya Büyük ölçüde destek veriyor. Ama en güçlü olduğu alan, Hepsiyle birlikte Cenerik programlama paradigmasını desteklemesi.
+
+## Template
+
+```CPP
+template <parameter>
+```
+> Template parametreleri bu kategorilerde olabilir:
+> 1. type parameter
+> 2. non-type parameter
+> 3. template parameter
+
+**Type parameter:** Öyle bir identifier ki derleyiciye ve okuyucuya şunu söylüyor: "Bu isim bir tür temsil ediyor". Yani derleyicinin yazacağı kodda Bu isim yerine Bir tür kullanılmış olacak.  
+- Template parametrelerini bildirirken **class** veya **typename** anahtar sözcüklerinden biri kullnaılmak zorunda. 
+- Class tür parametresi birden fazla olabilir. 
+
+```CPP
+template <typename T, typename U>
+```
+**Derleyici Kendi yazdığı kodda T'nin ya da U'nun yerine Hangi türü kullanacağını Nereden bilecek?**
+
+1. **(Template argument deduction)** Template parametrelerine karşı Derleyicinin Yazdığı kodda kullanılan gerçek türlere ya da sabitlere template Argümanları deniyor. Template parametresi ve argümanı farklı şeyler. Template argümanı, template parametresine karşılık gelen, derleyicinin yazdığı kodda kullanılan varlık.
+2. **(Template explicit arguments)** Explicit olarak template argumentlarının Neler olduğunu Derleyici'ye ben söylüyorum. 
+
+```CPP
+func<int>(12)
+```
+> Func bir template, Onun bir tür parametresi var. Sen bu templateten Funksiyonun kodunu yazarken O tür parametresi yerine int kullanacaksın, anlamına geliyor.
+
+3. **(Default template argument)** Template argument'ın Ne olduğunu Ben derleyiciye söylemediğim zaman Önceden belirlenmiş Bir argument Ya da sabit alınıyor.
+
+```CPP
+template <typename T = int>
+```
+> Bu Şablon'dan kod üretimi Söz konusu olduğu zaman T'ye karşılık gelen template
+Argümanı yazılmazsa Sen onun yerine Int'i alacaksın, anlamına geliyor. 
+
+## non-type parameter
+
+```CPP
+template<int x>
+class Myclass {
+	int ival = x;
+};
+```
+> Derleyici, X kullandığım yerde Sen bu sınıfın kodunu yazarken Int türünden bir sabit Kullanacaksın. 
+
+> Yani Derleyici X'in karşılığı olan Template Argümanının 10 olduğunu bilirse Burada 10 değerini Kullanacak, 20 olduğunu bilirse 20 değerini kullanacak.
+
+- Demek ki Template Non-type parametre Demek, bu bir sabit demek. Bir ya da birden fazla yerde Kullanılacak
+Bir sabit. Yani buna karşılık gelen Argüman bir sabit olacak.
+
+**Not:** C++20 standartlaırna kadar template non-type parametre sadece tamsayı türlerinden olabiliyordu ama C++ 20 ile birlikte artık gerçek sayı türleri de kullanılabiliyor.
+
+```CPP
+#include <iostream>
+#include <cstdlib>
+#include <bitset>
+
+int main()
+{
+	using namespace std;
+	bitset<16>;
+}
+```
+> Derleyici, bitset sınıf şablonundan bir sınıf kodu yaz. Ama o şablonun non-type parametresi karşılığı 16 sabitini kullan.
+
+**Özet:** non-type parametre bir sabite kaşılık geliyor, type parameter ise bir türe karşılık geliyor.
 
 
 
