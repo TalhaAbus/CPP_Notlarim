@@ -10044,7 +10044,9 @@ void func(T x, T y);
 ```
 > bu fonksiyon şablonlarından elde edecek fonksiyonlarda birbirini overload etmiş olacak.
 
-2.38
+**Template parametreleri karşılığı template argümanlarının ne olması gerektiğini derleyici nasıl anlayacak?**
+
+
 
 
 
