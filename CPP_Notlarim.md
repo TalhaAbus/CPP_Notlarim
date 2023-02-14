@@ -10046,16 +10046,53 @@ void func(T x, T y);
 
 **Template parametreleri karşılığı template argümanlarının ne olması gerektiğini derleyici nasıl anlayacak?**
 
+- Bir fonksiyon şablonu var. Fonksiyon şablonunun bir ya da birden fazla template parametresi var, derleyicinin bu fonksiyon şablonundan gerçek bir fonksiyonun kodunu yazabilmesi için, yani bu template initialize edebilmesi için template parametrelerine karşılık gelen template argümanlarının ne olduğunu bilmesi gerekiyor. Bunun için bir deduction mekanizması var.
 
 
 
+- C++ 17'ye kadar parametreler sınıf şablonlarında template argümanının explicit olarak yani açısal parantez içinde bildirilmesi mecburiydi. Fakat C++'ın 2017 standartlarıyla dile çok önemli bir araç eklendi. CTAD araç seti.
 
+```CPP
+vector x{ 1,5,5 };
+```
+> Vektör bir sınıf şablonu olmasına rağmen ben vektör sınıf şablonunda kullanılacak template argümanlarının ne olması gerektiğini derleyeceğe söylemedim. Ona rağmen bir deduction yapıldı. İşte burada yapılan deduction C++ 17'de eklendi.
 
+**Derleyicinin template parametresi karşılığı nasıl bir çıkarım yaptığını compile time'da görme şansım var mı?**
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T>
+void func(T)
+{
+	TypeTeller<T> x;
+}
+```
+> Eğer örneğin derleyici T türünün çıkarımını int olarak yapmışsa, buradaki X, typeteller sınıf şablonunun int açılımı türünden olacak değil mi? 
 
+> Şimdi bu sınıf şablonunun sadece bildirimi yapıldığı için, dolayısıyla oluşturulan sınıflar in-complete type olacağı için, bu şekilde bir nesne oluşturduğumda derleyici tipik olarak bana sentaks hatası verecek. In-complete type türünden nesne oluşturamazsın diyecek. Örnek:
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T>
+void func(T)
+{
+	TypeTeller<T> x;
+}
+
+int main()
+{
+	func(10);
+}
+```
+**Hata:** 'x' uses undefined class 'TypeTeller<int>'
+
+> Yani T'nin yerine int kullanığını bize söylüyor.
+
+**Kaç çeşit referans vardı?**
 
 
 
