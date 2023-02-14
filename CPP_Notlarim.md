@@ -10088,11 +10088,123 @@ int main()
 	func(10);
 }
 ```
-**Hata:** 'x' uses undefined class 'TypeTeller<int>'
+**Hata:** 'x' uses undefined class 'TypeTeller int '
 
 > Yani T'nin yerine int kullanığını bize söylüyor.
 
 **Kaç çeşit referans vardı?**
+
+```CPP
+	int x = 10;	
+	int& r1 = x;	// L value ref
+	int&& r2 = 20;	// R value ref
+	auto&& r3 = 2340;	// Universal Ref
+```
+**Universal Reference:** Her şey ile ilk değer verebiliriz.
+
+Bu durumda auto yerine gelecek olan tür ifadenin value kategorisine bağlıydı.
+
+```CPP
+	auto x = { 3,6,8,7 };
+```
+> X'in türü initializer list'in int açılımı.
+
+```CPP
+	std::initializer_list<int> x = { 3,6,8,7 };
+```
+> Bu da aynı anlama geliyor.
+
+**template argument deduction ile auto type deduction arasındaki tek bir fark nedir?**
+
+```CPP
+	auto x = { 3,6,8,7 };
+```
+> auto type deduction'da bu şekilde bir Initializer kullandığınızda çıkarım yapılabiliyor. Auto yerine gelen tür initizlizer list.
+
+```CPP
+	auto x{ 3,6,8,7 };
+```
+> Böyle yazdığımızda kural farklı, çıkarım int olarak yapılıyor.
+
+# Ders 27
+
+```CPP
+template <typename T>
+void func(T, T);
+
+template <typename T>
+void foo(T&, T&);
+
+int main()
+{
+	func("ali", "mert");
+	func("ali", "can");
+	foo("ali", "mert");
+	foo("ali", "can");
+}
+```
+> no instance of function template matches the argument list            argument types are: (const char [4], const char [5])
+
+> Referans dekleratörü olduğu için burada tür çıkarımı artık dizi türü olarak yapılacak. ilk foo çağrısında const char [4], ikincide const char [5] olarak tür çıkarımı yapacak. O zaman bunlar aynı tür olamaz.
+
+```CPP
+int foo(int x)
+{
+	std::cout << "x = " << x << "\n";
+
+	return{};
+}
+
+int main()
+{
+	auto i = foo({});
+	std::cout << "i = " << i << "\n";
+}
+```
+> Geçerli kod.
+
+## RTTI (Runtime Type Information)
+
+- C++ dilinde de bir nesnenin dinamik türünün programın çalışma zamanında anlaşılmasına, belirlenmesine yönelik araçlar var. bir nesnenin dinamik türünün programın çalışma zamanında anlaşılması ne demek?
+
+```CPP
+#include "car.h"
+
+void func(Car* p)
+{
+	///
+}
+```
+> Acaba programın çalışma zamanında buraya gelen arabanın, örneğin bir Mercedes olup olmadığını sınama şansımız var mı? Yani nesnenin dinamik türünün ne olduğunu sınamaya yönelik dilin doğrudan aracı var mı?
+
+- Aslında bu sınama işlemi kötü bir tasarım. Çünkü runtime polimorfizminin virtual dispatch mekanizmasının  ana avantajını yitirmiş oluruz. Ana avantajı neydi? Nesnenin gerçek türünü bilmeden onun interface'inde belirli fonksiyonların, belirli operasyonların olduğuna güvenerek onlar üstünde ortak işlem yapmak.
+
+- Fakat öyle durummlar var ki sınamaktan başka yol kalmıyor. Öyle yerler olabilir ki nesnenin dinamik türünün programın çalışma zamanında anlaşılması bana bazı başka avantajlar sağlayabilir.
+
+- Özetle programın çalışma zamanında bir nesnenin türünün anlaşılmasına yönelik C++ dilinde 2 tane operator var.
+
+1. dynamic_cast
+2. Typeid
+
+**dynamic_cast** bir tür dönüştürme operatörü. C dilnide doğrudan bir karşılığı yok. down castingin yani aşağı doğru dönüşümün programın çalışma zamanında güvenli olup olmadığını test ediyor. Bu ne demek?
+
+```CPP
+#include "car.h"
+
+void func(Car* p)
+{
+	//
+}
+```
+> Burada p'yi audi* a dönüştürürsem bunu bir Audi nesnesi olarak kullanabilir miyim? Sorusunun cevabı. Bu da aslında şu demek, P'nin gösterdiği nesne gerçekten de bir Audi mi?
+
+> Eğer P'nin gösterdiğin nesne farklı bir araçsa ve ben onu Audi olarak kullanma girişiminde bulunursam Compile Time'daki engelleri aşsam bile Runtime'da tanımsız davranış olacak, Runtime hatası olacak. Bunu bir Audi olarak kullanabilmem için Runtime'da bundan emin olmalıyım. İşte Dynamic Cast Operatörüyle bunu gerçekleştirebiliyorum.
+
+52
+
+
+
+
 
 
 
