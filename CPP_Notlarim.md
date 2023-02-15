@@ -10200,22 +10200,95 @@ void func(Car* p)
 
 > Eğer P'nin gösterdiğin nesne farklı bir araçsa ve ben onu Audi olarak kullanma girişiminde bulunursam Compile Time'daki engelleri aşsam bile Runtime'da tanımsız davranış olacak, Runtime hatası olacak. Bunu bir Audi olarak kullanabilmem için Runtime'da bundan emin olmalıyım. İşte Dynamic Cast Operatörüyle bunu gerçekleştirebiliyorum.
 
-52
+### Typeid operator
 
+**Tür olarak kullanımı:** polimorfik bir tür olmak zorunda değil. 
 
+```CPP
+typeid(int)
+typeid(Myclass)
+typeid(string)
+typeid(Base)
+typeid(Der)
+```
+**Operandı ifade olabilir:**
+```CPP
+typeid(x)
+typeid(*ptr)
+typeid(12)
+```
 
+- typeid operatörüyle oluşturulmuş bir ifade aslında bir type info nesnesine referans.
 
+> typeid(int) bu bir typeinfo sınıfı türünden bir nesne.
 
+- type id operatörüyle eriştiğiniz type info nesnesi belirli bir türü temsil ediyor. Yani örneğin int türünün int türü olduğunu gösteren type info nesnesiyle double türünü temsil eden type info nesnesi ayrı nesneler.
 
+**Template**
 
+```CPP
+template <typename T, T x>
+class Myclass {
 
+};
+```
+> T, type parametre, x non-type parametre. Böyle bir template yapısı, t'nin type parametre olduğunu, yani t için bir tür kullanılması gerektiğini, Ama x'in ise t türü'nden bir non type parametre olduğunu söylüyor. Yani t'ye int ise, ikinci template parametresi int turdan bir sabit olacak.
 
+```CPP
+template <auto n>
+class Myclass {
 
+};
 
+int main()
+{
+	Myclass<10>;
+}
+```
+> Bu durumda sanki auto yerine x yazılmış kabul edilecek.
 
+**Örnek:**
 
+```CPP
+template <typename T>
+void func(T x)
+{
 
+}
+```
+```CPP
+void func(auto x)
+{
 
+}
+```
+> Bu ikisi de aynı anlamda. C++ 20 ile gelen özezllik. Yazdığımız fonksiyon direkt template oldu.
+
+**Auto return type:**
+
+```CPP
+auto func(int x)
+{
+	return x * x;
+}
+```
+> Fonksiyonun geri dönüş değeri türünü return ifadesinden yap.
+
+- Fonksiyonların c++'da geri dönüş değerinin türü'nü anlatmak için ister template olsun, ister template olmasın, 4 tane yol var.
+
+1. Fonksiyonun geri dönüş değerinin türü'nü açıkça yazmak, c'de olduğu gibi.
+2. **trailing return type:**
+
+```CPP
+auto foo()->int
+{
+	return 1;
+}
+```
+> Bu template ler ile ilgili kullanılıyor.
+
+3. auto return type
+4. decltype(auto) return type
 
 
 
