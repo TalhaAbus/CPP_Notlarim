@@ -10519,6 +10519,62 @@ int main()
 ```
 > Her bir template uygun. En spesifik olan T** olan seçilecek. 
 
+# Ders 28
+
+- Nasıl bir fonksiyon shablonundan derliyici bir fonksiyon kodu oluşturuyor, böylece biz adeta bir algoritmayı türden bağımsız ifade edebiliyoruz. Zaten fonksiyon şablonlarının ana fikri bu. Türden bağımsız kodları, türden bağımsız bir formatla ifade edip, derliyicinin compile time'da onları türe bağlı hale getirmesi. Böylece daha yüksek düzeyde bir soyutlama sağlıyoruz. Ortak kodu bir yerde topluyoruz. Mesela algoritmada bir değişiklik yapmak istediğimiz zaman bir tek template kodu değiştirip tekrar derlersek, bu seferde bütün farklı türler için yeni kod kullanılacak.
+
+**Örnek: İki string'i bu şekilde swap ettiğimizi düşünelim:**
+
+```CPP
+template <typename T>
+void Swap(T& x, T& y)
+{
+	T temp(x); // copy constructor
+	x = y;		// Copy assignment
+	y = temp;	// Copy assignment
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
