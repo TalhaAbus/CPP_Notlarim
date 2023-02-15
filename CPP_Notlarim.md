@@ -10290,6 +10290,53 @@ auto foo()->int
 3. auto return type
 4. decltype(auto) return type
 
+**Örnek:**
+
+```CPP
+template <typename F>
+void func(F f)
+{
+	f(10);
+}
+
+void foo(int x)
+{
+	std::cout << "foo cagrıldı x = " << x << '\n';
+}
+
+int main()
+{
+	func(foo);
+}
+```
+> Derleyici Template argument deduction yaptı. Foo'nun argümanının türünden f'nin türünün void(*)(int) oldugunu anladı
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
