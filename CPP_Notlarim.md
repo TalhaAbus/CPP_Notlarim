@@ -10311,25 +10311,213 @@ int main()
 ```
 > Derleyici Template argument deduction yaptı. Foo'nun argümanının türünden f'nin türünün void(*)(int) oldugunu anladı. Dolayısıyla bu kod derlendiğinde aslında function pointer olan f'nin gösterdiği fonksiyon foo fonksiyonu çağrılmış oldu.
 
+## Explicit Template Argument
 
+bir fonksiyon şablonunda ben template parametresine karşılık gelen argümanın ne olduğunu çıkarıma bırakmak zorunda değilim. 
 
+```CPP
+template <typename T>
+void func(T x)
+{
 
+}
+int main()
+{
+	func<int>(12);
+}
+```
+> Böyle de çağırabilirim. Burada template'in isminden sonra yazılan açısal parantez içinde kullandığınız varlıklara explicit template argument deniyor. Yani template argument'ın ne olduğunu siz açıkça söylüyorsunuz.
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T>
+void func(T)
+{
+	TypeTeller<T> x;
+}
 
+int main()
+{
+	float f = 3.46f;
+	func(f);
+}
+```
+> Burada f float. Şimdi değiştirelim:
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T>
+void func(T)
+{
+	TypeTeller<T> x;
+}
 
+int main()
+{
+	float f = 3.46f;
+	func<double>(f);
+}
+```
+> Şimdi f 'nin double olduğunu görüyoruz. Yani artık burada çıkarım yapılmıyor. Siz fiilen template argümanı olarak neyin kullanılması gerektiğini söylüyorsunuz.
 
+- non-type parametre için de bu geçerli: 
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T, int>
+void func(T)
+{
+	TypeTeller<T> x;
+}
 
+int main()
+{
+	float f = 3.46f;
+	func<double,10>(f);
+}
+```
+> Böylece birinci template parametresi karşılığı kullanılacak türü argümanının double, ikinci template parametresi non-type parametre karşılığı kullanılacak sabit argümanında "10" olması gerektiğini söylemiş oldunuz. 
 
+- Bir kısmını ben söyleyeyim, bir kısmının çıkarımını derleyici yapsın?
 
+**Örnek:**
 
+```CPP
+template <typename T>
+class TypeTeller;
 
+template <typename T, typename U,typename W>
+void func(U, W)
+{
+	
+}
 
+int main()
+{
+	float f = 3.46f;
+	func<double>(1,4.5);
+}
+```
 
+- Fonksiyon şablonuyla fonksiyonun bir arada bulunması bir hata değil:
+
+```CPP
+template <typename T>
+void func(T x)
+{
+	std::cout << "function template specialization T is" << typeid(T).name() << "\n";
+}
+
+void func(int x)
+{
+	std::cout << "func(int x) x =" << x << "\n";
+}
+
+int main()
+{
+	func(12.4);
+}
+```
+> Bu durumda function overload resolution şöyle yapılacak. Funksiyona gönderdiğim argumandan hareketle template ten elde edilecek fonksiyonun imzasının anlaşılması için substitution dediğimiz süreç gerçekleşecek.
+
+**substitution:** template parametresinin ne olduğu belli. Böylece fonksiyonun parametrik yapısında ve geri dönüş değeri türünde template argümanını yerine koyarak
+bir parametrik yapı elde etmek.
+
+**Partial Ordering Rules Örneği:**
+
+```CPP
+template <typename T>
+void func(T)
+{
+
+}
+//template <typename T>
+//void func(T *)
+//{
+//
+//}
+
+int main()
+{
+	int x{ 10 };
+	func(&x);
+}
+```
+> bu durumda fonksiyonun parametre türü int yıldız olacak. Yani t türünün çıkarımı int * olarak yapılacak.
+
+```CPP
+//template <typename T>
+//void func(T)
+//{
+//
+//}
+template <typename T>
+void func(T *)
+{
+
+}
+
+int main()
+{
+	int x{ 10 };
+	func(&x);
+}
+```
+> Burada ise T türü int olacak.  Her ikisi birlikte olduğunda ise:
+
+```CPP
+template <typename T>
+void func(T)
+{
+
+}
+template <typename T>
+void func(T *)
+{
+
+}
+
+int main()
+{
+	int x{ 10 };
+	func(&x);
+}
+```
+> burada kullanılan kural setini partial ordering rules deniyor. (hangi templetten specialization yapılacağına yönelik kural seti). Daha spesifik olan seçilecek. Burada daha fazla dekleratöre sahip olan seçilecek. 
+
+```CPP
+template <typename T>
+void func(T)
+{
+	std:cout << "func(T)\n";
+}
+template <typename T>
+void func(T *)
+{
+	std:cout << "func(T*)\n";
+}
+
+template <typename T>
+void func(T**)
+{
+	std:cout << "func(T**)\n";
+}
+
+int main()
+{
+	int x{ 10 };
+	int* p = &x;
+
+	func(&p);
+}
+```
+> Her bir template uygun. En spesifik olan T** olan seçilecek. 
 
 
 
