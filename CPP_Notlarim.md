@@ -10309,7 +10309,7 @@ int main()
 	func(foo);
 }
 ```
-> Derleyici Template argument deduction yaptı. Foo'nun argümanının türünden f'nin türünün void(*)(int) oldugunu anladı
+> Derleyici Template argument deduction yaptı. Foo'nun argümanının türünden f'nin türünün void(*)(int) oldugunu anladı. Dolayısıyla bu kod derlendiğinde aslında function pointer olan f'nin gösterdiği fonksiyon foo fonksiyonu çağrılmış oldu.
 
 
 
