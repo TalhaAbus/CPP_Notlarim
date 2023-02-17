@@ -10535,10 +10535,12 @@ void Swap(T& x, T& y)
 }
 ```
 
-10
+```CPP
+vector<int>
+```
+> Elemanları int olan bir diziyi temsil ediyor.
 
-
-
+37
 
 
 
