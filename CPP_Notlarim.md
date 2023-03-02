@@ -10540,38 +10540,208 @@ vector<int>
 ```
 > Elemanları int olan bir diziyi temsil ediyor.
 
-37
+- C++ 17'ye kadar template lerde decduction yoktu. Sınıf şablonlarında template argümanlarının yazılması mecburiydi. C++17 ile önemli bir ekleme yapıldı. CTAD: Class TEmplate Argument Deduction. 
+
+```CPP
+using namespace std;
+
+int main()
+{
+	vector x{ 1,3,5,7 };  // vector<int> x{ 1,3,5,7 };
+}
+```
+> vektör bir sınıf olmasına karşın template argümanında vektör isminden sonra gelecek açısal parantezi içinde belirtmeden böyle bir sınıf nesnese oluşturuyorum. CTAD bunu sağlıyor. Derleyici burada bir deduction yapıp 1. template parametresi yerine template argument olarak int kullanılacağını nereden anlıyor? Cevap: Constructor gönderilen argümanlardan. 
 
 
+**Kısaca CTAD:**  Derleyici bir sınıf şablonundan oluşturulacak sınıf türünden nesnenin
+oluşturulduğu bildirime yaparken constructor'a gönderilen argümanların hangi türden olduğuna ya da olduklarına bakarak template argümanlarının ne olduğunun çıkarımını yapıyor.
 
+```CPP
+using namespace std;
 
+template <typename T>
+class Myclass {
+public:
+	Myclass(T);
+};
 
+int main()
+{
+	Myclass x(13);
+}
+```
+> Derleyici constructor'a gönderilen argümanın int türden olduğunu gördüğü için x'i
+my class'ın int açılımı türünden olması gerektiğini anlıyor.
 
+```CPP
+template <typename T>
+class Nec {
+private:
+	T mx;
+};
+```
+> Nec'in int açılımı söz konuusu olduğunda veri elamanı int, double söz konusu olduğunda veri elemanı double olacak.
 
+```CPP
+template <typename T>
+class Counter {
+public:
 
+private:
+	T cnt;
+};
+```
+> Counter'ın int açılımında veri elemanı int olacak counter'ın  long açılımında veri elemanı long olacak. Dolayısıyla öyle bir counter türü oluşturmuş olacağız ki bizim sayacımız int, long int, long long int olabilecek.
 
+**Örnek:**
+```CPP
+template <typename T>
+class Counter {
+public:
+	Counter() = default;
+	explicit Counter(T val) : m_cnt{val}{}
+	T get()const
+	{
+		return m_cnt;
+	}
+private:
+	T m_cnt;
+};
 
+int main()
+{
+	Counter c1;
+}
+```
+> Bu durumda sınıf şablonunun hangi açılım olduğu belli değil. Yani sınıf şablonunun kendisini bir sınıfmış gibi kullanma girişiminde bulunursanız sentaks hatası olur.
 
+- Fonksiyonu sınıf dışında tanımlamak istersem nasıl olacak:
 
+```CPP
+using namespace std;
 
+template <typename T>
+class Counter {
+public:
+	Counter() = default;
+	explicit Counter(T val) : m_cnt{val}{}
+	T get()const;
+private:
+	T m_cnt;
+};
 
+template <typename T>
+T Counter<T>::get() const
+{
+	return m_cnt;
+}
+```
 
+### Pair Sınıfı
 
+- Struct anahtar sözcüğü ile tanımlanmış bir sınıf. Doalyısıyla ögeleri doğrudan public.
+- 2 Tane template parametresi var. 
 
+```CPP
+	pair<int, double>;
+```
+- Tutulan ögeler fonksiyon değil. Sınıfın non-static veri elemanları. X'in first'ünü yazdıralım:
 
+```CPP
+int main()
+{
+	pair<int, double>x;
+	std::cout << "x.first= " << x.first << "\n";
+}
+```
+> DEfault initilaize edilmesi durumunda igeler default value init ediliyorlar. Yani değerleri sıfır. Bu bir sınıf türü olsaydı default constructor çağırılacak. (Value init edildiğinde)
 
+```CPP
+int main()
+{
+	pair x = { 45,6.7 };
+	std::cout << "x.first= " << x.first << "\n";
+	std::cout << "x.second= " << x.second << "\n";
+}
+```
+> Derleyici burada constuırctor'a gönderilen argümanlara bakacak ve ilk argümanın int ikincinin doubnle olmasından hareketle bunun, pair'in int-double açılımı olduğunu anlayacak.
 
+```CPP
+int main()
+{
+	pair <double, double>dp;
+	pair <int, int>ip{2,5};
 
+	dp = ip;
 
+	std::cout << "x.first= " << x.first << "\n";
+	std::cout << "x.second= " << x.second << "\n";
+}
+```
+> Bu atama legal, member template olduğuı için.
 
+```CPP
+int main()
+{
+	pair <string, string>x;
+	pair <const char*, const char*>y{"murat", "hakan"};
 
+	x = y;
+}
+```
+> Bu da legal fakat farklı bir tür olsaydı illegal olabilirdi. Legal olması için ögelerin birbirine atanabiliyor olması gerekiyor.
 
+```CPP
+	auto p = make_pair(12, Date{ 12,6,1986 });
+```
+> p'nin türü, pair'in (int,Date) açılımı oldu.
 
+**Bir pair'i çıkış akımına insert edecek kod:**
 
+**inserter:** Operator < fonksiyonunu overload eden fonksiyonlar.
 
+- standart kütüphanenin pair sınıfı için yazılan bir inserter yok.
+- Eğer inserter olsaydı:
 
+```CPP
+	cout << make_pair(12, 4.5) << "\n";
+```
+> Eğer inserter olsaydı bunu ekrana yazması gerekirdi ama hata.
 
+**Şimdi herhangi bir pair'i standart output veya çıkış akımına yazdırabilecek bir "operator <" fonksiyonu yazalım.**
+> Böylece pair yazdırmamız gerektiğinde bizim fonksiyon şablonumuz kullanılacak.
 
+```CPP
+#include <ostream>
+#include <utility>
+
+template <typename T, typename U>
+std::ostream& operator<<(std::ostream& os, const std::pair<T, U>& p)
+{
+	return os << '[' << p.first << "," << p.second << ']';
+}
+```
+> böylece bu kodumuz geçerli oldu:
+
+```CPP
+int main()
+{	
+	pair p{ "necati", Date{4,5,1994} };
+	cout << p << '\n';
+}
+```
+
+### Tür eş ismi bildirimleri:
+
+- Modern C++ öncesi bir türe eş isim oluşturmaının tekl you typedef bildirimleriydi. 
+- Typedef anahtar sözcüğü ile yapılan tür eş ismi bildirimleri template haline getirilemiyor. 
+
+```CPP
+typedef std::pair<int, int> ipair;
+```
+> Böylece ipar, pair'in int,int açılımının eş ismi oldu.
+
+- Using anahtar sözcüğü ile yapılan tür eş isim bildirimleri template haline getirileiliyor. 
 
 
 
