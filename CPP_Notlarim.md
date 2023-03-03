@@ -10743,6 +10743,7 @@ typedef std::pair<int, int> ipair;
 
 - Using anahtar sözcüğü ile yapılan tür eş isim bildirimleri template haline getirileiliyor. 
 
+# Ders 29
 
 
 
