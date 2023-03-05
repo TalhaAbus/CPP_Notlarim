@@ -10995,19 +10995,141 @@ basic_ostream<char, char_traits<char>>
 - Perfekt forwarding aracın kendisi değil. Perfekt forwarding yapma olanağa sağlayan araçlar C++ 11 standartlarıyla dile eklendi.
 - Bir fonksiyon olsun. Siz bu fonksiyonu aslında pekala kendiniz de çağırabilirsiniz. Fakat  öyle yerler var ki kutuphaneyi hazırlayan, bu fonksiyonu doğrudan çağırmanız yerine sizin bu fonksiyonu çağıran bir fonksiyonu çağırmanızı istiyor.
 
+```CPP
+using namespace std;
 
+class Myclass {};
 
+void func(Myclass&)
+{
+	std::cout << "L value ref.\n";
+}
 
+void func(const Myclass&)
+{
+	std::cout << "const L value ref.\n";
+}
 
+void func(Myclass&&)
+{
+	std::cout << "R value ref.\n";
+}
 
+int main()
+{
+	Myclass m;	//L value
+	const Myclass c_m;	// const L value 
+	
+	func(m);
+	func(c_m);
+	func(Myclass{});
+}
+```
+> Fonksiyonlari tek tek kendimiz cagirdik.
 
+```CPP
+using namespace std;
 
+class Myclass {};
 
+void func(Myclass&)
+{
+	std::cout << "L value ref.\n";
+}
 
+void func(const Myclass&)
+{
+	std::cout << "const L value ref.\n";
+}
 
+void func(Myclass&&)
+{
+	std::cout << "R value ref.\n";
+}
 
+int main()
+{
+	Myclass m;	//L value
+	const Myclass c_m;	// const L value 
+	
+	func(m);
+	//call_func(m);
 
+	func(c_m);
+	//call_func(c_m);
 
+	func(Myclass{});
+	//call_func(Myclass{});
+}
+```
+> Burada call_func yazma ve implemente etme islemine "argumanlari func'a perfect foward etmek" deniyor. 
+
+```CPP
+template <typename T>
+void call_func(T&&)
+{
+	func(std::forward<T>(x));
+}
+```
+> Perfect fowarding uygulanmis bir fonksiyon.
+
+```CPP
+template<typename T, typename U, typename W>
+void call_foo(T&& t, U&& u, W&& w)
+{
+	foo(std::forward<T>(t), std::forward<U>(u), std::forward<W>(w));
+
+}
+```
+> call_foo 3 adet forwarding ref parametreye sahip.
+
+### Variadic Template
+
+```CPP
+template<typename T>
+template<typename T, typename U>
+template<typename T, typename U, typename V>
+```
+> Kac tane template parametresi olmasini istiyorsak, template'i normalde ona gore olusturmak zorundayiz. Fakat variadic template araci bize tek bir template olusturarak, o template'in aslinda cok sayida parametreye sahip template ler olarak kullanilmasini sagliyor. Yani ortada tek bir template olacak ama o template'in parametre sayisi biz ne istersek o  olacak. Iste bunu saglayan arac varidadic template.
+
+```CPP
+//template parametre paketi, template type parameter pack
+template <typename ...Args>
+```
+> Bu pakette birden fazla template parametresi var demek.
+
+```CPP
+template <typename ...Args>
+void func(Args... params)
+{
+
+}
+
+//void func();
+//void func(int);
+//void func(int, double);
+//void func(int,double, const char*);
+
+int main()
+{
+	func();
+	func(1);
+	func(1, 2.3);
+	func(1, 2.3, "alican");
+}
+```
+> Burada fonksiyonun parametrelerinin ne oldugunu derleyici, template argument deduction ile anladi. Derleyici asagida cagirilan fonksiyonlara gore ortadaki fonksiyonlari birer birer kendisi tanimladi. Args (Template parametre paketi) ismi Args olmak zorunda degil. Ama uygulamalarda iki tane  identifier ismi cok sik kullaniliyor. 
+
+> Params = function parameter pack
+
+> Args = Template parameter pack
+
+```CPP
+template <typename T, typename U, typename ...Args>
+```
+> 1 tane parametre paketi olmak zorunda.
+
+  
 
 
 
