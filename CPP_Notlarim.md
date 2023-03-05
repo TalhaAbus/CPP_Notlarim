@@ -10900,29 +10900,100 @@ int main()
 
 ### Template parametrelerinin varsayılan argüman alması
 
-1.41
+**Vector nasil bir sinif sablonu?**
 
+```CPP
+template <typename T, typename A = std::allocator<T>>
+class Vector {
 
+};
+```
+> vector boyle bir sinif sablonu. Aslında siz vektörün int açılımı dediğinizde (Vektörün int - allocator'ın int açılımı) demis oluyorsunuz.
 
+```CPP
+vector<int> vec;
+Vector<int, allocator<int>> vec;
+```
+> ikisi de derleyici acisindan ayni anlamda.
 
+**Allocator ne demek?**
+- Allocator aslında bir kavram. Yani dinamik bellek ihtiyacının karşılanması ve kullanılması işlemlerini gerçekleştiren tür anlamında.
+- Container'lar (STL'deki ya da 3. parti kütüphanelerdeki) coğunlukla dinamik bellek yönetimi kullanıyorlar.
+**Yani dinamik bir dizi elemanlari nerede tutuyor?**
+- Basitce heap te tutuyor diyebiliriz. Aslinda programın çalışma zamanında elde edilen bir bellek alanında tutuyor.
+- Peki ya bir gömülü sistem için vektör sınıfını kullanmak istesek? Böyle olduğunda gömülü sistemde heap diye bir alan yok. Programın çalışma zamanında heap ten bir bellek alanı elde edemiyorum. Ama siz şimdi ilgili gömulü sistemde programın çalışma zamanında birbellek alanini kullanır kılan kendiniz bir kod yazabiliriz.
+- Container dediğimiz sınıfların  bir allocator parametresi var. Şimdi siz eğer allocator parametresini kendiniz seçmezseniz standart kütüphanenin allocator'ı aslında New ve delete operatörlerini kullanıyor.
+- Ama siz allocator'ın işlemlerinin böyle yapılmasını istemiyorsaniz, kendim ayrı bir allocator kullanacağım derseniz gidip bir allocator sınıfa oluşturup sizin sınıfınızın
+ dinamik bellek yönetimi kodlarını o sınıfın kodları olarak seçme şansınız oluyor.
+> new ve delete operatörlerinin ne zararı var? Bir zararı yok ama  bazı durumlarda
+sizin daha etkili, daha efektif bir kod oluşması için verim kritik uygulamalarda ayrı bir allocator kullanmayı tercih edebiliyorsunuz.
 
+- Standart kütüphanenin allocatoru herkese hizmet verecek şekilde yazılmış. Yani siz bin bitlik bir bellek alanı elde etmek isteseniz de 10 bitlik bellek alanı elde etmek isteseniz deaynı allocator kullanılıyor. Yani standart kütüphanenin allocatoru specific belirli bir ihtiyaç için değil.
 
+**Ornek:**
+- Biz programımızda sürekli bellek tahsisati yapacağız, dinamik bellek tahsisati. Ama bunu baştan biliyoruz. Bizim allocate edecegimiz bellek blokları hep 4 bit, 8 bit, 2 bit gibi küçük küçük değerler olacak. Simdi bu durumda standart kütüphanenin bu dinamik bellek yonetim sistemi bizim için büyük bir dezavantaj oluşturacak. Neden dezavantaj?
 
+1. Her dinamik tahsaat için bir header kısmı olacak. Orası 8 bytesa sizin kodunuz 4 byte kullanırken orayı yöneten sistemde ilave bir 8 byte daha kullanilacak. Veri yapısına bir enter yapılmak zorunda o da onun da bir maliyeti var.
 
+```CPP
+std::set<int, std::less<int>, std::allocator<int>> myset;
+```
+> Boyle yazmak yerine --
 
+```CPP
+std::set<int> myset;
+```
+> Biz Zaten aradaki tempate argumanlarini istedigimiz icin boyle yaziyoruz. Boylece kalan template parametreleri icin default template argumanlari kullaniliyor.
 
+```CPP
+using namespace std;
 
+template <typename Key, typename Comp, typename Alloc>
+class Set {
 
+};
 
+int main()
+{
+	Set<int> myset;
+}
+```
+> Boyle yazdigimda hata verecekti cunku ii+kinci ve ucuncu template parametreleri icin template argumani belirlemedim.
 
+```CPP
+using namespace std;
 
+template <typename Key, typename Comp = std::less<Key>, typename Alloc = std::allocator<Key>>
+class Set {
 
+};
 
+int main()
+{
+	Set<int> myset;
+}
+```
+> Boylece set-int, less-int, allocator-int acilimi yapmis olduk. Hata vermedi.
 
+**Not:** 
+- C++ bir nesne yönelimli programlama dili değil . C++ dili multi-paradigm bir programlama dili ve birden fazla paradigmayı sizin iş birliği için de kullanmanıza olanak sağlayan araçlar var. 
+- C++ data abstraction konusuna özellikle ağırlık vermiş bu özelliğini güçlendirmiş, ama bünyesinde barındırdığı araçlarla (başta nesne yönelimli programlama ve generic programlama olmak üzere) -(fonksiyonel programlama paradigması dahil)- paradigmaların iş birliği için de kullanılmasına olanak veren bir programlama dili o yüzden belki de ciddi bir alternatif yok.
 
+**Dikkat:**
+- Fonksiyon şablonlarının varsayılan argüman alması C++ 11 standartları ile eklendi. Daha oncesinde sadece sinif sablonlari varsayilan arguman alabiliyordu.
 
+**Dikkat:** cout, cin, aslinda bunlar da birer sinif sablonlari. cout'un ait oldugu sinif basic_ostream.
 
+```CPP
+using namespace std;
+basic_ostream<char, char_traits<char>>
+```
+> basic_ostream bizim sinif sablonumuzun turu. Iki template parametresi var. Birincisi akimdaki karakterlerin turu. Digeri karakterler uzerinde islemlerin nasil yapildigini belirleyen tur.
+- Yani ostream sinifin ismi degil. Bir sinif sablonunun belirli tur argumanlariyla olusturulmus specialization'u olan bir sinifin tur es ismi. Sinif sablonunun ismi basic_ostream.
 
+## Perfect Fowarding
+- Perfekt forwarding aracın kendisi değil. Perfekt forwarding yapma olanağa sağlayan araçlar C++ 11 standartlarıyla dile eklendi.
+- Bir fonksiyon olsun. Siz bu fonksiyonu aslında pekala kendiniz de çağırabilirsiniz. Fakat  öyle yerler var ki kutuphaneyi hazırlayan, bu fonksiyonu doğrudan çağırmanız yerine sizin bu fonksiyonu çağıran bir fonksiyonu çağırmanızı istiyor.
 
 
 
