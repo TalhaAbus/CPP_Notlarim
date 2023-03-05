@@ -10745,6 +10745,260 @@ typedef std::pair<int, int> ipair;
 
 # Ders 29
 
+### explicit specialization
+// eksik
+
+### Template Partial Specialization
+
+- Explicit Specialization'dan farklı olarak şimdi belirli tür argümanı ya da argümanları için değil, bir tür argümanı grubu için bir Specialization veriyorsunuz. Pointer türleri için, Dizi türleri için...
+
+- Partial Specialization'da, fonksiyonlar için bu araç kullanamıyor. Yani sadece sınıf şahlonları için kullanabiliyoruz.
+
+**Örnek:**
+
+```CPP
+template <typename T>
+struct Nec {
+	Nec()
+	{
+		std::cout << "primary template\n";
+	}
+};
+
+template <typename T>
+struct Nec<T*> {
+	Nec()
+	{
+		std::cout << "partial specialization Nec<T*>\n";
+	}
+};
+int main()
+{
+	Nec<int> n1;
+	Nec<double> n2;
+	Nec<int *> n3;
+	Nec<int **> n4;
+}
+```
+> Pointer türleri söz konusu olduğunda partial specialization kullanılıyor. 
+
+```CPP
+template <typename T, typename U>
+struct Nec {
+	Nec()
+	{
+		std::cout << "primary template\n";
+	}
+};
+
+template <typename T>
+struct Nec<T, int> {
+	Nec()
+	{
+		std::cout << "partial template\n";
+	}
+};
+
+int main()
+{
+	Nec<double, long> n1;
+	Nec<int, long> n2;
+	Nec<float, char> n3;
+}
+```
+> Hepsi primary template
+
+```CPP
+template <typename T, typename U>
+struct Nec {
+	Nec()
+	{
+		std::cout << "primary template\n";
+	}
+};
+
+template <typename T>
+struct Nec<T, int> {
+	Nec()
+	{
+		std::cout << "partial template\n";
+	}
+};
+
+int main()
+{
+	Nec<double, long> n1;
+	Nec<int, long> n2;
+	Nec<float, char> n3;
+	Nec<float, int> n4;
+	Nec<int, int> n5;
+}
+```
+> Burada partial specializaytion da geldi.
+
+```CPP
+template <typename T, typename U>
+struct Nec {
+	Nec()
+	{
+		std::cout << "primary template\n";
+	}
+};
+
+template <typename T>
+struct Nec<T, T> {
+	Nec()
+	{
+		std::cout << "partial template\n";
+	}
+};
+
+int main()
+{
+	Nec<int, char> n1;
+	Nec<int, int> n2;
+	Nec<char*, char*>n3;
+}
+```
+> Aynı türler olduğunda partial oldu.
+
+```CPP
+template <typename T, typename U>
+struct Nec {
+	Nec()
+	{
+		std::cout << "primary template\n";
+	}
+};
+
+template <typename T, typename U, typename V, typename M>
+struct Nec<std::pair<T, U>, std::pair<V, M>>
+{
+	Nec()
+	{
+		std::cout << "partial specialization\n";
+	}
+};
+
+int main()
+{
+	using namespace std;
+
+	Nec<int, double> x;
+	Nec<pair<int, double>, pair<char, long>>y;
+}
+```
+> Primary'den daha fazla parametreye sahip olan partia specialization
+
+## Default Template Arguments
+
+-  Dedik ki templatelerin parametreleri var. Ve bu template parametreleri karşılığı template argumentleri var.  Derleyici bir templateten bir specialization oluşturabilmesi için şüphesiz template argumentlarının ne olduğunu bilmesi gerekiyor. Template argumentlerinden ne olduğunun bilinmesi kaç yolda mümkündü?
+
+1. Deduction yoluyla
+2. explicit template argument kullanılmasıyla
+3. Default template argument ile
+
+### Template parametrelerinin varsayılan argüman alması
+
+1.41
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
