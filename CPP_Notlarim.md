@@ -11286,6 +11286,14 @@ void func(Ts ...args)
 **Associative Containers:** Ikili arama agaclari. Hepsinin ortak ozelligi: Bir anahtar ile arama yapiyorum ve o key'in olup olmadigini sorguluyorum. Mevcut ise ona erisiyorum. 
 
 **Iterators**
+- Pointerlarin daha soyutlanmis bicimi.
+
+- Bagli liste veri yapisinda ogeler bellekte ardisik degil. Ogeler dugumlerin icinde tutuluyor. Dugum, veri yapisinda tutulacak degerler ile implementasyon tarafinda kullanilacak pointerlari bir arada tutan nesneler. Yani bagli listenin ilk dugumunun icindeki pointer, bir sonraki ogeyi tutaun dugumu gosterebiliyor. 
+- Pointer yerine, pointer gibi davranan bir sinif olsaydi ve pointerlar yerine boyle siniflar turunden nesneleri kullaniyor olsaydik bu durumda operator overloading mekanizmasindan faydalanarak ++p yaptigimizda calistirilacak kod o pointerin degerini bir sonraki  ogeyi tutaun dugumun icindeki nesnenin adresi haline getirebilirdi. Veri yapisini en oldugundan bagimmsiz olarak p'nin bir sonraki ogeyi gostermesini saglayabiliriz. 
+- Yani pointer yerine generic programlama araclarindan faydalanarak yeni bir kavram  yaratmis oluyoruz. Bir iterator oyle bir varlik ki, belirli interface'deki operasyonlari destekliyor. ++ operatorunun operandi oldugunda veri yapisindan tutulan bir sonraki ogenin konumunu tutuyor.
+- Iteratorler fonksiyon parametreleri yapildiginda, containerlar ustunde genellestirilmis islem yapan fonksiyon sablonlarinin olusturulmasini sagliyorlar. Bunlara da algoritma deniyor. (ornegin sort algorimasi, copy algoritmasi)
+
+**Kisaca algoritmalar:** Tipik olarak parametreleri iterator olan ve bu sayede bir container'in bazi islemlerinin yapilmasini saglayan fonksiyon sablonlari. Yani containerlar sinif sablonlari, iteratorlar, tipik olarak sinif sablonlari, algoritmalar ise sinif sablonlari. 
 
 
 
