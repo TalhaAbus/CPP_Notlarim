@@ -11295,24 +11295,147 @@ void func(Ts ...args)
 
 **Kisaca algoritmalar:** Tipik olarak parametreleri iterator olan ve bu sayede bir container'in bazi islemlerinin yapilmasini saglayan fonksiyon sablonlari. Yani containerlar sinif sablonlari, iteratorlar, tipik olarak sinif sablonlari, algoritmalar ise sinif sablonlari. 
 
+# Ders 31
+
+- Bütün STL iteratörleri ya da üçüncü parti kütüphanelerdeki iteratörler, ortak bir interface'e sahip ama tamamen aynı da değil. Iteratörlerin kategori dediğimiz bir özelliği var. Bir iteratörün hangi operasyona destek verdiği, hangi operasyonu sağladığı
+ve tabii ki hangi operasyonu sağlamadığı o iteratörün kategorisine bağlı.
+
+**Iterator Categories:**
+1. input iterator
+2. output iterator
+3. forward iterator
+4. bidirectional iterator
+5. random access iterator
+
+- Aşağı doğru indikçe yetenek artıyor. (3. sıradaki, 1 ve 2 yi kapsıyor). Yani forward iterator kategorisindeki bir iterator ile hem input iterator interface'indeki operasyonları hem de output iterator kategorisindeki operasyonları gerçekleştirebilirim. Bir iterator bu kategorilerden birine ilişkin olmak zorunda. 
+
+![image](https://user-images.githubusercontent.com/75746171/223234748-7f57a3ba-ccf8-42d5-bb01-630c212c2b99.png)
+
+> Containerların içinde begin ismi geçen fonksiyonları containerdaki ilk ögenin konumunu veriyor.
+
+> Containerların end fonksiyonu son ögenin değil, bir sonraki (olmayan) ögenin konumunu tutuyor(Sentinel). Yani endin geri dönüş değeri olan konum erişim yapmamız için değil. Zaten bu end fonksiyonun geri dönüş değeri olan iteratörü dereference edersek tanımsız davranış.
+
+- Biz begin fonksiyonunu çağırıp ilk ögenin konumunu alıp, end fonksiyonunun geri dönüş değeri olan konumla karşılaştırıyoruz. Bu değer End'in geri dönüş değeri olan bir iteratör konumuna eşit ise artık konteynerde başka öge olmadığını, bütün ögeleri ziyaret ettiğimizi anlıyoruz.
+
+**Random Access Iterator:** C'deki raw pointer'ların ham pointer'ların yapabildiği her şeyi yapıyor.
+
+![image](https://user-images.githubusercontent.com/75746171/223237293-5e8c3d25-1c7d-46eb-ab08-8e0a7e863876.png)
+
+**Şu sınıfların iteratörleri Random Access Iterator:** (Yani her şeyi yapmaya muktedir)
+> Vector, deque, string, array, C Dizileri
+
+> Pointerları nasıl kullanabiliyorsak bunlar da aynı şekil kuulanabiliyoruz.
+
+**Şu sınıfların iteratörleri Bidirectional Iterator kategorisinde:**
+> List, set / multiset, map / multimap
+
+> Yani örneğin list'in iteratörü ile bir tam sayıyı toplayamam.
+
+**Örnek:**
+```CPP
+#include <list>
+
+int main()
+{
+	using namespace std;
+
+	list<int> mylist(100);
+	auto iter1 = mylist.begin();
+	auto iter2 = mylist.begin();
+
+	++iter1;
+	auto b = iter1 == iter2;
+	b = iter1 != iter2;
+	--iter1;
+	//Buraya kadar hatasız.
+
+	auto x = iter1 + 3; // Burada hata var. 
+	// Bunu sadece random access iterator yapabilir.
+	iter1 > iter2; //Bu da hata
+}
+```
+**Diğer bir örnek:**
+
+```CPP
+#include <forward_list>
 
 
+int main()
+{
+	using namespace std;
 
+	forward_list<int> mylist(100);
+	auto iter1 = mylist.begin();
+	auto iter2 = mylist.begin();
 
+	++iter1; //Hatasız
+	--iter1; //Hatalı
+}
+```
 
+**Bir iteratörün kategorisini nasıl öğrenebiliriz?** (Yani fiilen kodda bunu nasıl tespit edebilirim?)
+- İtoratör olan türlerin bazı nested type'leri var. Bu nested type'ları kullanarak özellikleri hakkında compile time'da bilgi edinebiliyoruz.
 
+```CPP
+iter_t::iterator_category
+```
+> Her iteratör türünün "iterator_category" nested type'ı, iteratörün kategorisini bildiriyor. (STL'de tanımlanan bazı empty class'lar iterator_category'i temsil ediyor.) Nedir bu empty class'lar? (Empty class'lar derleme zamanında bilgi edinme konusunda kullanılan temel araçlardan biri.)
 
+```CPP
+struct intput_iterator_tag{};
+struct output_iterator_tag {};
+struct forward_iterator_tag {};
+struct bidirectional_iterator_tag {};
+struct random_access_iterator_tag {};
+```
 
+**Örnek:**
 
+```CPP
+using iter_t = std::vector<int>::iterator;
 
+int main()
+{
+	using namespace std;
+	cout << typeid(iter_t::iterator_category).name() << '\n';
+}
+```
+> Çıktıda türünü derleme zamanında görmüş olduk.
 
+**İterator kategorisi neden önemli?**
 
+### std::copy
+- Bir range'deki ögeleri başka bir range'e kopyalıyor. 
+- Bir bağlı listede bulunan ögeleri bir dinamik diziye kopyalamak istiyoruz. Bu C dilinde standart kütüphaneler ile mümkün değil. Ama std::copy ile faklı containerlar arasında işlemler yapabiliyoruz.
 
+**Örnekler:** sdt::copy
+- Bir int dizideki ögeleri başka bir int diziye kopyalayabilirim.
+- Bir oyun programındaki fighter sınıfı türünden nesneler bir vektörde tutuluyor. Bu nesneleri ben bağlı listeye taşımak istiyorum. Bu da sdt::copy ile mümkün. İşte bu generic programlama, türden bağımsız. Yani 2-3 satırlık copy algoritması kodu ile (derleyicinin ürettiği gerçek fonksiyon ile) bir veri yapısında tutulduğu sürece her çeşit kopyalamayı yapabiliyoruz.
 
+**Not:** Belirli bir range'e yazan algoritmalar (copy) en son yazdıkları konumdan sonraki konumu döndürürler. Çünkü fonksiyonu çağıran yazılmış range'i kullanabilsin diye.
 
+**Örnek:**
+```CPP
+#include <iostream>
+#include <algorithm>
 
+template <typename InIter, typename OutIter>
+OutIter Copy(InIter beg, InIter end, OutIter destbag)
+{
+	while (beg != end) {
+		*destbeg++ = *beg++;
+	}
+	return destbag;
+}
 
+int main()
+{
+	int a[10] = { 1,2,4,6,7,3,7,23,5,19 };
+	int b[10];
 
+	Copy(a, a + 10, b);
+}
+```
 
 
 
