@@ -11129,22 +11129,161 @@ template <typename T, typename U, typename ...Args>
 ```
 > 1 tane parametre paketi olmak zorunda.
 
-  
+# Ders 30
 
+```CPP
+template <typename ...Ts>
+void func(Ts& ...args)
 
+void func(const int& p1, const double& p2)
+{
 
+}
 
+int main()
+{
+	int x = 324;
+	double dval{ 56.24 };
 
+	func(x, dval);
+}
+```
+> Asagidaki cagriya gore bize derleyici ortadaki fonksiyonu yazdi.
 
+### Pack Expansion
 
+- Parametre paketindeki parametrelerin bir kalıba uygun olarak bir kalıba uygun olarak virgülerle ayrılan listeye dönüştürülmesi.
+- Yani biz bir parametre paketini ya da fonksiyon parametre paketini ya da templet parametre paketini expand ettiğimizde ya da genişlettiğimizde Virgülerle ayrılan bir liste oluşturuyoruz templetin içinde.
 
+**Ornek:**
+```CPP
+template<typename ...TS>
+class Var
+{
 
+};
 
+template <typename ...Types>
+class Myclass : public Var<Types...> {
+public:
+	constexpr static size_t size = sizeof...(Types);
+};
 
+int main()
+{
+	constexpr auto n = Myclass<int, double>::size;
+}
+```
+> Burada dikkat ederseniz ismi Michael'a olan sınıf kalıtım yoluyla var sınıfının bir açılımından elde edilmiş. Şimdi eğer ben Myclass'in  int - double açılımını oluşturursam parametre paketinde iki tane tür olacak. Ve burada da pack expansion yapıldığı için, Var'in int double açılımından elde edilmiş olacak. Myclass'in int - double açılımı aslında Var'ın int - double açılımından kalıtım yoluyla elde edilecek .Bu pack expansion ile basariliyor. (<Types...>)
 
+```CPP
+template<typename ...TS>
+class Var
+{
+public:
+	Var()
+	{
+		std::cout typeid(Var).name() << '\n';
+	}
 
+};
 
+template <typename ...Types>
+class Myclass : public Var<Types*...> {};
 
+int main()
+{
+	Myclass<int, double, long> x;
+}
+```
+> Var'in, int* - doublr*, long* acilimindan elde edilecek.
+
+**Ornek:**
+
+```CPP
+#include <tuple>
+
+template<class A, class B, class... TS>
+void func(A arg1, B arg2, TS ...pack)
+{
+	std::tuple<A, B, TS...> t1;
+	//std::tuple<TS..., A, B> t2;
+	//std::tuple<A, TS..., B> t3;
+}
+int main()
+{
+	func(1, 4.5, 'C', 4.5f, 4L);
+}
+```
+> Bu fonksiyon vagrisinda derleyicinin yazdigi kodda olusturulan tur, tuple'in A,B, parametre paketindeki turlerin acilimi olacak.
+
+```CPP
+template <typename ...Ts>
+void func(Ts ...args)
+{
+	foo(args...)
+	bar(args)...
+	baz(bar(args)...)
+}
+```
+> Nasil uretilecek?
+
+```CPP
+foo(p1, p2, p3);
+bar(p1), bar(p2), bar(p3);
+baz(bar(p1), bar(p2), bar(p3));
+```
+
+**Ornek**
+
+```CPP
+template <typename ...Ts>
+void func(Ts ...args)
+{
+	{args...}
+}
+```
+> Boyle yazdigimda derleyicinin yazdirdigi fonksiyonun parametrelerinin isimlerini yaziyoruz.
+
+```CPP
+template <typename ...Ts>
+void func(Ts ...args)
+{
+	int a[] = { args... };
+	//int a[] = { p1,p2,p3 };
+}
+```
+> Bu da ayni anlmaa geliyor.
+
+## STL (Standart Template Library)
+
+- STL != C++ standart kutuphanesi
+- Fakat genel olarak ayni anlamda kullaniliyor.
+- Kisaca anlami: C++ standart kutuphanesindeki generic ogelerin olusturdugu kume
+- STL nesne yonelimli programlama paradigmasina uygun ya da o paradigmayi implemente eden bir kutuphane degil. (Nesne yonelimli programlamanin bazi ozelliklerinden faydalaniyor fakat ozellikle runtime polimorfizmini cok kisitli olarak kullaniyor.) (Kalitim da kullaniliyor fakat statik olarak, compile time'a yonelik olarak kullaniliyor.)
+- C#, java gibi dillerde en ufak bir hata, exception gonderilmesine sebep oluyor fakat STL efficiency odakli bir kutuphane oldugu icin hemen her yerde exception throw edilmiyor. Exception handling'ten ziyade sorumluluk programciya birakiliyor. En ufak bir hata exception gonderilmesi yerine tanimsiz davranis olusturuyor.
+- Hata mesajlari cok uzun olabiliyor.
+
+**Bircok STL bileseni var:**
+
+![image](https://user-images.githubusercontent.com/75746171/223106402-f79c3774-8eb4-4eac-bcca-f9b0e3da8327.png)
+
+**STL standart container siniflari:**
+![image](https://user-images.githubusercontent.com/75746171/223107072-a3afd7f2-0f34-4c79-8880-ff00a38edbcb.png)
+
+**Vector:** Dinamik dizi sinifi, veri yapilari ihtiyacinin cogunu karsiliyor.
+
+**Deque:** Dinamik dizilerin dizisi.
+
+**List:** Cifte bagli liste sinifi
+
+**Forward_list:** Teke bagli liste sinifi
+
+**Array:** C dizilerini sarmalayan bir container sinifi. Bircok durumda C'deki dizileri kullanmak yerine, onlari sarmalayan bu sinifi kullaniyoruz.
+
+**string:** Yazi tutma amacli.
+
+**Associative Containers:** Ikili arama agaclari. Hepsinin ortak ozelligi: Bir anahtar ile arama yapiyorum ve o key'in olup olmadigini sorguluyorum. Mevcut ise ona erisiyorum. 
 
 
 
