@@ -11437,9 +11437,9 @@ int main()
 }
 ```
 
+## Arama Algoritmaları
 
-
-
+- C'de arama fonksiyonları tipik olarak adres döndürür aranan değer bulunamazsa null pointer döndürür. String sınıfının arama fonksiyonları indeks döndürür. (std sizet). Başarısız ise string'in npos'u
 
 
 
