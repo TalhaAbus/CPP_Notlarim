@@ -11458,7 +11458,34 @@ InIter Find(InIter beg, InIter end, const T& val)
 }
 ```
 
-**Örnek:**
+**Predicate**
+
+- bool döndüren bir callable.
+
+**Unary predicate:** 1 tane parametreye sahip.
+**Binary predicate:** 
+
+STL algoritmmalarından bazıları bizden bir predicate istiyor. Örneğin sonu if ile biten algoritmalar.
+
+### find if 
+- Bir range de tutulan ögelerden belirli bir koşulu sağlayan ilk ögenin konumunu döndürüyor. Başarısızlıkta range'in end konumunu döndürecek. Kendim iz örnek olarak yazalım.
+
+```CPP
+template <typename InIter, typename Pred>
+InIter FindIf(InIter first, InIter last, Pred f)
+{
+	while (first != last) {
+		if (f(*first))
+		{
+			return first;
+		}
+		++first;
+	}
+	return last;
+}
+```
+
+
 
 
 
