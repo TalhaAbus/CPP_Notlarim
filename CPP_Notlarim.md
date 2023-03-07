@@ -11439,8 +11439,26 @@ int main()
 
 ## Arama Algoritmaları
 
-- C'de arama fonksiyonları tipik olarak adres döndürür aranan değer bulunamazsa null pointer döndürür. String sınıfının arama fonksiyonları indeks döndürür. (std sizet). Başarısız ise string'in npos'u
+- C'de arama fonksiyonları tipik olarak adres döndürür aranan değer bulunamazsa null pointer döndürür. String sınıfının arama fonksiyonları indeks döndürür. (std sizet). Başarısız ise string'in npos'u döndürüyor.
+- STL'deki arama algoritmaları ise iterator döndürüyor. Bulursa ögenin konumunu, bulamazsa range'in end iteratörünün döndürüyor.
 
+**Örnek:**
+```CPP
+template <typename InIter, typename T>
+InIter Find(InIter beg, InIter end, const T& val)
+{
+	while (beg != end) {
+		if (*beg == val)
+		{
+			return beg;
+		}
+		++beg;
+	}
+	return end;
+}
+```
+
+**Örnek:**
 
 
 
