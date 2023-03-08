@@ -11799,6 +11799,7 @@ int main()
 
 ## STL Containers
 - Verileri bir arada tutulup işlenmesini sağlayan düzenekler. Bu iş için oluşturulan sınıflara container sınıfları deniyor.
+- Bu containerların varlık nedeni bir değer ile bir ögeye erişmek.
 
 - Sequence Containers:
 
@@ -11806,21 +11807,45 @@ int main()
 
 > std::deque
 
-> std::list
+> std::list : Çifte bağlı liste
 
-> std::forward_list
+> std::forward_list : Tek bağlı liste
 
 > std::string
 
-> std::array
+> std::array : C dizilerini sarmalamak
 
+- Associative Containers:
 
+> std::set : Anahtarın kendisini tutuyor
 
+> std::multiset
 
+> std::map : Anahtar ile ilişkilendirilmiş bir değeri tutuyor.
 
+> std::multimap : Aynı anahtardan birden fazla olabilir.
 
+- Unordered Associative Containers:
 
+> set::unordered_set
 
+> set::unordered_multiset
+
+> set::unordered_map
+
+> set::unordered_multimap
+
+- Container Adapters:
+
+> std::stack
+
+> std::queue
+
+> std::priority_queue
+
+**Notlar:**
+- Günümüzdeki birlghisayar sistmeleri için maliyeti en fazla etkileyen mekanizma önbellek mekanizması. Bir veriyi kullanmak istiyoruz ve bu veri kullanmak istediğimiz anda zaten önbelleğe alınmış durumdaysa ona erişme maliyeti düşük. Ama cache'te değilse ona bellekten erişmek gerekiyor ve bunun maliyeti çok daha yüksek.
+- Veri yapısındaki ögeyi kullanmöak sitediğimizde bu zaten önbellekte ise buna cache hit deniyor, değilse cache miss.  
 
 
 
