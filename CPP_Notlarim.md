@@ -11774,6 +11774,64 @@ int main()
 ```
 > Sentaks hatası. Derleyicinin yazıdğı sınıfta, derleyici sınıfa veri elemanı olarak mt19937 nesnesini koydu. Ama derleyicinin yazdığı fonksiyon, cosnt üye fonksiyon. Const üye fonksiyon, elemanlarının const olmayan üye fonksiyonlarını çağıramaz. Buradaki discard, non-cost üye fonksiyon oldğu içiçn sentaks hatası oldu.
 
+```CPP
+template <typename T>
+void func(T t)
+{
+	//
+}
+
+int main()
+{
+	func([](int x) {return x + 5; });
+	// Böyle çağırırsam fonksiyonun parametre değişkeni türü closure type
+	func(+[](int x) {return x + 5; });
+	// Böyle çağırırsam fonksiyonun parametre değişkeni türü function pointer
+}
+```
+
+- Positive lambda
+- capture clause
+- iife idiom
+- overload reloltion
+- generalized lambda expression
+
+
+## STL Containers
+- Verileri bir arada tutulup işlenmesini sağlayan düzenekler. Bu iş için oluşturulan sınıflara container sınıfları deniyor.
+
+- Sequence Containers:
+
+> std::vector
+
+> std::deque
+
+> std::list
+
+> std::forward_list
+
+> std::string
+
+> std::array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
