@@ -11679,7 +11679,7 @@ int main()
 ```
 > f1 ve f2 kesinlikle farklı türler.
 
-
+ 
 
 
 
