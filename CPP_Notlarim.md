@@ -11485,6 +11485,10 @@ InIter FindIf(InIter first, InIter last, Pred f)
 }
 ```
 
+# Ders 32
+
+- Lambda ifadelerini bir algoritmaya argüman olarak gönderiyoruz. Böylece bir callable göndermiş olduk. Algoritma aldığı callable'ı bir ya da birden fazla yerde çağırıyor.
+
 
 
 
