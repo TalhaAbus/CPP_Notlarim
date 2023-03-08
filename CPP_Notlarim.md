@@ -11489,14 +11489,133 @@ InIter FindIf(InIter first, InIter last, Pred f)
 
 - Lambda ifadelerini bir algoritmaya argüman olarak gönderiyoruz. Böylece bir callable göndermiş olduk. Algoritma aldığı callable'ı bir ya da birden fazla yerde çağırıyor.
 
+### Reverse iterator
 
+```CPP
+	ivec.begin();	// geri dönüş değeri iterator
+	ivec.rbegin();	// Geri dönüş değeri reverse iterator
+```
 
+**Örnek:**
 
+```CPP
+using namespace std;
 
+int main()
+{
+	vector<int> x;
 
+	cout << typeid(x.begin()).name() << "\n";
+	cout << typeid(x.rbegin()).name() << "\n";
+}
+```
+- Çıktı:
 
+```CPP
+class std::_Vector_iterator<class std::_Vector_val<struct std::_Simple_types<int> > >
+class std::reverse_iterator<class std::_Vector_iterator<class std::_Vector_val<struct std::_Simple_types<int> > > >
+```
 
+![image](https://user-images.githubusercontent.com/75746171/223683460-bdf1b2a4-6b25-4de4-9520-1b05c7aa56af.png)
 
+> Normalde iterator böyle çalışıyor. Bgini lk ögenin, end sonuncudan sonrakinin konumunu veriyor. Ama reverse iterator öbyl değil.
+
+![image](https://user-images.githubusercontent.com/75746171/223683678-ee043d88-f656-460b-9e05-6f0f74462624.png)
+
+> rbegin fonksiyonu fiziksel olrak end konumunu tutuyor. Fakat onu dereference ettiğimizde kendi konumundan bir ömnceki konumunu dereferecne ediyor. 
+
+```CPP
+template <typename Iter>
+void Print(Iter beg, Iter end)
+{
+	while (beg != end)
+		std::cout << *beg++ << " ";
+	std::cout << "\n---------------------------\n";
+}
+
+**Örnek:**
+
+int main()
+{
+template <typename Iter>
+void Print(Iter beg, Iter end)
+{
+	while (beg != end)
+		std::cout << *beg++ << " ";
+	std::cout << "\n---------------------------\n";
+}
+
+int main()
+{
+	using namespace std;
+
+	vector<int> ivec{ 12,56,89,3,57 };
+	Print(ivec.begin(), ivec.end());
+
+	auto riter = ivec.rbegin(); 
+	// Bu iter içinde bir iterator tutuyor.
+	// Aslında bu end konumunu tutuyor.
+	// Ben bunu dereferece ettiğimde aslında bir önceki konunumu dereference ediyor.
+	// Böylece contaienrdaki son ögeye erişmiş oluyoruz.
+
+	cout << *riter << "\n";
+	++riter; // Burada çalışan kod sarmaladığı iteratorün -- operatörünü kullanıyor.
+	cout << *riter << "\n";
+	// çıktı olarak bir önceki ögeyi görüyoruz
+
+	// riter = ivec.rend(); 
+	// Bu da aslında ilk ögenin konumunu tutuyor.
+	// Ama ben bunu dereferece etsem tanımsız davranış olacak.
+}
+```
+- O zaman ++ operator fonksiyonu reverse için, sarmaladığı iteratörün -- fonksiyonunu çağırdığına göre, reverse iterator olması için en az bidirectional iterator olması gerekir.
+- Reverse iteratorun base isimli bir fonksiyonu var. Sarmaladığı iteratörü döndürüyor. 
+
+```CPP
+template <typename Iter>
+void Print(Iter beg, Iter end)
+{
+	while (beg != end)
+		std::cout << *beg++ << " ";
+	std::cout << "\n---------------------------\n";
+}
+
+int main()
+{
+	using namespace std;
+
+	vector<int> ivec{ 12,56,89,3,57 };
+
+	auto iter = ivec.rend().base();
+	cout << *iter << "\n";
+}
+```
+> Bu durumda iter'in türü reverse iterator değil, normal iterator. Ve aslında beg'in konumunu tutuyor. Çalıştırıınca vectordeki ilk ögetye erişmiş olacam.
+
+```CPP
+template <typename Iter>
+void Print(Iter beg, Iter end)
+{
+	while (beg != end)
+		std::cout << *beg++ << " ";
+	std::cout << "\n---------------------------\n";
+}
+
+int main()
+{
+	using namespace std;
+
+	vector<int> ivec{ 12,56,89,3,57 };
+
+	auto beg = ivec.rbegin();
+	auto end = ivec.rend();
+
+	// beg end
+	Print(beg, end);
+	Print(end.base(), beg.base());
+}
+```
+> Elinmizde bir iterator range varsa bu iteratorlerin yerini değiştirin. Ama iteratörün kendisini değil de base fonsiyonunun geri dönüş değerinı kullanın. Bu durumda ayın range'in baştan sona halini kullanmış olacaksınız.
 
 
 
