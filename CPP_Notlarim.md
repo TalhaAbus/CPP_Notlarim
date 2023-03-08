@@ -11617,19 +11617,67 @@ int main()
 ```
 > Elinmizde bir iterator range varsa bu iteratorlerin yerini değiştirin. Ama iteratörün kendisini değil de base fonsiyonunun geri dönüş değerinı kullanın. Bu durumda ayın range'in baştan sona halini kullanmış olacaksınız.
 
+- Advance Fonmksiyonu
+- Next fonksiyonu
+- Pre fopnksiyonu
+- swap fonk. 
 
+## Lambda Expresions (Lambda Funcitons)
 
+- Modern C++ ile dile eklendi.
+- C++'ta nested fonksiyon yok ama lambda ifadeleri bunu dolaylı olarak yapılmasını sağlıyor. Yani lambda ifadeleriyle biz aslında bir fonksiyon içinde çağırabileceğimiz bir fonksiyon kullanabiliyoruz.
 
+```CPP
+int main()
+{
+	[]() {}();
+}
+```
+> Minimal bir lambda ifadesi. 
+- Bir lambda ifadesi, derleyicinin bir sınıf kodu yazmasını ve ifadenin kendisini de o sınıf türünden geçici bir nesneye dönüştürülmesini sağlıyor.
+- () : Derleyiciye yazdırdığımız sınıfınfonksiyon çağrı operatörünün parametre parantezi. İçini boş bırakırsak, derleyiciye yaszdırmak istediğimiz sınıfın fonksiyon çağrı operatör fonksiyonunu parametresinin olmaması demek.
 
+# Ders 33
 
+```CPP
+		[](int x, int y)mutable{}	// Uye fonksiyon  non-const olsun
+		[](int x, int y)noexcept {}	// bu exception throw etnmmiyor anlamında
+		[](int x, int y)constexpr {}	// constexpr olamsını engelleyen bir durumda hata verecek
+		[](int x, int y)->int {}	// return ifadesini belirtmek
+```
+> Bu bir veya birden fazlası olabilir.
 
+**Kullanım biçimleri:**
 
+```CPP
+int main()
+{
+	using namespace std;
 
+		//auto f = [](int x) {return x * x; };
+		//auto f([](int x) {return x * x; });
+		auto f{ [](int x) {return x * x; } };
 
+		cout << f(12) << '\n';
+}
+```
 
+- Lambda expressinolar aynı olursa:
+```CPP
+int main()
+{
+	using namespace std;
 
+	auto f1 = [](int x) {
+		return x * x;
+	};
 
-
+	auto f2 = [](int x) {
+		return x * x;
+	};
+}
+```
+> f1 ve f2 kesinlikle farklı türler.
 
 
 
