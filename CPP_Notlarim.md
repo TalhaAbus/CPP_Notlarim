@@ -11679,16 +11679,100 @@ int main()
 ```
 > f1 ve f2 kesinlikle farklı türler.
 
- 
+**Transform Algorithm** -- Tekrar et
+
+- Lambda ifadeleri en çok kullanıldığı yerler fonksiyon şablonlarına argüman olarak gönderilmesi.
+- 2. olarak lambda ifadesinin bulunduğu yerde fonksiyonu çağırmak.
 
 
+```CPP
+class xyz {
+public:
+	xyz(int a) : x(a) {}
+	void foo()
+	{
+		//
+	}
+private:
+	int x;
+};
 
 
+int main()
+{
+	int a = 10;
+}
+```
+> Yazdığımız constructor ile sınbıfın veri elemanını constructor a gelen değer ile init ettik. Yani xyz sınbıfından oluşturulan nesnenin foo fonksiyıonu çağırıldığında, foo x'i kullanıdğında aslında a'nın değerini kullanmış oluyoruz. 
 
+> Ve aslında derleyiciye böyle bir kod yazırabiliriz. Bunu yapabilmek için lambda ifadesinde captura close kullanılıyoruz.
 
+```CPP
+int main()
+{
+	int a = 10;
 
+	[a] //Derleyici benim için yazacağı sınıfa 
+	// a değişkeninin türünden bir veri elemanı eklyecek. 
+	// Ve o veri elemanını benim sınıfımda yazacağın cosnturtor ile init et.
+}
+```
 
+**Örnek:**
+```CPP
+using namespace std;
 
+int main()
+{
+	int a = 10;
+
+	auto f = [a](int x) {
+		a *= x;
+	};
+}
+```
+> a sentaks hatası verdi. Neden? Yazılan kodda fonksiyonun const üye fonksiyon olması.  Derleyici nasıl bir kod yazdı?
+
+```CPP
+using namespace std;
+
+class comp_gnt {
+public:
+	comp_gnt(int a) : m_a(a) {}
+	void operator()(int x) const
+	{
+		m_a *= x;
+	}
+private:
+	int m_a;
+};
+```
+> yani const olan private içindeki m_a değil. cosnt olan, üye fonksiyon. Üye fonksiyoınun const olmaması için lambda ifadesinde mutable kullanmamız gerekiyor.
+
+```CPP
+int main()
+{
+	int a = 10;
+
+	auto f = [a](int x)mutable {
+		a *= x;
+	};
+}
+```
+
+**Örnek:**
+
+```CPP
+int main()
+{
+	auto eng = mt19937{};
+
+	auto f = [eng]() {
+		eng.discard(12);
+	};
+}
+```
+> Sentaks hatası. Derleyicinin yazıdğı sınıfta, derleyici sınıfa veri elemanı olarak mt19937 nesnesini koydu. Ama derleyicinin yazdığı fonksiyon, cosnt üye fonksiyon. Const üye fonksiyon, elemanlarının const olmayan üye fonksiyonlarını çağıramaz. Buradaki discard, non-cost üye fonksiyon oldğu içiçn sentaks hatası oldu.
 
 
 
