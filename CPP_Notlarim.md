@@ -11919,7 +11919,7 @@ int main()
 	auto x{ 1 };	// çıkarım int olarak yapıldı
 ```
 
-
+2.28
 
 
 
