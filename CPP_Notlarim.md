@@ -11847,18 +11847,77 @@ int main()
 - Günümüzdeki birlghisayar sistmeleri için maliyeti en fazla etkileyen mekanizma önbellek mekanizması. Bir veriyi kullanmak istiyoruz ve bu veri kullanmak istediğimiz anda zaten önbelleğe alınmış durumdaysa ona erişme maliyeti düşük. Ama cache'te değilse ona bellekten erişmek gerekiyor ve bunun maliyeti çok daha yüksek.
 - Veri yapısındaki ögeyi kullanmöak sitediğimizde bu zaten önbellekte ise buna cache hit deniyor, değilse cache miss.  
 
+# Ders 34
 
+- Containerlar programın çalışma zamanında (array hariç) öge sayısı değişebilen yapıalr.
 
+**Ekleme işlemi naısl yapılıyor?**
 
+- Referans semantiği ile değil. Taşınacak ögenin bir kopyası çıkartılıp kopyası koyuluyor. Falat referans semantiğini kullanma yolları da var.
 
+## std::vector
 
+```CPP
+int main()
+{
 
+	std::vector<int> ivec;
+	std::cout << "ivec.size() = " << ivec.size() << "\n";
+	std::cout << std::boolalpha;
 
+	std::cout << ivec.empty() << "\n";
+}
+```
+> Default init. Boş bir vector oluştu.
 
+```CPP
+int main()
+{
 
+	std::vector<int> ivec(10);
+	std::cout << "ivec.size() = " << ivec.size() << "\n";
 
+	std::cout << ivec.empty() << "\n";
+}
+```
+> 10 tane öge ile başlaacak. Bunlar çöp değer değiller. Value init ediliyor. Hepsinin değeri sıfır.
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	initializer_list<int> x{ 1,4,6,7,9 };
+
+	std::cout << "sizeof(x) = " << sizeof(x) << "\n";
+}
+```
+> sizeof(x) çıktısı olarak 8 aldık. Bu nasıl oldu?
+
+> initializer lsito luşturduğunuzda aslında derleyici bir dizi oluşturuyor. 
+
+![image](https://user-images.githubusercontent.com/75746171/223967055-04f9317a-8ade-4b16-a467-770df3fdbb94.png)
+
+- Bu initializer list ile o range'e erişebiliyorum. 
+- Yani bir initiazlier list kopyalanarak başka bir initilazier list oluşturulursa, dize diziyle herhangi bir alakalsı yok.
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	initializer_list<int> x{ 1,4,6,7,9 };
+	auto y = x;
+
+	cout << boolalpha << (x.begin() == y.begin()) << '\n';
+}
+```
+> true döndü. 
+
+```CPP
+	auto x = { 1 }; // çıakrım initializer list olarak yapıldı
+	auto x{ 1 };	// çıkarım int olarak yapıldı
+```
 
 
 
