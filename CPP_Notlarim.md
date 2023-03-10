@@ -11943,8 +11943,48 @@ int main()
 }
 ```
 
+# Ders 35
 
+- İsminde begin veya end geçen fonksiyonlar, iterator veren fonksiyonlar.
 
+```CPP
+int main()
+{
+	using namespace std;
+
+	vector<string> x(100'000);
+	//code
+	vector<string> y(100'000);
+
+	auto temp = x;
+	x = y;
+	y = temp;
+}
+```
+> Swap işlemimizi böyle yaparsak çok kötü bir kod olur. Burada deep copy yapıldı. 100 bin tane string bir yerden başka bir yere taşınacak. Çok yüske bir maliyeti var. Fakat biz swap fonksiyonunu çağırdığımızda:
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	vector<string> x(100'000);
+	//code
+	vector<string> y(100'000);
+
+	//auto temp = x;
+	//x = y;
+	//y = temp;
+
+	x.swap(y);
+	swap(x, y);
+}
+```
+> Burada sadece vector nesnesinin içindeki pointerlar swap ediliyor. Destroy edilen nesne yok, copy constructor yok, move cvconstructor yok. 
+
+### Iterator Invalidation
+
+- Bir iterator geçerliyken belirli işlemlerin yapılması o iteratörü geçersiz hale getirebiliyor. Bunun en tipik örneği reallocation.
 
 
 
