@@ -11986,11 +11986,50 @@ int main()
 
 - Bir iterator geçerliyken belirli işlemlerin yapılması o iteratörü geçersiz hale getirebiliyor. Bunun en tipik örneği reallocation.
 
+### Emplace Fonksiyonları
 
+![image](https://user-images.githubusercontent.com/75746171/224391964-afce3fdd-946a-4fcf-bb2d-f93affadb57c.png)
 
+- Container'a sondan bir nesne ekleyeceğiz. Sondan ekleme fonksiyonuna fighter'ı argüman olarak geçtik.
+- Ögenin storage'ını ayarlamak container'ın görevi.
 
+- Container sınıfların insert fonksiyonları (pushfront, pushback, insert) her zaman 2 tane overload ları oluyor. Çünkü biri taşıyacak diğeri kopyalayacak.   
 
+![image](https://user-images.githubusercontent.com/75746171/224393028-890e1760-c2be-40e1-aaf0-9a148f31f921.png)
 
+- Nesneyi ekleme işleminde kullanmak yerine, doğrudan nesneyi bellek alanında construct edebilirim. 
+
+**Kısaca emplace:** Sen bana containerda tutulacak nesneyi geçme, Bu nesneyi construcot etmek için gereken argümanları geç. Constructor'ın tutulacağı bellek alanında senin gönderdiğin argümanları constructor a çağırıp perfectly forward edeyim. 
+- Böylece kopyalama ve taşıma maliyeti olamayacak.
+
+- Bu fonksiyonun da template olması gerekiyor.
+
+```CPP
+template <typename T>
+class Myclass {
+
+public:
+	void func(T&&)
+	{
+
+	}
+};
+```
+> Bu fonksiyonun parametresi R value reference. Forwarding reference yok. Bunun olması için bir deduction gerekliyor. Fonksiyon bir member template olsaydı fonksiyonun parametresi forwarding referecen olurdu.
+
+```CPP
+template <typename T>
+class Myclass {
+
+public:
+	template <typename U>
+	void func(T&&)
+	{
+
+	}
+};
+```
+> Artık bu fonksiyonun parametresi forwarding reference.
 
 
 
