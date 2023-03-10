@@ -12032,7 +12032,7 @@ public:
 > Artık bu fonksiyonun parametresi forwarding reference.
 
 
-
+49
 
 
 
