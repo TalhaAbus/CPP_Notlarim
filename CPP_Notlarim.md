@@ -11919,7 +11919,30 @@ int main()
 	auto x{ 1 };	// çıkarım int olarak yapıldı
 ```
 
-2.28
+**resize fonksiyonu**
+**pushback fonksiyonu**
+**assign fonk.**
+
+**Bir container'ın insert fonksiyonu nasıl çalışıyor?**
+- insert fonksiyonlarından bir parametre daime iterator. ve bu ilk parametre. 
+
+![image](https://user-images.githubusercontent.com/75746171/224298838-3a8a7f75-82eb-419c-bf77-b79b5180aa82.png)
+
+> x nesnesi b'ye insert edilirse a ve be arasına giriyor. 
+
+- insert fonksiyonundaki diğer parametreler, insert işleminin farklı şekilde yapılmasını sağlayan overload lar oluşturacak.
+```CPP
+int main()
+{
+	using namespace std;
+	vector<string> svec{ "ali", "selim", "murat", "serhat" };
+
+	print(svec);
+	svec.insert(svec.begin() + 2, "nihal");
+	print(svec);
+}
+```
+
 
 
 
