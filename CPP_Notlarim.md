@@ -12268,7 +12268,7 @@ std::forward_list
 
 - Vectordeki bu ögeyi silip başka bir vectordeki başka bir noktaya insert edeceğiz. Eğer bunu silersek başka vectorde construct etmek zorundayız. Ama bağlı lsitede düğümler söz konusu olduğu için düğümü bir bağlı listeden çıkartıp içindeki veriyi hiç öldürmeden başka listeye eklemek mümkün. İsmi splice olan fonksiyonlar bunu gerçekleştiriyorlar.  
 
-
+53
 
 
 
