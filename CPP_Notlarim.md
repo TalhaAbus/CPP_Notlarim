@@ -12216,17 +12216,57 @@ int main()
 }
 ```
 
+# Ders 37
 
+- C++ standartları containerların nasıl implemente edildiğine karışmıyor. Hatta hiçbir implementasyona karışmıyor. 
 
+**Not:**
+- vector - int açılımı template argümanı olarak int kullanıyoruz, string açılımında string kullanıyoruz. Ama vector bool açılımında primary template kullanılmıyor. Bir partial specialization var. Yani vector bool açılımı primary template ile aynı koda sahip değil. Vector'un bool açılımının değerleri bit seviyesinde tutması istendiği için. 
 
+```CPP
+int main()
+{
+	using namespace std;
 
+	vector<bool> vec(100);
 
+	auto val = vec[5];
+}
+```
+> val'in türü olarak (std::vector bool::reference val) gözüküyor. Nested bir type. Çünkü arka planda bit seviyesinde tutulduğu için referans olmaz bu bir proxy class (yardımcı sınıf). Yani bunun bit seviyesinde tutulması için aslında nested class söz konusu. 1 byte lık nesnesin referans döndürmesi mümkün değil.
 
+- deque bool açılımı bir specializationdeğil, gerçekten bool tutuyor.
 
+### Bağlı liste containerları
 
+std::list
+std::forward_list
 
+![image](https://user-images.githubusercontent.com/75746171/224509037-d8c6ad55-dbca-4c61-87ba-7f842eb393de.png)
 
+- Node kendi içinde bir data tutuyor ve data ile birlikte 2 tane pointer tutuyor. Önceki ve sonraki ögeyi tutan düğümü gösteriyor. 
 
+**Dezavantajları:**
+- Bir bağlı listeye int sokmak içiçn 12 byte lık bellek alanı alocate etmemiz gerekiyor. int + 2 pointer. Vectorde bunu tutsaydık sadece 4 bytelık yere ihtiyacımız olacaktı ve ardışık olacaktı.
+- Normalde malloc ile 20 byte lık bellek alocate etmek istediğimizde malloc 20 byte lık bellek alocate etmiyor. Daha büyük bir bellek bloğu alocate ediyor, biz kısmını kendisi kullanıyor.  
+
+![image](https://user-images.githubusercontent.com/75746171/224509272-69a91ae6-6fd2-496e-8863-6ad02627753a.png)
+
+- Yani her bir alocation ilave bir bellek alanına ihtiiyaqç duyuyor. Bunun bir avantajı da, implementasyon birimi olarak düğümün kullanıldığı veri yapılarının bir avantajı da, fragmente olmuş belleğe daha uyumlulular. Küçük küçük node'lar 12 byte ise, farklı yerlerde allocation yapılabilir. 
+- İndeks ile erişimde önemli dezavantajı var. 10. ögeye erişmek için altındaki tüm ögelerden 10. ögeye ulaşması gerekiyor. 
+
+- Eğer ekleme işlemleri baştan ve sondan sürekli yapılmıyorsa, herhangi bir noktadan ekleme ve silme sık yapılıyorsa burada bağlı liste kullanımıo düşünülebilir. 
+
+**Neden  vectorde olmayan bazı fonksiyonlar list'te var?**
+
+- Ögeler bellekte 400 byte yer kaplıyor olsun. Her bir data 400 byte. 2 data nesnesini swap işlemi 400 byte lık bellek blokarının takası anlamına gelir bunun da ciddi bir maliyeti var. Ama node'larda tutulduğunda sadece 4 byte lık pointerlar takas edilecek. 
+- Bu yüzden list'in algoritmalardaki bazı işlemler için doğrudan üye fonksiyonları var. 
+
+**Bir başka avantajı:**
+
+![image](https://user-images.githubusercontent.com/75746171/224509805-8462b586-30e9-4f97-8962-f814391ea612.png)
+
+- Vectordeki bu ögeyi silip başka bir vectordeki başka bir noktaya insert edeceğiz. Eğer bunu silersek başka vectorde construct etmek zorundayız. Ama bağlı lsitede düğümler söz konusu olduğu için düğümü bir bağlı listeden çıkartıp içindeki veriyi hiç öldürmeden başka listeye eklemek mümkün. İsmi splice olan fonksiyonlar bunu gerçekleştiriyorlar.  
 
 
 
