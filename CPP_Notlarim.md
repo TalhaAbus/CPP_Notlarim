@@ -12031,8 +12031,81 @@ public:
 ```
 > Artık bu fonksiyonun parametresi forwarding reference.
 
+### Spaceship operatörü (Three-way comparison)
 
-49
+```CPP
+45 == x;
+x == 45;
+```
+> C++ 17 ve öncesinde üstteki geçöerli değil. Fakat dile eklenen özellik ile üsttekinin geçersiz olduğunu derleyici analdıktan sonra alttakini de deniyor ve geçerli olduğunu kabul ediyor. Buna rewritable özelliği deniyor.
+
+> C++ 20 ile artık operator== rewritable. 
+
+- Yeni karşılaştırma operatoru eklendi. Three-way comparison.(spaceship operator)
+
+**Lexicographical Compare:**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	vector<int> x{ 3,6,9,1,10 };
+	vector<int> y{ 4 };
+
+	cout << boolalpha << (y > x) << "\n";
+}
+```
+> y daha büyük.
+
+```CPP
+template <typename Iter1, typename Iter2>
+bool LexicographicalCompare(Iter1  beg1, Iter1 end1, Iter2 beg2, Iter2 end2);
+```
+
+**Örnek:**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	vector<int> x{ 1,3,6,9 };
+	list<int> y{ 1,3,7,2 };
+}
+```
+> x < y doğru.
+
+## Sıralamaya ilişkin Algoritmalar
+## sstandart Function Object
+
+**Function object:** Bir sınıfa verilemn isim. Fonksiyon çağrı operatörünü overlaod eden sınıflar. Böyle sınıflar türünden ensneler fonksiyon çağrı operatörünün operanmdı olabiliyorlar.
+
+**sort**
+**partial sort**
+**stable sort** 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
