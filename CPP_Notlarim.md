@@ -12085,20 +12085,136 @@ int main()
 **partial sort**
 **stable sort** 
 
+# Ders 36
+
+**is_sorted**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	int a[] = { 2,5,7,13,90,349,312,6257 };
+
+	cout.setf(ios::boolalpha);
+
+	cout << is_sorted(begin(a), end(a)) << '\n';
+}
+```
+
+**is_sorted_until:** Bir range'in sıralamasının nerede bozulduğunu döndürüyor.
+
+```CPP
+int sumdigit(int x)
+{
+	int sum{};
+	while (x) {
+		sum -= x % 10;
+		x /= 10;
+	}
+	return sum;
+}
+
+int main()
+{
+	using namespace std;
+
+	vector<int> ivec{ 11,2,121,5,333,99,666,66661,9993 };
+	const auto f = [](int a, int b) {return sumdigit(a) < sumdigit(b); };
+
+	cout << boolalpha << is_sorted(begin(ivec), end(ivec), f);
+}
+```
+> Rakamlarının toplamının sıralı olup olmadığını sınadık.
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	vector<int> ivec{ 1,2,11,14,13,111 };
+
+	auto iter = is_sorted_until(ivec.begin(), ivec.end());
+
+	std::cout << "index =" << (iter - ivec.begin()) << '\n';
+}
+```
+> Hatalı olan konumu verdi. 
+
+**nth_elemant Algorithm**
+
+**Sonunda copy olan algoritmalar:**
+
+reverse: bir range reverse ediyor.
+reverse_copy: range'in reverse edilmiş halini başka bir range'e kopyalıyor.
 
 
+**partititon**
+**stable_partititon**
+**partititon_copy**
+**partititon_point** koşulu sağlamayanalrın ilkinin konumu
+
+### Heap
+
+- Heap
+- heapify
+- max_heap
+- min_heap
+- heap_sort
 
 
+> Heap normalde binary bir ağaç. Fakat buna rağmen biz bunu vektörel bir veri yapısı olarak ta ifade edebiliytoruz.
 
+![image](https://user-images.githubusercontent.com/75746171/224500608-7e8c38c1-4806-433a-a826-79c34ed33874.png)
 
+> Yani yulkarıdaki veri yapısını vektörel bir veri yapısında tutabilirim. 
 
+- Bri vektörü heap haline getirmek "heapify" deniyor. make heap. Bunun nasıl bir faydası var. 
 
+### Silme Algoritmaları
 
+**Remove - erase idiom**, mülakatlarda kesin sorulan soru
 
+## Deque Container
 
+- Dinamik dizilerin dizisi
 
+![image](https://user-images.githubusercontent.com/75746171/224504403-abb957a5-4c88-4917-864a-d640629e1d7d.png)
 
+- Yoğun olarak baştan ve sondan ekleme yapıyorsam kullanmalıyım. 
+- size baştan belli değilse bu durumda sık sık reallocation olacak ve bu ilave maliyete sahip, fakat burada rellocation yok.
 
+```CPP
+template <typename T, typename A = std::allocator<T>>
+class Deque {
+
+};
+```
+> Yapısı bu şekilde
+
+**Örnek:**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	deque<int> d;
+
+	for (int i = 0; i < 1000; ++i)
+	{
+		auto val = rand();
+		std::cout << val << "\n";
+		if (val % 2 == 0)
+			d.push_front(val);
+		else
+			d.push_back(val);
+
+		print(d);
+		getchar();
+	}
+}
+```
 
 
 
