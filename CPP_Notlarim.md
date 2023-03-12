@@ -12268,7 +12268,48 @@ std::forward_list
 
 - Vectordeki bu ögeyi silip başka bir vectordeki başka bir noktaya insert edeceğiz. Eğer bunu silersek başka vectorde construct etmek zorundayız. Ama bağlı lsitede düğümler söz konusu olduğu için düğümü bir bağlı listeden çıkartıp içindeki veriyi hiç öldürmeden başka listeye eklemek mümkün. İsmi splice olan fonksiyonlar bunu gerçekleştiriyorlar.  
 
-53
+**Mülakat sorusu: bağlı listenin reverse edilmesi.**
+
+### Tekli bağlı liste
+
+![image](https://user-images.githubusercontent.com/75746171/224533781-c6b8d576-5dd7-4713-a67d-17e498ec2346.png)
+
+- 1 data ve 1 pointer var. Dolayısıyla her pointer kendisinden sonraki veriyi tutan veriyi fösteriyor.
+
+![image](https://user-images.githubusercontent.com/75746171/224533864-1863c190-5872-4ce7-b70f-26252c106612.png)
+
+- ekleme veya silme yapmam gerekse önceki nesneye erişmem lazım ama mümkün değil. Yani istediğimiz bir konuma değil de o konumdan sonraki bir konuma ekleme yapabilirim.
+
+### Associative Containers
+
+# Ders 38
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
