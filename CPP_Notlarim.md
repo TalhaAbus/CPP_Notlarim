@@ -12356,7 +12356,7 @@ unordered_multimap
 - Buradaki amaç değerli aramayı (key ile erişmeyi) constant time'a çekmek. Anahtar ile erişim logaritmik karmaşıklıkta.
 
 
-1.15
+1.43
 
 
 
