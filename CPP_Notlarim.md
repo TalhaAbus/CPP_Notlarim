@@ -12346,10 +12346,17 @@ set_symmetric_difference
 
 # Ders 39
 
+unordered_set
+unordered_multiset
+unordered_map
+unordered_multimap
+
+**Hash table nasıl bir veri yapısı?**
+
+- Buradaki amaç değerli aramayı (key ile erişmeyi) constant time'a çekmek. Anahtar ile erişim logaritmik karmaşıklıkta.
 
 
-
-
+1.15
 
 
 
