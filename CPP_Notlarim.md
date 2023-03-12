@@ -12284,18 +12284,67 @@ std::forward_list
 
 # Ders 38
 
+## set
+
+- Sequence containerlarda ögelerin bir sırası var ve ekleme ısrayla yapılyıor, nereye istersem oraya öge eklerim. Fakat associative container larda ekleme değer ile yapılıyor. Nereye eklenecekse oranın konumu değil anahtarını istiyor.
+
+- en önemli işlemler ekleme, silme, arama işlemleri. Logaritmik karmaşıklıkta
+
+**set içindeki insert fonksiyonu**
+
+```CPP
+int main()
+{
+	using namespace std;
+
+	set<int> myset;
+
+	// code
+
+	myset.insert(myset.begin(), 34)
+	{
+
+	}
+}
+```
+> Associative containerlarda ekleme konum ile yapılmaz. Çünkü eklenecek ögenin konumunu belirleyen burada komperator. Fakat buradaki fonksiyonun varlık nedeni (hint insert) bu konumun hint olarak verilmesi. Çünkü eğer ekleme bu konuma yapılabiliyorsa bu durumda gereksiz bir şeklilde döngüsel kod çalışmayacak, verim daha yüksek olacak. Yani eğer o noktaya veya oraya yakın bir noktaya ekleme yapılacağına eminseniz bu fonksiyonu çağırabilirsiniz. Verimlilik açısından kar edeceğiz.
+
+### set::extract
+
+- Set'te aslında ögeler düğümlerde tutuluyor. Düğümlerin içinde de pointerar var. Düğüm içide datamız var. Bu data sınıf türünden ise datayı oluşturmak için bir constructor çalışıyor. Bir eğer düğümü buradan silersek bunun destructor ı çalışacak. Bu düğüm dealocate edilecek ve bundan önce de sınıf nesnesi destroy olacak.
+- Fakat öyle bir üye fonksiyonu var ki bu düğümü dealocate etmesin ve ögeyi destroy etmesin ama set'ten çıkarsın. Gereksiz yere deallocation ve allocation ve destructor maliyeti olmayacak. Extract fonksiyonu ile bunu gerçekleştiriyoruz. Özellikle anahtarın değştirilmesinde kullanılıyor.
+
+**Lower bound**
+**Upper bound**
+**Equal range**
+**Sorted range**
+
+- Lower bound ve upper bound birer konum. Bir key için verilen bir konum. **Lower bound:** belirli bir değerin lower bound'u, onun insert edilebileceği ilk konum.
 
 
+```CPP
+3 4 7 7 7 9 9 12 12 12 12 23 45 56
+```
+> 7'nin lower bound'u 2 ve 3. elemanlar arası. Sırayı bozmadan insert edilebilecei ilk konum.
 
+**Equal range** lower ve upper bound arasındaki range
 
+**Map'in [] operatör fonksiyonu**
+- Sadece map'te var. Multimapte yok.
+- non-const olduğu içiçn const map nesneleri için çağırılamaz.
 
+```CPP
+mymap[12] = "nihal";
+```
+> Bu kodun anlamı: anahtarı 12 olan varsa onun value' değiştir nihal yap. Ama yoksa 12'yi nihal pair'ine insert et.
 
+**Diğer sıralanmış range algoritmaları**
+set_intersection
+set_union
+set_difference
+set_symmetric_difference
 
-
-
-
-
-
+# Ders 39
 
 
 
