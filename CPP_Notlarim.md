@@ -12355,8 +12355,67 @@ unordered_multimap
 
 - Buradaki amaç değerli aramayı (key ile erişmeyi) constant time'a çekmek. Anahtar ile erişim logaritmik karmaşıklıkta.
 
+## Container Adapters
 
-1.43
+**std::stack** last in first out
+**std::queue** first in first out
+**std::priority_queue** önceliği olanın ilk çıktığı
+
+Stack Tekrar et.
+2.22
+
+```CPP
+stack<int>
+stact<int,deque<int>>
+```
+> İkisi birbirine eşit çünkü default template argument olarak stackte deck kullanılıyor.
+
+- İnitializer list constructor ı yok. 
+
+**std::array**
+**std::tuple**
+**std::bitset**
+
+std::array :
+
+```CPP
+int a[10];
+array<int, 10> a;
+```
+> Bir diziyi doğrudan kullanmak yerine, eleman olarak alıp (wrap edip) bir interface sunan sınıf kullanma fikrinin avantajı ne olabilir? Böyle bir wrapping in maliyet açısından bir farkı olur mu? Hayır.
+
+- Bu bir sınıf şablon olduğu için bütün kodlar inline. Yani diziyi doğrudan kullanmakla std::array arasında, oluşturulan assembly kodu açısından bir farklılık yok.  
+- Contaierlarda c dizisi tutamazsınız ama std::array tutabilirsiniz.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
