@@ -12387,7 +12387,17 @@ array<int, 10> a;
 - Bu bir sınıf şablon olduğu için bütün kodlar inline. Yani diziyi doğrudan kullanmakla std::array arasında, oluşturulan assembly kodu açısından bir farklılık yok.  
 - Contaierlarda c dizisi tutamazsınız ama std::array tutabilirsiniz.
 
+# Ders 40
 
+- std:array bir wrapper. C dizileriin kullanmanın bir alternatifi. Kullanılırsa bazı avantajlar elde ediliyor. İlave maliyeti yok.
+- Bir C dizisi sarmalayacak ve bize bir interface sunacak.
+
+**tuple interface**
+çalış
+
+**Tuple**: demet, birden çok farklı türden ögeyi bir arada tutabilecek ögeleri bir arada tutabiliyor.
+
+- Tuple'daki ögelere erişmek için get interface kullanıyourz.
 
 
 
