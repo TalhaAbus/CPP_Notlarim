@@ -12493,6 +12493,9 @@ placement new ifadesi, destructır un ismi ile çağırılması gereken birkaç 
 
 1.25
 
+release function
+get function
+
 
 
 
