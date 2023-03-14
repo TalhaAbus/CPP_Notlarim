@@ -12424,7 +12424,36 @@ array<int, 10> a;
  ```
 > Aslında örtülütür dönüşümü ile r1, int& dönüştürülüyor. Operator int& fonksiyonuna çağrı yap demek.
 
-1.10
+
+**std::bind**
+**std::function**: Belirli bir parametrik yapıdaki bir callable ı çağırıyor. Callable ı doğrudan çağırmak yerine onu sarmalayan bir sınıf türü olşuşturoyoruz. Oluşturduğumuz sııfın fonksiyon çağrı operatörü çağırıldığında, sarmaladığı callable çağırılmış oluyor.
+
+```CPP
+int func(int x)
+{
+	return x * x - 5;
+}
+```
+> func'ın türü int(int)
+
+- Func'ın adresi olan ifadenin türü ne? (&func) : int(*)int
+
+```CPP
+template <typename T>
+class Myclass {
+
+};
+
+int main()
+{
+	Myclass<int>	// T int olsun demek
+	Myclass<int(int)>	// T fonksiyon türü olsun demek.
+}
+```
+
+3
+
+
 
 
 
