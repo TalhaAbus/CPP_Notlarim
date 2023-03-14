@@ -12491,7 +12491,7 @@ placement new ifadesi, destructır un ismi ile çağırılması gereken birkaç 
 
 > shared_ptr 
 
-
+1.25
 
 
 
