@@ -12399,8 +12399,32 @@ array<int, 10> a;
 
 - Tuple'daki ögelere erişmek için get interface kullanıyourz.
 
+# Ders 41
 
+### Reference Wrapper
 
+- Bir varlık bir sınıfın elemanı yazpıyoruz. O varlığın diğer kodlar tarafıdan doğrudan kullanılması yerine o varlığı kontrollü şekilde bizim istediğimiz gibi kullanılmasını sağlayan bir interface oluşturuyoruz.
+- uniqueptr de bir wrapper sınıfı. Bir pointer sarmalıyor. 
+
+- Rebindable. Yani başka bir nesneye bağlanabiliyor.
+ 
+ ```CPP
+ int main()
+{
+	using namespace std;
+
+	int x = 10;
+	int y = 92;
+
+	reference_wrapper<int> r1 = x;
+
+	cout << r1 << '\n';
+	cout << r1.operator int& () << '\n';
+}
+ ```
+> Aslında örtülütür dönüşümü ile r1, int& dönüştürülüyor. Operator int& fonksiyonuna çağrı yap demek.
+
+1.10
 
 
 
