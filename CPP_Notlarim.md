@@ -12451,14 +12451,45 @@ int main()
 }
 ```
 
-3
+# Ders 41
 
+**not_fn** Callable ı alıyor, çağırıyor. Onun geriş dönüş değerinin lojik değilini döndürüyor.
 
+.*
 
+new ifadesi
+delete ifadesi
 
+new T{}
+new T[n] dinamik ömürlü bir dizi
 
+array new ve yalın new farklı
 
+placement new ifadesi, destructır un ismi ile çağırılması gereken birkaç senaryodan birisi.
 
+- nothrow new : eğer dinamik bellek edinimi başarısız olursa exception throw etmesin.
+
+# Ders 43
+
+## Smart Pointers
+
+- Bir kaynağın yaşam döngüsünü konrol eden pointerlar ya da pointer benzeri arayüze sahip sınıflar.
+
+- Smart pointer sınıfları:
+
+> unique_ptr
+
+> shared_ptr
+
+> weak_ptr
+
+**Neden normal pointerlar kullanmamalıyız?**
+
+- Double deletion: dinamik nesnenin adresini farklı yerlere kopyalama
+
+> unique_ptr : Ben bu kaynağı göstren tek pointerım
+
+> shared_ptr 
 
 
 
