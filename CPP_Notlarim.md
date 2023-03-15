@@ -12613,9 +12613,24 @@ uniform_int_distribution
 
 - Bu aslinda basic string view isimli bir sinif sablonu. String view de onun char aciliminin tyepedef ismi. C++17 ile eklendi.
 
+- Bir yerlerde bir yazi tutuluyor diyelim.
+> string nesnessi olabilir
 
+> cstring olabilir (null terminated byte stream)
 
+> Bellekte ardisik tutulan karakterler,
 
+Olabilir.
+
+- diyelim ki uzerinde islem yapacagimiz yaziyi salt okuma amacli kullanacagiz. Baslangic ve bitis yerinin adresini tutsam burayi range olarak kullansam buradaki yaziyi olusturan karakterler uzerinde okumaya yonelik islemler yapabilirim. Bu durumda yazinin kopyasini cikartmam gerekmez.
+- Oyle bir sinif olusturalim ki, aslinda bu sinif sadece 2 tane pointer tutsa (ya da 1 pointer 1 tam sayi) bunlar tum islemleri yapmamizi saglayabilir.
+- Ve string sinifinin okumaya yonelik tum fonksiyonlarini bu yeni olusturacah+gimiz sibifa koysak. Yani kopyalamama gerek kalmayacak maliyeti kaldiracagim.
+- String_view bunu standart hale getirdi.
+
+**Dezavataji:**
+- Icinde tuttugu 2 pointer bu yazinin hayatinin devam edip etmedigi bilgisine bizi eristirmez. Yani string view sinifi o tutulan adreslerin hala hayatini devam ettiren bir yaziyi tuttugu bilgisine erisme sansi yok. 
+
+51- 38
 
 
 
