@@ -12630,8 +12630,13 @@ Olabilir.
 **Dezavataji:**
 - Icinde tuttugu 2 pointer bu yazinin hayatinin devam edip etmedigi bilgisine bizi eristirmez. Yani string view sinifi o tutulan adreslerin hala hayatini devam ettiren bir yaziyi tuttugu bilgisine erisme sansi yok. 
 
-51- 38
 
+std::variant
+- onceden belirlenmis bazi degerlere sahip olabiliyor, C'deki unionlari tutmak.
+
+std::ratio
+
+chrono kutuphanesi
 
 
 
