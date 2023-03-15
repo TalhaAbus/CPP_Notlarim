@@ -12561,11 +12561,57 @@ ios::out
 ios::app
 ios::binary
 
+**Formatli yazma:** yazilacak verilari text e donusturerek yazmak. Verilerin kendisi degil, bytelarin tasidigi anlama karsilik gelen karakter kodlarini yaziyoruz. 
+
+**Formatsiz yazma:** Bytelarin kendisini yazma, Ram'den dosyaya dogrudan byte transferi.
+
+seekg
+tellg
+
+cerr
+
+**vocabulary types**
+
+random kutuphanesi
+std::ratio
+std::chrono
+std::optional
+std::variant
+std::any
 
 
+string_view
+std::regex
 
+## Random kutuphanesi
 
+pseudo random number generation
+true random number generation
 
+Random kutuphanesinde 2 grupta uyeler var.
+
+1. grup URNG(uniform random number generators)
+- Rastgele sayi uretiyorlar. Algoritmalari kullanarak.
+> Mersen twister algorthm
+
+> Lagged fibonacci
+
+- URNG rastgele bit kaynagini 4 - 8 byte lik tamsayilar olarak vercek.
+
+- mt19937, bir sinifin ismi. Ama bir sinifin typedef tur es ismi. Bir sinif sablonunun specialization'i.
+- string sinifi aslinda basic string'in bir specialization'u oldugu gibi, mt19937 de bir sinif sablonunun belirli argumanlar kullanilarak elde edilmis sppecialization'u.
+
+pseudo-random number generators
+
+https://pd.codechef.com/docs/cpp/cpp/numeric/random.html
+
+steady_clock
+
+uniform_int_distribution
+
+## string_view sibifi
+
+- Bu aslinda basic string view isimli bir sinif sablonu. String view de onun char aciliminin tyepedef ismi. C++17 ile eklendi.
 
 
 
