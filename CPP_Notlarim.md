@@ -12556,6 +12556,11 @@ eof
 
 - print_stream_state
 
+ios::in
+ios::out
+ios::app
+ios::binary
+
 
 
 
