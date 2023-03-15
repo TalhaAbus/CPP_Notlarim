@@ -12499,6 +12499,65 @@ get function
 
 46- 1.47
 
+static assert
+
+structure binding, c++17 ile eklendi
+
+if constrexpr, github ornekler
+
+enable_if
+
+## input - output operations
+
+C++ giris cikis islemleri, C'deki gibi degil. Birden fazla programlama teknigini isbirligi icinde kullaniyor.
+
+- data abstraction
+- OOP
+- Generic
+- Procedural
+
+**Giris cikis islemlerini nasil yapiyorum?**
+- Formatli giris cikis islemleri
+- Formatsiz giris cikis islemleri
+
+![image](https://user-images.githubusercontent.com/75746171/225332680-3fffc7cc-9edb-43e8-8464-2fad3011f9e1.png)
+
+sdt format c++ 20 ile eklendi, iostream kutuphanei giris cikis formatlamasi biraz hantaldi.
+
+![image](https://user-images.githubusercontent.com/75746171/225333775-aa8bf5ae-4053-4d16-a5b6-b3aba06a05d6.png)
+
+Bir sinif hiyerarsisi.
+
+ios base bir sinif sablonu degil, duz bir sinif. Digerleri hepsi sinif sablonu.
+
+- Akimda byte ve bitler var ve bunlar veriyi temsil ediyor. 
+- Ios base ten kalitim yoluyla elde edilen sinif sablonlarinin hepsi akimdaki bytelardan elde edilevek karakterlerin turu ve islem turunun nasil yapilacagini belirleyen template parametrelerine sahip.
+- Bunlarin hepsi public kalitim.
+
+iostreams and locales (kitap ismi) pdf bul oku
+
+- Basic ostream sinifi formatli ya da formatsiz cikis islemlerini yapmak icin var. basic istream sinifi da ayni sekilde formatli ve formatsi giris islemlerine yonelik. Yanibir akima karakter gonderecek veya alakcaksak bunu bunlarin member functionlari ile yapioruz.
+
+cout.setf
+
+ios::boolalpha
+ios::showbase
+
+ostream oss
+
+std::quoted
+
+stream nesnesi 	icin dogrudan sunlari cagirabioliriz:
+
+.good()
+.fail()
+operator bool
+eof
+
+- print_stream_state
+
+
+
 
 
 
