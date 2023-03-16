@@ -215,6 +215,7 @@ int a3[4]{};
 - decltype(auto)
 - lambda expression
 - template
+-
 **Örnek:**
 ```CPP
 int* foo(const int*, size_t);
@@ -2773,12 +2774,13 @@ int main()
 ```
 
 **Çıktı:**
+```CPP
 main baslıyor
 default ctor this:00000009800FFD54
 Myclass foo() this:00000009800FFD54
 destructor this:00000009800FFD54
 main devam ediyor
-
+```CPP
 **Sonuç:**
 > Geçici nesnenin bulunduğu ifadenin yürütülmesinden sonra nesnenin hayatı sona ermiş olacak.
 
@@ -2815,12 +2817,13 @@ int main()
 }
 ```
 **Çıktı:**
+```CPP
 [1] main basladi
 Myclass (int, int) a = 3b = 5
 [2] main decam ediyor
 Myclass foo() this:00000073B474FB74
 destructor this:00000073B474FB74
-
+```CPP
 ## Reference Qualifiers:
 
 Bir sınıfın non-static üye fonskiyonları 
@@ -2904,12 +2907,13 @@ int main()
 > m = 5 ifadesi yürütüldüğünde geçici nesnenin destructor ı çağırılacak. Ama main closing brace geldiğimizde diğer destructor çağırılacak. 
 
 **Çıktı:**
+```CPP
 Myclass default ctor. this =00000001000FF854
 Myclass (int x) x =5this 00000001000FF934
 Myclass destructor this =00000001000FF934
 main devam ediyor
 Myclass destructor this =00000001000FF854
-
+```CPP
 > Buradaki atamayı da sınıfın move constructor ı gerçekleştiriyor. Ama ben sınıfa bir copy constructor yazarsam copy constructor cağırılacak.
 
 ```CPP
@@ -2947,6 +2951,7 @@ int main()
 }
 ```
 **Çıktı :**
+```CPP
 Myclass default ctor. this =0000007A7EAFF7A4
 Myclass (int x) x =5this 0000007A7EAFF884
 copy assignment func
@@ -2955,7 +2960,7 @@ other =0000007A7EAFF884
 Myclass destructor this =0000007A7EAFF884
 main devam ediyor
 Myclass destructor this =0000007A7EAFF7A4
-
+```CPP
 **Sonuç:**
 Böyle bir dönüşüm çok tehlikeli. Tehlikenin bir örneği:
 
@@ -12399,7 +12404,10 @@ array<int, 10> a;
 
 - Tuple'daki ögelere erişmek için get interface kullanıyourz.
 
-# Ders 41
+# 40'tan Sonraki Dersler
+
+
+**================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================**
 
 ### Reference Wrapper
 
@@ -12451,8 +12459,6 @@ int main()
 }
 ```
 
-# Ders 41
-
 **not_fn** Callable ı alıyor, çağırıyor. Onun geriş dönüş değerinin lojik değilini döndürüyor.
 
 .*
@@ -12468,8 +12474,6 @@ array new ve yalın new farklı
 placement new ifadesi, destructır un ismi ile çağırılması gereken birkaç senaryodan birisi.
 
 - nothrow new : eğer dinamik bellek edinimi başarısız olursa exception throw etmesin.
-
-# Ders 43
 
 ## Smart Pointers
 
@@ -12491,13 +12495,9 @@ placement new ifadesi, destructır un ismi ile çağırılması gereken birkaç 
 
 > shared_ptr 
 
-1.25
-
 release function
 get function
 
-
-46- 1.47
 
 static assert
 
@@ -12609,7 +12609,7 @@ steady_clock
 
 uniform_int_distribution
 
-## string_view sibifi
+## string_view sinifi
 
 - Bu aslinda basic string view isimli bir sinif sablonu. String view de onun char aciliminin tyepedef ismi. C++17 ile eklendi.
 
