@@ -9,7 +9,6 @@
 - Bu da unspecified behaviour fakat derleyici bunu belgelemek zorunda. Derleyici kararlı bir şekilde belirli bir seçeneği tercih ederek kod üretmek zorunda.
 ### User-Defined type
 - Kullanıcının bildirim ile tür oluşturması. (struct, enum, union sözcükleri ile oluşturulan türler)
-### External Linkage
 - Farklı kaynaklarda kulanılan aynı isimlerin aynı varlığa ait olması
 ### Internal Linkage
 - Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması
@@ -54,7 +53,7 @@ int main()
 }
 ```
 **Cevap:**
-> Adres, poniter türlerinden bool türüne otomatik dönüşüm var.  b1'in değeri true
+> Adres, pointer türlerinden bool türüne otomatik dönüşüm var.  b1'in değeri true
 Burada true veya false dönüşümü pointer ın null pointer olup olmadığına bağlı.
 gp zero initialize edildiği için null pointer değerini almıştır ve dönüşürken false olarak dönüşür.
 
@@ -106,6 +105,7 @@ int main{
 
 **2 istisna:** 
 > sizeof operatörünün operandının dizi olması.
+
 > Adres operatörünün operandının bir dizi olması.
 
 **Örnek:**
