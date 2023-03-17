@@ -2913,7 +2913,7 @@ Myclass (int x) x =5this 00000001000FF934
 Myclass destructor this =00000001000FF934
 main devam ediyor
 Myclass destructor this =00000001000FF854
-```CPP
+```
 > Buradaki atamayı da sınıfın move constructor ı gerçekleştiriyor. Ama ben sınıfa bir copy constructor yazarsam copy constructor cağırılacak.
 
 ```CPP
