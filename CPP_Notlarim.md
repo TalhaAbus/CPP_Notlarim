@@ -2960,7 +2960,7 @@ other =0000007A7EAFF884
 Myclass destructor this =0000007A7EAFF884
 main devam ediyor
 Myclass destructor this =0000007A7EAFF7A4
-```CPP
+```
 **Sonuç:**
 Böyle bir dönüşüm çok tehlikeli. Tehlikenin bir örneği:
 
