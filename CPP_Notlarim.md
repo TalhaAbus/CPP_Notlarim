@@ -2783,7 +2783,7 @@ main devam ediyor
 ```CPP
 **Sonuç:**
 > Geçici nesnenin bulunduğu ifadenin yürütülmesinden sonra nesnenin hayatı sona ermiş olacak.
-
+```
 **Örnek:**
 ```CPP
 class Myclass {
@@ -2823,7 +2823,7 @@ Myclass (int, int) a = 3b = 5
 [2] main decam ediyor
 Myclass foo() this:00000073B474FB74
 destructor this:00000073B474FB74
-```CPP
+```
 ## Reference Qualifiers:
 
 Bir sınıfın non-static üye fonskiyonları 
