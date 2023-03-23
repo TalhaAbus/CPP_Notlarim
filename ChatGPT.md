@@ -453,6 +453,175 @@ namespace std {
 
 - Bu nedenle, birçok C++ sınıfı, swap fonksiyonunu kullanarak nesnelerin yerlerini değiştirir ve std::swap fonksiyonunu kullanarak sınıfın swap fonksiyonu çağrılabilir.
 
+# iki vector'ü swap edebilirmiyim
+
+- Evet, iki vector nesnesini std::swap fonksiyonu veya vector::swap metodunu kullanarak swap edebilirsiniz. İki vector nesnesinin yerlerini değiştirirken, vector'ün elemanları yer değiştirmez, sadece vector nesneleri arasındaki bellek blokları değiştirilir.
+
+- İşte std::swap fonksiyonu kullanarak iki vector nesnesini yer değiştirme örneği:
+
+```CPP
+#include <iostream>
+#include <vector>
+
+int main() {
+  std::vector<int> vec1 = {1, 2, 3, 4, 5};
+  std::vector<int> vec2 = {10, 20, 30, 40, 50};
+
+  std::cout << "Before swap:" << std::endl;
+  std::cout << "vec1: ";
+  for (auto x : vec1) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "vec2: ";
+  for (auto x : vec2) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  std::swap(vec1, vec2);
+
+  std::cout << "After swap:" << std::endl;
+  std::cout << "vec1: ";
+  for (auto x : vec1) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "vec2: ";
+  for (auto x : vec2) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+- Bu örnekte, std::vector sınıfının std::swap fonksiyonu kullanılarak vec1 ve vec2 nesnelerinin yerleri değiştirilir. İlk olarak, vec1 ve vec2 nesnelerinin orijinal elemanları ekrana yazdırılır. Daha sonra, std::swap fonksiyonu kullanılarak vec1 ve vec2 nesnelerinin yerleri değiştirilir. Son olarak, vec1 ve vec2 nesnelerinin yeni elemanları ekrana yazdırılır.
+
+- vector::swap metodunu kullanarak iki vector nesnesini yer değiştirme örneği:
+
+```CPP
+#include <iostream>
+#include <vector>
+
+int main() {
+  std::vector<int> vec1 = {1, 2, 3, 4, 5};
+  std::vector<int> vec2 = {10, 20, 30, 40, 50};
+
+  std::cout << "Before swap:" << std::endl;
+  std::cout << "vec1: ";
+  for (auto x : vec1) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "vec2: ";
+  for (auto x : vec2) {
+    std::cout << x << " ";
+  }
+  std::cout << std::endl;
+
+  vec1.swap(vec2);
+
+  std::cout << "After swap:" << std::endl;
+  std::cout << "vec1:
+
+```
+
+# for deyimini nasıl öyle kullandın
+
+- Yukarıdaki örnekte, for döngüsü kullanarak, bir vector nesnesinin elemanlarını döngü yoluyla gezerek ekrana yazdırdım. Bu örnekte, for döngüsü, vec isimli bir vector nesnesinin tüm elemanlarını x değişkenine atayarak, elemanların üzerinde dolaşır.
+
+- for döngüsü, aşağıdaki gibi bir yapıya sahiptir:
+
+```CPP
+for (declaration : range) {
+  // loop body
+}
+
+```
+
+- Burada declaration, range üzerinde döngü yapmak için kullanılacak değişkenin tanımını içerir. range, döngü yapmak için kullanılacak nesneyi veya aralığı belirtir. loop body, her döngü adımında çalıştırılacak kod bloğunu içerir.
+
+- Yukarıdaki örnekte, for döngüsünde, declaration kısmı auto x şeklindedir, yani x değişkeni vec nesnesinin elemanlarını temsil eder. range kısmı vec olarak belirtilir, bu nedenle for döngüsü, vec nesnesinin tüm elemanlarını gezerek döngüyü çalıştırır. loop body kısmında, her bir eleman ekrana yazdırılır.
+
+- for döngüsü, C++'da çok sık kullanılan bir döngü yapısıdır ve birçok farklı durumda kullanılabilir. vector gibi birçok C++ sınıfı, for döngüsünü kullanarak nesnelerin elemanlarını gezme işlemini sağlar.
+
+# bunu for kullanamdan da yapabiliriz
+
+- Evet, aynı işlemi for döngüsü kullanmadan da yapabilirsiniz. Bunun için std::vector sınıfının iterator'larını kullanarak vector nesnesinin elemanlarına erişebilirsiniz.
+
+- İşte bir örnek:
+
+```CPP
+#include <iostream>
+#include <vector>
+
+int main() {
+  std::vector<int> vec = {1, 2, 3, 4, 5};
+
+  std::cout << "Elements of vec: ";
+  for (auto it = vec.begin(); it != vec.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+- Bu örnekte, std::vector sınıfının begin ve end metodları, vector nesnesinin başlangıç ve son iterator'larını döndürür. auto it = vec.begin() satırı, vector nesnesinin başlangıç iterator'ını it değişkenine atar. it != vec.end() satırı, it değişkeninin vector nesnesinin son iterator'ından farklı olduğu sürece döngünün çalışmasını sağlar. ++it satırı, it değişkeninin bir sonraki elemana ilerlemesini sağlar. *it ifadesi, it değişkeninin işaret ettiği elemana erişir.
+
+- Bu örnekte, for döngüsü kullanmak yerine std::vector sınıfının iterator'larını kullanarak vector nesnesinin elemanlarını ekrana yazdırdım. iterator'lar, vector nesnesinin elemanlarına erişmenin alternatif bir yoludur ve bazı durumlarda for döngüsüne göre daha esnek bir kullanım sağlar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
