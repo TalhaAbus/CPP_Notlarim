@@ -82,3 +82,46 @@ C++ dilinin anahtar kelimeleri (keywords) şunlardır:
 - void: Herhangi bir tür olmadığını belirtmek için kullanılır.
 - volatile: Değişkenin beklenmedik şekilde değişebileceğini belirtmek için kullanılır.
 - wchar_t: Genişletilmiş karakter kümesi türü için kullanılır.
+
+# basic_string_view ve basic_string nedir?
+
+- std::basic_string ve std::basic_string_view, C++'ta metin işleme işlevlerini gerçekleştirmek için kullanılan iki sınıftır.
+- std::basic_string sınıfı, metinleri depolamak, değiştirmek ve erişmek için kullanılır. Bu sınıf, dinamik olarak yeniden boyutlandırılabilen bir dizi (yani bir dize) tutar. 
+- std::basic_string_view sınıfı ise, bir std::basic_string örneğine bakılmaksızın bir karakter dizisine (metne) bakmak için kullanılır.
+
+- Kullanılacak sınıf, kullanım senaryonuza bağlıdır. Eğer metni değiştirmeniz gerekiyorsa 
+
+> std::basic_string kullanmalısınız. Eğer metni sadece okumak istiyorsanız,
+
+> std::basic_string_view kullanabilirsiniz. std::basic_string_view, std::basic_string sınıfına göre daha hafif bir veri yapısıdır ve performansı daha yüksektir. Ancak, 
+
+> std::basic_string_view nesnesi, kendisine atanan karakter dizisi ömrü boyunca geçerli olmalıdır. Aksi takdirde, tanımsız davranışa yol açabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
