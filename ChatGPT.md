@@ -97,12 +97,42 @@ C++ dilinin anahtar kelimeleri (keywords) şunlardır:
 
 > std::basic_string_view nesnesi, kendisine atanan karakter dizisi ömrü boyunca geçerli olmalıdır. Aksi takdirde, tanımsız davranışa yol açabilir.
 
+**std::basic_string Örneği:**
 
+```CPP
+#include <iostream>
+#include <string>
 
+int main() {
+  std::string str = "Merhaba dünya!"; // bir string tanımlıyoruz
+  std::cout << "string: " << str << std::endl; // çıktı: string: Merhaba dünya!
+  
+  str.replace(0, 7, "Selam"); // string içindeki "Merhaba"yı "Selam" ile değiştiriyoruz
+  std::cout << "string: " << str << std::endl; // çıktı: string: Selam dünya!
+  
+  return 0;
+}
 
+```
+**std::basic_string_view Örneği:**
 
+```CPP
+#include <iostream>
+#include <string_view>
 
+int main() {
+  std::string_view str = "Merhaba dünya!"; // bir string_view tanımlıyoruz
+  std::cout << "string_view: " << str << std::endl; // çıktı: string_view: Merhaba dünya!
+  
+  std::string_view greeting = str.substr(0, 7); // "Merhaba"yı greeting adlı yeni bir string_view'a kopyalıyoruz
+  std::cout << "greeting: " << greeting << std::endl; // çıktı: greeting: Merhaba
+  
+  return 0;
+}
 
+```
+
+- Yukarıdaki örneklerde, önce std::string ve sonra std::string_view kullanarak farklı işlemler gerçekleştiriyoruz. std::string ile bir metin değiştirme işlemi yapıyoruz ve std::string_view ile bir alt dize kopyalama işlemi yapıyoruz.
 
 
 
