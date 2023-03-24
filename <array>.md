@@ -1,12 +1,12 @@
 - array başlık dosyası, C++11 standartlarıyla birlikte standart kütüphaneye eklenmiştir. Bu başlık dosyası, boyutu sabit olan diziler için bir veri türü sunar. Dizi boyutu, dizi nesnesi oluşturulurken belirtilir ve değiştirilemez.
 
-std::array sınıfı, sabit boyutlu dizileri yönetmek için kullanılır. Bir std::array nesnesi, C++ dilindeki normal diziler gibi davranır, ancak bazı ek özellikler sunar. std::array sınıfı, normal dizilerin aksine bir geçici nesne olarak değil, bir değer olarak geçirilebilir ve fonksiyonlardan geri döndürülebilir.
+- std::array sınıfı, sabit boyutlu dizileri yönetmek için kullanılır. Bir std::array nesnesi, C++ dilindeki normal diziler gibi davranır, ancak bazı ek özellikler sunar. std::array sınıfı, normal dizilerin aksine bir geçici nesne olarak değil, bir değer olarak geçirilebilir ve fonksiyonlardan geri döndürülebilir.
 
-std::array sınıfı, C-style dizilerin çoğu dezavantajını giderir. Dizinin boyutu, dizi nesnesi oluşturulurken belirtilir ve çalışma zamanında değiştirilemez. Bu nedenle, std::array sınıfı kullanarak, dizi boyutuna ilişkin hataların önüne geçilebilir.
+- std::array sınıfı, C-style dizilerin çoğu dezavantajını giderir. Dizinin boyutu, dizi nesnesi oluşturulurken belirtilir ve çalışma zamanında değiştirilemez. Bu nedenle, std::array sınıfı kullanarak, dizi boyutuna ilişkin hataların önüne geçilebilir.
 
-Ayrıca, std::array sınıfı, diğer standart kütüphane sınıfları ile birlikte kullanılabilecek birçok fonksiyon ve özellik sağlar. Örneğin, std::array nesneleri, sıralama ve arama gibi işlemler için std::algorithm sınıfındaki fonksiyonlarla birlikte kullanılabilir.
+- Ayrıca, std::array sınıfı, diğer standart kütüphane sınıfları ile birlikte kullanılabilecek birçok fonksiyon ve özellik sağlar. Örneğin, std::array nesneleri, sıralama ve arama gibi işlemler için std::algorithm sınıfındaki fonksiyonlarla birlikte kullanılabilir.
 
-std::array sınıfı, kullanımı kolaydır ve temel bir veri türü olarak düşünülebilir. Örneğin, aşağıdaki kodda, std::array nesnesi arr oluşturulmuştur ve ardından for döngüsü kullanılarak dizinin elemanları yazdırılmıştır:
+- std::array sınıfı, kullanımı kolaydır ve temel bir veri türü olarak düşünülebilir. Örneğin, aşağıdaki kodda, std::array nesnesi arr oluşturulmuştur ve ardından for döngüsü kullanılarak dizinin elemanları yazdırılmıştır:
 
 ```CPP
 #include <iostream>
