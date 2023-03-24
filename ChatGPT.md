@@ -1217,38 +1217,133 @@ int main() {
 ```
 > Bu kod, std::fixed ve std::setprecision manipülatörlerini kullanarak x değerinin ondalık kısmının iki basamağını yazdırır. std::setw manipülatörü, çıktı alanının genişliğini 10 karakter olarak ayarlar.
 
+# std::list
+
+- <list başlık dosyası, C++ standart kütüphanesinde yer alan bir başlık dosyasıdır ve çift yönlü bağlı liste yapısını tanımlayan std::list sınıfını içerir.
+
+- std::list sınıfı, elemanları çift yönlü bir bağlı liste şeklinde tutan bir veri yapısıdır. Listeler, elemanların ekleme ve çıkarma işlemlerinde daha hızlıdır ancak elemanlara rastgele erişimde (örneğin, dizilerdeki gibi) daha yavaştırlar.
+
+- std::list sınıfı, elemanları push_front, push_back, pop_front ve pop_back gibi işlevlerle ekleyip ve çıkarabilen bir arayüz sağlar. Elemanlara doğrudan erişim mümkün değildir, ancak begin() ve end() işlevleri aracılığıyla liste üzerinde döngüler oluşturulabilir.
+
+- Örneğin, aşağıdaki kodda std::list sınıfı kullanılarak bir liste oluşturulur ve liste üzerinde döngü kullanarak elemanlar ekrana yazdırılır:
+
+```CPP
+#include <iostream>
+#include <list>
+
+int main() {
+  std::list<int> my_list = {1, 2, 3, 4, 5};
+  for (auto it = my_list.begin(); it != my_list.end(); ++it) {
+    std::cout << *it << ' ';
+  }
+  std::cout << '\n';
+  return 0;
+}
+
+```
+
+> Bu kodda, std::list sınıfı kullanılarak my_list adında bir liste oluşturulur ve begin() ve end() işlevleri kullanılarak listenin elemanları üzerinde bir döngü oluşturulur. Döngüdeki her bir eleman, *it ifadesi ile elde edilir ve ekrana yazdırılır. Sonuç olarak, çıktı şu şekilde olur:
+
+```CPP
+1 2 3 4 5
+
+```
 
 
+- <list başlık dosyası, std::list sınıfının yanı sıra std::forward_list sınıfını da içerir. std::forward_list, elemanları tek yönlü bir bağlı liste şeklinde tutan bir sınıftır ve std::list sınıfına kıyasla daha düşük bellek kullanımı ve daha hızlı ekleme/çıkarma işlemleri sağlar. Ancak, elemanlara rastgele erişim mümkün değildir.
+
+# std::locale
+
+- std::locale, C++ standart kütüphanesinde yer alan bir sınıftır ve yerel ayarlar (locale settings) ile ilgili bilgileri içerir. Yerel ayarlar, çeşitli özellikleri tanımlayan ve değişen bir sıralama, karakter çevirimi, tarih ve saat biçimi, para birimi, sayı biçimi gibi birçok kültürel özelliklerdir. std::locale sınıfı, bu yerel ayar bilgilerini tutar ve C++ girdi/çıktı işlemlerinde bu ayarları kullanarak karakterlerin kodlamasını, sıralamasını, tarih/saat biçimini vb. belirleyebilir.
+
+- std::locale sınıfı, yerel ayarları bir std::locale::id nesnesi aracılığıyla tanımlar. Bir std::locale nesnesi oluşturulurken, belirli bir std::locale::id kullanarak yerel ayar bilgilerine erişilir. Yerel ayar bilgileri, std::locale::facet adı verilen alt sınıflar tarafından temsil edilir. Örneğin, std::collate, std::ctype, std::time_get, std::money_put vb. gibi alt sınıflar, sıralama, karakter çevirimi, tarih/saat biçimi, para birimi gibi yerel ayarlarla ilgili işlevler sağlarlar.
+
+- Örneğin, aşağıdaki kodda std::locale sınıfı kullanılarak bir std::money_put nesnesi oluşturulur ve belirli bir yerel ayar kullanarak para birimleri formatlanır:
+
+```CPP
+#include <iostream>
+#include <locale>
+#include <string>
+
+int main() {
+  double money = 1234.56;
+  std::string currency = "USD";
+  std::locale loc("");
+  const auto& money_put_facet = std::use_facet<std::money_put<char>>(loc);
+  std::ostringstream oss;
+  money_put_facet.put(oss, false, oss, ' ', currency.c_str(), money);
+  std::cout << oss.str() << '\n';
+  return 0;
+}
+
+```
+> Bu kodda, std::locale sınıfı kullanılarak bir yerel ayar nesnesi oluşturulur. std::use_facet işlevi kullanılarak std::money_put tipinde bir alt sınıf nesnesi elde edilir. Bu alt sınıf, para birimi formatlaması yapmak için kullanılır. Daha sonra std::ostringstream sınıfı kullanılarak bir çıktı akımı oluşturulur ve std::money_put::put işlevi kullanılarak para birimi formatlaması yapılır. Sonuç olarak, çıktı şu şekilde olur:
 
 
+```CPP
+USD1,234.56
 
+```
 
+- Bu örnekte, std::money_put sınıfı, para birimi formatlaması yapmak için kullanılır. std::money_put sınıfı, para birim formatlaması ile ilgili bilgileri tutar ve para birimi simgesini, sayı biçimini ve diğer ayarları belirleyerek para birimi formatlaması yapar. std::money_put::put işlevi, önceki örnek kodda gösterildiği gibi, std::ostringstream sınıfı kullanarak bir çıktı akımı oluşturur ve para birimi formatlaması yapar.
 
+- std::locale sınıfı, C++ girdi/çıktı işlemlerinde de kullanılabilir. Örneğin, std::cin ve std::cout akımları, varsayılan olarak "C" yerel ayarını kullanırlar. Ancak, std::locale sınıfı kullanılarak bu ayarlar değiştirilebilir. Aşağıdaki örnekte, bir std::locale nesnesi kullanılarak std::cin ve std::cout akımlarının yerel ayarları değiştirilir:
 
+```CPP
+#include <iostream>
+#include <locale>
 
+int main() {
+  std::cout.imbue(std::locale("tr_TR.utf8"));
+  std::cin.imbue(std::locale("tr_TR.utf8"));
+  double d;
+  std::cout << "Lütfen bir ondalık sayı girin: ";
+  std::cin >> d;
+  std::cout << "Girdiğiniz sayı: " << d << '\n';
+  return 0;
+}
 
+```
+- Bu örnekte, std::cout ve std::cin akımlarının yerel ayarları tr_TR.utf8 olarak değiştirilir. Bu ayar, Türkçe karakterleri destekler. Daha sonra, kullanıcıdan bir ondalık sayı girmesi istenir ve std::cin kullanılarak girilen sayı alınır. Son olarak, std::cout kullanılarak girilen sayı tekrar yazdırılır. Bu örnekte, yerel ayar değişikliği nedeniyle Türkçe karakterlerin kullanımı da mümkündür.
 
+- Özetle, std::locale sınıfı, C++ programlarında yerel ayarlarla ilgili bilgileri tutar ve girdi/çıktı işlemlerinde bu ayarları kullanarak karakterlerin kodlamasını, sıralamasını, tarih/saat biçimini vb. belirleyebilir.
 
+# std::map
 
+- std::map, C++ standart kütüphanesinde bulunan bir ilişkisel veri yapısıdır. std::map bir anahtar-değer çiftleri koleksiyonudur ve anahtarlar benzersizdir. Bu özellik, std::map'i bir anahtarın değerini hızlı bir şekilde aramak için kullanışlı hale getirir.
 
+- std::map veri yapısı, kırmızı-siyah ağaçlar kullanılarak gerçekleştirilir. Bu nedenle, std::map'in performansı, en kötü durumda bile logaritmiktir ve arama, ekleme ve silme işlemleri için O(log n) zaman karmaşıklığına sahiptir. Ancak, bu performans avantajı, std::map'in bir anahtar-değer çiftleri koleksiyonu olarak kullanılmasının yanı sıra, bir sıralı liste gibi de kullanılabileceği anlamına gelir.
 
+- std::map sınıfı, std::pair sınıfından oluşan bir anahtar-değer çiftleri koleksiyonu tutar. Anahtar-değer çiftleri, std::pair sınıfından türetilen std::map::value_type sınıfı ile temsil edilir. std::map sınıfı, bir anahtarın değerine hızlı bir şekilde erişmek için std::map::find işlevini sağlar. std::map ayrıca, std::map::insert işlevi kullanılarak yeni anahtar-değer çiftleri eklemek için de kullanılabilir.
 
+- Aşağıdaki örnek, std::map kullanarak bir kelimenin sayısını hesaplar:
 
+```CPP
+#include <iostream>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <cctype>
 
+int main() {
+  std::map<std::string, int> word_counts;
+  std::string word;
+  while (std::cin >> word) {
+    std::transform(word.begin(), word.end(), word.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    ++word_counts[word];
+  }
+  for (const auto& p : word_counts) {
+    std::cout << p.first << ": " << p.second << '\n';
+  }
+  return 0;
+}
 
+```
 
+- Bu örnekte, std::map kullanılarak girilen kelimelerin sayısı hesaplanır. std::transform işlevi kullanılarak girilen kelimeler küçük harfe dönüştürülür. Daha sonra, std::map::operator[] işlevi kullanılarak her kelime için bir sayac oluşturulur. Son olarak, std::map'de bulunan tüm anahtar-değer çiftleri yazdırılır.
 
-
-
-
-
-
-
-
-
-
-
-
+- std::map sınıfı, bir anahtar-değer koleksiyonu tutmak istediğimizde ve anahtarların benzersiz olması gerektiğinde kullanışlıdır. std::map, herhangi bir tür için kullanılabilir ve performansı yüksek bir veri yapısıdır.
 
 
 
