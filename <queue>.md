@@ -46,7 +46,13 @@ int main() {
 - Bu konteyner adaptörlerinin kullanımı, veri yapılarının işlevlerine ve kullanım amaçlarına göre değişiklik gösterir. Örneğin, verilerin öncelik sırasına göre saklanması gerektiğinde priority_queue sınıfı kullanılırken, verilerin sırayla işlenmesi gerektiğinde queue sınıfı kullanılabilir.
 
 
+- std::queue sınıfı, tipik bir kuyruk (queue) veri yapısını temsil eder ve bu veri yapısını kullanarak birçok algoritma ve veri yapısı problemini çözmek için faydalıdır.
 
+- Kuyruklar, FIFO (first-in, first-out) veri yapısına sahiptirler, yani kuyruğa en son eklenen eleman en son çıkar. Bu, işlem sırasıyla çalıştığında ve işlemler sırayla gerçekleştirildiğinde önemli bir avantajdır. Örneğin, işlemciye gelen verileri işlemek veya çeşitli işlemleri sırayla gerçekleştirmek için kullanılabilirler.
+
+- std::queue sınıfı, standart kütüphanenin diğer bileşenleriyle birlikte kullanılarak birçok algoritma ve veri yapısı problemini çözmek için kullanılabilir. Örneğin, BFS (breadth-first search) algoritması gibi algoritmalar, genellikle bir kuyruk kullanarak gerçekleştirilirler.
+
+- Ayrıca, std::queue sınıfı, elemanların eklenmesi ve kaldırılması için özel bir arayüz sunar, bu da kullanımını kolaylaştırır ve hatasız kod yazmaya yardımcı olur.
 
 
 
