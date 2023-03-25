@@ -8,13 +8,13 @@
 ```
 
 Bu kütüphane, std::filesystem ad alanı içinde tanımlanmıştır ve 
-**std::filesystem::path,** 
-**std::filesystem::directory_iterator,**
-**std::filesystem::recursive_directory_iterator** gibi sınıfları ve 
-**std::filesystem::create_directory,** 
-**std::filesystem::remove,**
-**std::filesystem::rename,** 
-**std::filesystem::exists** gibi işlevleri içerir.
+- **std::filesystem::path,** 
+- **std::filesystem::directory_iterator,**
+- **std::filesystem::recursive_directory_iterator** gibi sınıfları ve 
+- **std::filesystem::create_directory,** 
+- **std::filesystem::remove,**
+- **std::filesystem::rename,** 
+- **std::filesystem::exists** gibi işlevleri içerir.
 
 İşte küçük bir örnek:
 
