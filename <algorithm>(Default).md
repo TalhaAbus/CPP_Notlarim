@@ -267,7 +267,7 @@ int main()
 	for (int i = 0; i < n; i++)
 		cout << vect[i] << " ";
 
-	for (int i = 0; i <= 100; i++)
+	for (int i = 0; i <= 5; i++)
 	{
 		// modifies vector to its next permutation order
 		next_permutation(vect.begin(), vect.end());
@@ -276,8 +276,20 @@ int main()
 			cout << vect[i] << " ";
 	}
 
+	cout << "\n\n\n";
+
+	for (int i = 0; i <= 5; i++)
+	{
+		// modifies vector to its next permutation order
+		prev_permutation(vect.begin(), vect.end());
+		cout << "\nVector after performing next permutation:\n";
+		for (int i = 0; i < n; i++)
+			cout << vect[i] << " ";
+	}
+
 	return 0;
 }
+
 
 ```
 
