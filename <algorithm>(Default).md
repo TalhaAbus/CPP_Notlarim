@@ -165,8 +165,49 @@ int main()
 }
 ```
 
+# Ornek : (binary_search - lower_bound - upper_bound)
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+	//init the vector:
+
+	int arr[] = { 5,10,15,20,20,23,42,45 };
+	int numberof_elements = sizeof(arr) / sizeof(arr[0]);
+
+	vector<int> vect(arr, arr + numberof_elements);
 
 
+
+	sort(vect.begin(), vect.end());
+
+	cout << binary_search(vect.begin(), vect.end(), 20) << "\n";
+
+	auto low = lower_bound(vect.begin(), vect.end(), 20);
+	auto upper = upper_bound(vect.begin(), vect.end(), 20);
+
+	cout << low - vect.begin() << "\n";
+	cout << upper - vect.begin() << "\n";
+
+}
+```
+- std::binary_search ve std::find fonksiyonları, bir sıralı aralık içinde bir öğe arama işlemleri için kullanılır.Ancak aralarındaki fark, arama işleminin nasıl gerçekleştirildiğidir.
+
+- std::binary_search fonksiyonu, sıralı bir aralıkta bir öğenin var olup olmadığını kontrol etmek için kullanılır.Fonksiyon, bir aralık ve aranacak öğe alır ve aralıkta öğenin olup olmadığını kontrol eder.Aralık sıralı olduğu için, arama işlemi hızlı bir şekilde gerçekleştirilebilir.Fonksiyon, aranan öğenin var olması durumunda true, yoksa false değeri döndürür.
+
+- std::find fonksiyonu ise, bir aralıkta belirtilen öğenin var olup olmadığını kontrol eder ve öğenin konumunu(bir iterator) döndürür.Aralık sıralı olmak zorunda değildir, yani bu fonksiyon sıralama gerektirmez.Bu fonksiyon da arama işlemi gerçekleştirir ancak lineer zaman karmaşıklığına sahiptir, yani büyük aralıklarda performans sorunlarına neden olabilir.
+
+- Özet olarak, std::binary_search bir sıralı aralıkta bir öğenin var olup olmadığını kontrol etmek için kullanılırken std::find fonksiyonu bir aralıkta belirtilen öğeyi bulmak için kullanılır ve aralığın sıralı olması gerekli değildir.
+
+- std::binary_search() işlevi, sıralanmış bir aralıkta belirli bir değerin var olup olmadığını belirlemek için kullanılır.Fonksiyon, arama işlemini gerçekleştirmeden önce aralığı sıralamaz.Bu nedenle, sıralanmamış bir aralık üzerinde std::binary_search() işlevini çağırdığınızda, sonuç beklenmeyen bir şekilde yanlış olabilir.
+
+- Bununla birlikte, std::binary_search() işlevi, aralık öğelerinin sıralanmasını gerektirir.Eğer aralık sıralanmamışsa, işlev yanlış sonuçlar verebilir.Bu nedenle, std::binary_search() işlevini kullanmadan önce, aralığı sıralamak için önce std::sort() işlevini çağırmak gerekir
 
 
 
