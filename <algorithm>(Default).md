@@ -61,3 +61,82 @@ int main() {
 
 ```
 > Bu kodda, önce bir std::vectorint oluşturulur ve bu vektörün içine 1'den 10'a kadar olan sayılar eklenir. Daha sonra, std::count_if algoritma fonksiyonu, vec.begin() ve vec.end() aralığında bulunan elemanlar arasında gezinerek, tek sayıların sayısını hesaplar. std::transform algoritma fonksiyonu ise, vec.begin() ve vec.end() aralığındaki her elemanı iki katına çıkarır. Son olarak, for döngüsü ile yeni vektör yazdırılır.
+
+
+# Ornekler:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <numeric>
+
+using namespace std;
+
+int main()
+{
+	int arr[] = { 10,20,5,23,42,15 };
+	int numberof_members = sizeof(arr) / sizeof(arr[0]);
+
+	vector<int> vect(arr , arr+numberof_members);
+
+	for (auto element : vect)
+		cout << element << " ";
+
+	cout << "\n";
+
+	sort(vect.begin(), vect.end());
+
+	cout << "vector after sorting is:\n";
+	for (auto element : vect)
+		cout << element << " ";
+	cout << "\n";
+
+
+	cout << "vector after descending order:\n";
+
+	sort(vect.begin(), vect.end(), greater<int>());
+
+	for (auto element : vect)
+		cout << element << " ";
+	
+	cout << "\n";
+
+	reverse(vect.begin(), vect.end());
+	
+	for (auto element : vect)
+		cout << element << " ";
+	cout << "\n";
+
+
+	cout << "max element of vector is:\n";
+	cout << *max_element(vect.begin(), vect.end());
+
+	cout << "\n";
+
+
+	cout << "min element of vector is:\n";
+	cout << *min_element(vect.begin(), vect.end());
+
+	cout << "\n";
+
+	cout << "summation of vector is:\n";
+	cout << accumulate(vect.begin(), vect.end(), 0);
+
+	cout << "\n";
+
+	cout << "summation of vector is:\n";
+	cout << accumulate(vect.begin(), vect.end(), 10);
+
+}
+```
+
+
+
+
+
+
+
+
+
+
