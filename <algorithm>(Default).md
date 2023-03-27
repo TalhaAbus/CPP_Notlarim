@@ -131,7 +131,39 @@ int main()
 }
 ```
 
+# Ornek (count - find)
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <numeric>
+
+using namespace std;
+
+int main()
+{
+	int arr[] = { 10,20,5,23,20,42,15 };
+	int numberof_members = sizeof(arr) / sizeof(arr[0]);
+
+	vector<int> vect(arr , arr+numberof_members);
+
+	cout << "occurrences of 20 in vect:  ";
+	cout << count(vect.begin(), vect.end(), 20);
+
+	cout << "\n";
+
+	auto location = find(vect.begin(), vect.end(), 5);
+
+	if (location != vect.end())
+	{
+		cout << "element found";
+	}
+	else
+		cout << "element not found";
+
+}
+```
 
 
 
