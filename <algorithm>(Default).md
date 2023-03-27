@@ -293,7 +293,25 @@ int main()
 
 ```
 
+# Ornek (distance) 
 
+```CPP
+#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main()
+{
+	int arr[] = { 5,7,3,8,5,16,5,87 };
+	int size = sizeof(arr) / sizeof(arr[0]);
+
+	vector <int> vect(arr, arr + size);
+
+	cout << distance(min_element(vect.begin(),vect.end()),
+		max_element(vect.begin(), vect.end()));
+}
+```
 
 
 
