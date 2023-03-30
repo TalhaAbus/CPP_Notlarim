@@ -34,17 +34,25 @@
 > belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
 - **find_end()**
 > bir aralıkta belirli bir alt aralığın son konumunu bulmak için kullanılır. Bu algoritmanın amacı, belirli bir alt aralığın varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
-- find_first_of
-- adjacent_find
-- search
-- search_n
+- **find_first_of()** 
+> bir aralıkta belirli bir öğeler kümesinin ilk konumunu bulmak için kullanılır. Bu algoritmanın amacı, belirli bir öğeler kümesinin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **adjacent_find()**
+> bir aralıkta ardışık öğeler arasında bir özellik veya eşleşme aramak için kullanılır. Bu algoritmanın amacı, ardışık öğelerin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **search()**
+> bir aralıkta belirli bir alt aralığı aramak için kullanılır. Bu algoritmanın amacı, bir aralıkta alt aralığın varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **search_n()**
+> bir aralıkta ardışık bir öğe dizisi aramak için kullanılır. Bu algoritmanın amacı, ardışık öğe dizisinin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
 
 # Modifying sequence operations
 
-- copy
-- copy_if
-- copy_n
-- copy_backward
+- **copy()**
+> bir aralıktaki öğeleri başka bir aralığa kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **copy_if()**
+> bir aralıktaki öğeleri belirli bir koşulu sağlayan öğeleri başka bir aralığa kopyalamak için kullanılır. Bu işlevin kullanımı, std::copy() işlevine benzerdir, ancak kopyalanacak öğeler için bir koşul belirtilir.
+- **copy_n()**
+> bir aralıktan belirli bir sayıda öğeyi başka bir aralığa kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktan belirli bir sayıda öğe kopyalamak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- copy_backward()
+> bir aralıktaki öğeleri başka bir aralığa sondan başlayarak kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 - move
 - move_backward
 - fill
@@ -497,9 +505,302 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::find_end() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki alt aralığın son konumunu bulmak için std::find_end() işlevini kullanıyoruz. İkinci vektör, alt aralığı temsil eder. std::find_end() işlevi, vektördeki alt aralığın son konumunu tespit eder ve sonuç olarak alt aralığın son konumunu gösteren bir işaretçi döndürür.
+> Bu örnek kod, std::find_end() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektördeki alt aralığın son konumunu bulmak için std::find_end() işlevini kullanıyoruz. İkinci vektör, alt aralığı temsil eder. std::find_end() işlevi, vektördeki alt aralığın son konumunu tespit eder ve sonuç olarak alt aralığın son konumunu gösteren bir işaretçi döndürür.
 
 - Bu işlevin kullanımı, bir aralıkta belirli bir alt aralığın son konumunu bulmak için oldukça yaygındır. Örneğin, bir dosyadaki belirli bir kelimeyi içeren son satırın konumunu bulmak veya bir veritabanındaki belirli bir kaydın son konumunu bulmak için kullanılabilir.
+
+### find_first_of
+
+- std::find_first_of() C++ algoritması, bir aralıkta belirli bir öğeler kümesinin ilk konumunu bulmak için kullanılır. Bu algoritmanın amacı, belirli bir öğeler kümesinin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::find_first_of() işlevi, birinci aralık ve ikinci öğeler kümesi verildiğinde, ikinci öğeler kümesindeki herhangi bir öğenin ilk konumunu bulur. İşlevin sözdizimi şu şekildedir:
+
+```CPP
+template <class InputIt, class ForwardIt>
+InputIt find_first_of(InputIt first1, InputIt last1, ForwardIt first2, ForwardIt last2);
+
+```
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son iki parametre, öğeler kümesinin başlangıç ve sonunu gösteren işaretçilerdir. İşlev, ilk aralıkta ikinci öğeler kümesindeki herhangi bir öğenin ilk konumunu bulduğunda, öğenin konumunu gösteren bir işaretçi döndürür. Öğeler kümesindeki öğeler aranırken, her bir öğe için arama işlemi aralıktaki öğelerin sırasıyla taranmasıyla gerçekleştirilir. Eğer hiçbir öğe bulunamazsa son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::find_first_of() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
+
+  std::vector<int> search_vec {4, 5, 6};
+
+  auto it = std::find_first_of(my_vec.begin(), my_vec.end(), search_vec.begin(), search_vec.end());
+
+  if (it != my_vec.end()) {
+    std::cout << "İlk eşleşen öğe: " << *it << std::endl;
+  } else {
+    std::cout << "Eşleşen öğe bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::find_first_of() işlevinin kullanımını göstermektedir. std::vector int  türünde bir vektör oluşturuyoruz ve vektördeki belirli bir öğeler kümesinin ilk konumunu bulmak için std::find_first_of() işlevini kullanıyoruz. İkinci vektör, öğeler kümesini temsil eder. std::find_first_of() işlevi, vektördeki öğeler kümesindeki ilk eşleşen öğeyi tespit eder ve sonuç olarak öğenin konumunu gösteren bir işaretçi döndürür.
+
+- Bu işlevin kullanımı, bir aralıkta belirli bir öğeler kümesinin varlığını kontrol etmek veya belirli bir öğeler kümesindeki herhangi bir öğenin konumunu bulmak için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakter kümesinin ilk konumunu bulmak veya bir veritabanında belirli bir kayıttaki belirli bir alanın değeriyle eşleşen herhangi bir kaydın konumunu bulmak için kullanılabilir.
+
+### adjacent_find
+
+- std::adjacent_find() C++ algoritması, bir aralıkta ardışık öğeler arasında bir özellik veya eşleşme aramak için kullanılır. Bu algoritmanın amacı, ardışık öğelerin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::adjacent_find() işlevi, birinci ve ikinci parametre olarak aralığın başlangıç ve sonunu gösteren işaretçileri alır. İşlev, ardışık öğeler arasında belirli bir özellik veya eşleşme bulduğunda, öğelerin konumunu gösteren bir işaretçi döndürür. Eşleşme bulunamazsa son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::adjacent_find() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_consecutive(int x, int y) {
+  return y - x == 1;
+}
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 5, 6, 7, 9};
+
+  auto it = std::adjacent_find(my_vec.begin(), my_vec.end(), is_consecutive);
+
+  if (it != my_vec.end()) {
+    std::cout << "Ardışık öğelerin ilk konumu: " << std::distance(my_vec.begin(), it) << std::endl;
+  } else {
+    std::cout << "Ardışık öğeler bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::adjacent_find() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektördeki ardışık öğelerin ilk konumunu bulmak için std::adjacent_find() işlevini kullanıyoruz. İşlev, vektörde ardışık olan 1 ve 2 öğelerini tespit eder ve sonuç olarak öğelerin konumunu gösteren bir işaretçi döndürür.
+
+- Bu işlevin kullanımı, bir aralıkta ardışık öğelerin varlığını kontrol etmek için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakter dizisi aramak veya bir veritabanındaki ardışık kayıtları bulmak için kullanılabilir.
+
+### search()
+- std::search() C++ algoritması, bir aralıkta belirli bir alt aralığı aramak için kullanılır. Bu algoritmanın amacı, bir aralıkta alt aralığın varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::search() işlevi, birinci ve ikinci parametre olarak aralığın başlangıç ve sonunu gösteren işaretçileri alır. Üçüncü ve dördüncü parametreler, alt aralığın başlangıç ve sonunu gösteren işaretçilerdir. İşlev, alt aralığın ilk konumunu bulduğunda, öğenin konumunu gösteren bir işaretçi döndürür. Alt aralık bulunamazsa son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::search() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5, 1, 2, 3};
+
+  std::vector<int> sub_vec {1, 2, 3};
+
+  auto it = std::search(my_vec.begin(), my_vec.end(), sub_vec.begin(), sub_vec.end());
+
+  if (it != my_vec.end()) {
+    std::cout << "Alt aralık ilk konumu: " << std::distance(my_vec.begin(), it) << std::endl;
+  } else {
+    std::cout << "Alt aralık bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::search() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektörde belirli bir alt aralığı aramak için std::search() işlevini kullanıyoruz. İkinci vektör, alt aralığı temsil eder. std::search() işlevi, vektördeki alt aralığın ilk konumunu tespit eder ve sonuç olarak alt aralığın ilk konumunu gösteren bir işaretçi döndürür.
+
+- Bu işlevin kullanımı, bir aralıkta belirli bir alt aralığın varlığını kontrol etmek veya belirli bir alt aralığı bulmak için oldukça yaygındır. Örneğin, bir dosyada belirli bir kelimeyi içeren satırı bulmak veya bir veritabanında belirli bir kaydı bulmak için kullanılabilir.
+
+### search_n
+
+- std::search_n() C++ algoritması, bir aralıkta ardışık bir öğe dizisi aramak için kullanılır. Bu algoritmanın amacı, ardışık öğe dizisinin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::search_n() işlevi, birinci ve ikinci parametre olarak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, ardışık öğe dizisi için gereken öğe sayısıdır. Dördüncü parametre, aranacak öğe değeridir. İşlev, ardışık öğe dizisini bulduğunda, öğelerin konumunu gösteren bir işaretçi döndürür. Ardışık öğe dizisi bulunamazsa son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::search_n() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 1, 2, 3, 4, 5};
+
+  int count = 2;
+  int value = 3;
+
+  auto it = std::search_n(my_vec.begin(), my_vec.end(), count, value);
+
+  if (it != my_vec.end()) {
+    std::cout << "Ardışık " << count << " öğe bulundu, ilk konum: " << std::distance(my_vec.begin(), it) << std::endl;
+  } else {
+    std::cout << "Ardışık öğeler bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::search_n() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektörde ardışık bir öğe dizisini bulmak için std::search_n() işlevini kullanıyoruz. count değişkeni, aranacak öğe sayısını ve value değişkeni, aranacak öğe değerini temsil eder. std::search_n() işlevi, vektörde ardışık olan 3 öğelerinin ilk konumunu tespit eder ve sonuç olarak öğelerin konumunu gösteren bir işaretçi döndürür.
+
+- Bu işlevin kullanımı, bir aralıkta ardışık öğelerin varlığını kontrol etmek için oldukça yaygındır. Örneğin, bir dosyada belirli bir karakter dizisi aramak veya bir veritabanında ardışık kayıtları bulmak için kullanılabilir.
+
+### copy
+
+- std::copy() C++ algoritması, bir aralıktaki öğeleri başka bir aralığa kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::copy() işlevi, birinci ve ikinci parametre olarak kopyalanacak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, kopyalanacak aralığın başlangıcını gösteren işaretçidir. İşlev, kopyalama işlemini gerçekleştirdikten sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest(5);
+
+  std::copy(src.begin(), src.end(), dest.begin());
+
+  for (auto it = dest.begin(); it != dest.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy() işlevini kullanarak src vektöründeki öğeleri dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
+
+### copy_if()
+
+- std::copy_if() işlevi, bir aralıktaki öğeleri belirli bir koşulu sağlayan öğeleri başka bir aralığa kopyalamak için kullanılır. Bu işlevin kullanımı, std::copy() işlevine benzerdir, ancak kopyalanacak öğeler için bir koşul belirtilir.
+
+std::copy_if() işlevi, birinci ve ikinci parametre olarak kopyalanacak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, kopyalanacak aralığın başlangıcını gösteren işaretçidir. Dördüncü parametre, kopyalama koşulunu sağlayan bir işlev veya lambda işlevi olabilir. İşlev, kopyalama işlemini gerçekleştirdikten sonra son konumu gösteren bir işaretçi döndürür.
+
+İşte örnek bir kod parçası, std::copy_if() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int x) {
+  return x % 2 == 0;
+}
+
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest;
+
+  std::copy_if(src.begin(), src.end(), std::back_inserter(dest), is_even);
+
+  for (auto it = dest.begin(); it != dest.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::copy_if() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy_if() işlevini kullanarak src vektöründeki çift sayıları dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri belirli bir koşulu sağlayan öğeleri seçmek için oldukça yaygındır. Örneğin, bir veritabanından belirli bir koşulu sağlayan kayıtları seçmek için kullanılabilir.
+
+### copy_n
+
+- std::copy_n() C++ algoritması, bir aralıktan belirli bir sayıda öğeyi başka bir aralığa kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktan belirli bir sayıda öğe kopyalamak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::copy_n() işlevi, birinci parametre olarak kopyalanacak aralığın başlangıcını gösteren bir işaretçi alır. İkinci parametre, kopyalanacak öğe sayısını belirten bir tamsayıdır. Üçüncü parametre, kopyalanacak öğelerin başlangıcını gösteren işaretçidir. Dördüncü parametre, kopyalama işleminin yapılacağı hedefin başlangıcını gösteren işaretçidir. İşlev, kopyalama işlemini gerçekleştirdikten sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::copy_n() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest(3);
+
+  std::copy_n(src.begin(), 3, dest.begin());
+
+  for (auto it = dest.begin(); it != dest.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::copy_n() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy_n() işlevini kullanarak src vektöründen ilk üç öğeyi dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktan belirli bir sayıda öğe kopyalamak için oldukça yaygındır. Örneğin, bir dosyadan belirli bir sayıda karakter kopyalamak veya bir veritabanından belirli bir sayıda kayıt kopyalamak için kullanılabilir.
+
+### copy_backward
+
+- std::copy_backward() C++ algoritması, bir aralıktaki öğeleri başka bir aralığa sondan başlayarak kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::copy_backward() işlevi, birinci ve ikinci parametre olarak kopyalanacak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, kopyalanacak aralığın sonunu gösteren işaretçidir. Dördüncü parametre, kopyalama işleminin yapılacağı hedefin sonunu gösteren işaretçidir. İşlev, kopyalama işlemini gerçekleştirdikten sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::copy_backward() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest(src.size());
+
+  std::copy_backward(src.begin(), src.end(), dest.end());
+
+  for (auto it = dest.begin(); it != dest.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::copy_backward() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy_backward() işlevini kullanarak src vektöründeki öğeleri sondan başlayarak dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak için oldukça yaygındır. Örneğin, bir dosyada sondan başlayarak belirli bir karakter dizisi aramak veya bir veritabanında sondan başlayarak belirli bir sayıda kayıtları kopyalamak için kullanılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
