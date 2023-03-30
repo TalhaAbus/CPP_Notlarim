@@ -116,12 +116,14 @@
 
 - **is_pratitioned()**
 >  belirtilen aralıkta öğelerin belirli bir ölçüte göre bölünüp bölünmediğini kontrol eder.
-- partition()
+- **partition()**
 > bir aralıktaki öğeleri belirli bir ölçüte göre bölerek, ölçüye uyan öğeleri bir tarafa yerleştirir ve uymayanları diğer tarafa yerleştirir. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde sıklıkla kullanılır. Örneğin, bir listedeki çift sayıların tek sayılardan ayrılması gibi durumlarda kullanılabilir.
-- partition_copy()
+- **partition_copy()**
 > bir aralıktaki öğeleri belirli bir ölçüte göre böler ve iki farklı aralıkta sonuçları saklar. Ölçüye uyan öğeleri birinci aralığa, uymayan öğeleri ikinci aralığa kopyalar. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması ve sonuçların ayrı ayrı saklanması gerektiğinde sıklıkla kullanılır.
-- stable_partition
-- partition_point
+- **stable_partition()**
+> bir aralıktaki öğeleri belirli bir ölçüte göre böler ve ölçüye uyan öğeleri bir tarafa yerleştirir, uymayan öğeleri ise diğer tarafa yerleştirir. Bu işlev, std::partition() işlevi ile aynı işi yapar ancak sırayı korur. Bu nedenle, bu işlev, özellikle sıra önemli olduğunda kullanılır.
+- **partition_point()**
+> bir aralıktaki öğeleri belirli bir ölçüte göre böldükten sonra, bölme noktasını belirlemek için kullanılır. Bölme noktası, ölçüye uymayan öğelerin başladığı noktadır. Bu işlev, özellikle std::partition() işleviyle birlikte kullanıldığında faydalıdır.
 
 # Sorting Operations
 
@@ -1861,12 +1863,73 @@ int main() {
 
 - Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması ve sonuçların ayrı ayrı saklanması gerektiğinde oldukça yaygındır.
 
+### stable_partition()
 
+- std::stable_partition() işlevi, bir aralıktaki öğeleri belirli bir ölçüte göre böler ve ölçüye uyan öğeleri bir tarafa yerleştirir, uymayan öğeleri ise diğer tarafa yerleştirir. Bu işlev, std::partition() işlevi ile aynı işi yapar ancak sırayı korur. Bu nedenle, bu işlev, özellikle sıra önemli olduğunda kullanılır.
 
+- std::stable_partition() işlevi, bir aralık ve bölme noktası için bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri belirtilen ölçüte göre böler ve ölçüye uyan öğeleri aralığın baş tarafına, uymayan öğeleri ise aralığın son tarafına yerleştirir. Bu işlem sırasında, öğelerin özgün sıraları korunur.
 
+- İşte örnek bir kod parçası, std::stable_partition() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+bool is_even(int i) {
+  return i % 2 == 0;
+}
 
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  std::stable_partition(v.begin(), v.end(), is_even);
+
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::stable_partition() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::stable_partition() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, vektörü yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle sıra önemli olduğunda ve özgün sıralamanın korunması gerektiğinde oldukça yaygındır.
+
+### partition_point
+
+- std::partition_point() işlevi, bir aralıktaki öğeleri belirli bir ölçüte göre böldükten sonra, bölme noktasını belirlemek için kullanılır. Bölme noktası, ölçüye uymayan öğelerin başladığı noktadır. Bu işlev, özellikle std::partition() işleviyle birlikte kullanıldığında faydalıdır.
+
+- std::partition_point() işlevi, bir aralık ve bölme noktası için bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri belirtilen ölçüte göre böler ve bölme noktasını hesaplar.
+
+- İşte örnek bir kod parçası, std::partition_point() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int i) {
+  return i % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  auto it = std::partition(v.begin(), v.end(), is_even);
+
+  std::cout << "First odd element: " << *std::partition_point(v.begin(), v.end(), is_even) << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::partition_point() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partition() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, std::partition_point() işlevini kullanarak bölme noktasını buluyoruz ve ilk tek sayıyı yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle std::partition() işlevi ile birlikte kullanıldığında oldukça faydalıdır ve bir aralıktaki öğelerin belirli bir ölçüte göre bölündükten sonra hangi noktada bölündüğünü bulmak gerektiğinde kullanılabilir.
 
 
 
