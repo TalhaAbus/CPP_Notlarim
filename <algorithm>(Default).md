@@ -180,17 +180,21 @@ int main() {
 - next_permutation
 - prev_permutation
 
+# IMPLEMENTATIONS
 
+## Fonksiyolar 
 
+### all_of - any_of - none_of
 
+- Bu üç C++ algoritması, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için kullanılır. İşlevlerin sözdizimi şu şekildedir:
 
+- std::all_of(first, last, pred): aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
+- std::any_of(first, last, pred): aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- std::none_of(first, last, pred): aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
 
+- Bu işlevler C++11'de tanıtılmıştır ve C++17'de C++ aralık ifadeleri (std::ranges) için de tanıtılmıştır.
 
-
-
-
-
-
+- İşte bir örnek kod parçası, bu işlevlerin nasıl kullanıldığını gösteriyor: 
 
 
 
