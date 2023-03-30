@@ -13,8 +13,11 @@
 # Functions
 
 - **std::swap**
+> std::swap(std::any) işlevi, std::any sınıfının bir örneğinin içeriğini başka bir std::any örneğinin içeriğiyle değiştirmek için kullanılır.
 - **make_any**
+> std::make_any C++17 ile tanıtılan bir standart kütüphane işlevidir ve bir tür belirtilen std::any nesnesi oluşturur.
 - **any_cast**
+> std::any_cast işlevi, std::any sınıfı tarafından desteklenen herhangi bir türdeki nesnenin içeriğine erişmek için kullanılır.
 
 ### bad_any_cast 
 - std::bad_any_cast istisnası, std::any_cast işlevi std::any sınıfı nesnesinin içeriğini dönüştürmeye çalıştığında başarısız olduğunda fırlatılır. Bu istisna, std::any_cast işlevi tarafından otomatik olarak fırlatılır ve genellikle yakalayarak hatanın nasıl ele alınacağına karar vermek için kullanılır.
