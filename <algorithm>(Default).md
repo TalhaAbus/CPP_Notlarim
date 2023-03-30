@@ -64,10 +64,10 @@ int main() {
 
 # Fonksiyolar
 
-- all_of 
-- any_of
-- none_of
-- for_each
+- **std::all_of(first, last, pred):** aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
+- **std::any_of(first, last, pred):** aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **std::none_of(first, last, pred):** aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **std::for_each()** işlevi, bir işlev nesnesi ve bir aralık verildiğinde, aralıktaki her öğe için işlevi çağırır. 
 - for_each_n
 - count
 - count_if
@@ -188,305 +188,103 @@ int main() {
 
 - Bu üç C++ algoritması, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için kullanılır. İşlevlerin sözdizimi şu şekildedir:
 
-- std::all_of(first, last, pred): aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
-- std::any_of(first, last, pred): aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
-- std::none_of(first, last, pred): aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **std::all_of(first, last, pred):** aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
+- **std::any_of(first, last, pred):** aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **std::none_of(first, last, pred):** aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
 
 - Bu işlevler C++11'de tanıtılmıştır ve C++17'de C++ aralık ifadeleri (std::ranges) için de tanıtılmıştır.
 
 - İşte bir örnek kod parçası, bu işlevlerin nasıl kullanıldığını gösteriyor: 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# sort - reverse - max_element - min_element - accumulate 
-
 ```CPP
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#include <numeric>
 
-using namespace std;
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
 
-int main()
-{
-	int arr[] = { 10,20,5,23,42,15 };
-	int numberof_members = sizeof(arr) / sizeof(arr[0]);
+  if (std::all_of(my_vec.begin(), my_vec.end(), [](int i){return i > 0;})) {
+    std::cout << "Tüm öğeler pozitif" << std::endl;
+  } else {
+    std::cout << "Tüm öğeler pozitif değil" << std::endl;
+  }
 
-	vector<int> vect(arr , arr+numberof_members);
+  if (std::any_of(my_vec.begin(), my_vec.end(), [](int i){return i % 2 == 0;})) {
+    std::cout << "En az bir öğe çift" << std::endl;
+  } else {
+    std::cout << "Hiçbir öğe çift değil" << std::endl;
+  }
 
-	for (auto element : vect)
-		cout << element << " ";
+  if (std::none_of(my_vec.begin(), my_vec.end(), [](int i){return i < 0;})) {
+    std::cout << "Hiçbir öğe negatif değil" << std::endl;
+  } else {
+    std::cout << "En az bir öğe negatif" << std::endl;
+  }
 
-	cout << "\n";
-
-	sort(vect.begin(), vect.end());
-
-	cout << "vector after sorting is:\n";
-	for (auto element : vect)
-		cout << element << " ";
-	cout << "\n";
-
-
-	cout << "vector after descending order:\n";
-
-	sort(vect.begin(), vect.end(), greater<int>());
-
-	for (auto element : vect)
-		cout << element << " ";
-	
-	cout << "\n";
-
-	reverse(vect.begin(), vect.end());
-	
-	for (auto element : vect)
-		cout << element << " ";
-	cout << "\n";
-
-
-	cout << "max element of vector is:\n";
-	cout << *max_element(vect.begin(), vect.end());
-
-	cout << "\n";
-
-
-	cout << "min element of vector is:\n";
-	cout << *min_element(vect.begin(), vect.end());
-
-	cout << "\n";
-
-	cout << "summation of vector is:\n";
-	cout << accumulate(vect.begin(), vect.end(), 0);
-
-	cout << "\n";
-
-	cout << "summation of vector is:\n";
-	cout << accumulate(vect.begin(), vect.end(), 10);
-
+  return 0;
 }
-```
 
-# count - find
+```
+> Bu örnek kod, std::all_of(), std::any_of() ve std::none_of() işlevlerinin kullanımını göstermektedir. std::vectorint türünde bir vektör oluşturuyoruz ve bu vektörün öğelerinin pozitif, çift veya negatif olup olmadığını kontrol ediyoruz.
+
+> Her işlev, belirtilen özelliğe sahip olan öğe sayısına göre true veya false değeri döndürür. Yukarıdaki kodda, std::all_of() işlevinin sonucu true olarak döndürür çünkü tüm öğeler pozitiftir. std::any_of() işlevi, en az bir çift sayı içeren vektörde true döndürürken, std::none_of() işlevi, herhangi bir negatif öğe içermeyen bir vektörde true döndürür.
+
+Bu işlevlerin kullanımı, bir aralıktaki öğelerin özelliklerini kontrol etmek için oldukça yaygındır ve STL algoritmalarının güçlü bir parçasıdır.
+
+### for_each
+
+- std::for_each() C++ algoritması, bir aralıktaki öğeler üzerinde bir işlev işlevini uygular. Bu algoritmanın amacı, bir dizi işlemi bir aralık üzerinde uygulamak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::for_each() işlevi, bir işlev nesnesi ve bir aralık verildiğinde, aralıktaki her öğe için işlevi çağırır. İşlev nesnesi, aralıktaki her öğe için çağrılacak işlevi belirtir. İşlevin sözdizimi şu şekildedir:
 
 ```CPP
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <numeric>
+template <class InputIt, class UnaryFunction>
+UnaryFunction for_each(InputIt first, InputIt last, UnaryFunction f);
 
-using namespace std;
-
-int main()
-{
-	int arr[] = { 10,20,5,23,20,42,15 };
-	int numberof_members = sizeof(arr) / sizeof(arr[0]);
-
-	vector<int> vect(arr , arr+numberof_members);
-
-	cout << "occurrences of 20 in vect:  ";
-	cout << count(vect.begin(), vect.end(), 20);
-
-	cout << "\n";
-
-	auto location = find(vect.begin(), vect.end(), 5);
-
-	if (location != vect.end())
-	{
-		cout << "element found";
-	}
-	else
-		cout << "element not found";
-
-}
 ```
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son parametre, aralıktaki her öğe için çağrılacak işlevi belirten bir işlev nesnesidir. İşlev, aralıktaki her öğe için çağrıldığında işlevin geri dönüş değeri kullanılmaz.
 
-# binary_search - lower_bound - upper_bound
+- İşte bir örnek kod parçası, std::for_each() işlevinin nasıl kullanılabileceğini gösteriyor:
 
 ```CPP
 #include <iostream>
 #include <algorithm>
 #include <vector>
 
-using namespace std;
-
-int main()
-{
-	//init the vector:
-
-	int arr[] = { 5,10,15,20,20,23,42,45 };
-	int numberof_elements = sizeof(arr) / sizeof(arr[0]);
-
-	vector<int> vect(arr, arr + numberof_elements);
-
-
-
-	sort(vect.begin(), vect.end());
-
-	cout << binary_search(vect.begin(), vect.end(), 20) << "\n";
-
-	auto low = lower_bound(vect.begin(), vect.end(), 20);
-	auto upper = upper_bound(vect.begin(), vect.end(), 20);
-
-	cout << low - vect.begin() << "\n";
-	cout << upper - vect.begin() << "\n";
-
-}
-```
-- std::binary_search ve std::find fonksiyonları, bir sıralı aralık içinde bir öğe arama işlemleri için kullanılır.Ancak aralarındaki fark, arama işleminin nasıl gerçekleştirildiğidir.
-
-- std::binary_search fonksiyonu, sıralı bir aralıkta bir öğenin var olup olmadığını kontrol etmek için kullanılır.Fonksiyon, bir aralık ve aranacak öğe alır ve aralıkta öğenin olup olmadığını kontrol eder.Aralık sıralı olduğu için, arama işlemi hızlı bir şekilde gerçekleştirilebilir.Fonksiyon, aranan öğenin var olması durumunda true, yoksa false değeri döndürür.
-
-- std::find fonksiyonu ise, bir aralıkta belirtilen öğenin var olup olmadığını kontrol eder ve öğenin konumunu(bir iterator) döndürür.Aralık sıralı olmak zorunda değildir, yani bu fonksiyon sıralama gerektirmez.Bu fonksiyon da arama işlemi gerçekleştirir ancak lineer zaman karmaşıklığına sahiptir, yani büyük aralıklarda performans sorunlarına neden olabilir.
-
-- Özet olarak, std::binary_search bir sıralı aralıkta bir öğenin var olup olmadığını kontrol etmek için kullanılırken std::find fonksiyonu bir aralıkta belirtilen öğeyi bulmak için kullanılır ve aralığın sıralı olması gerekli değildir.
-
-- std::binary_search() işlevi, sıralanmış bir aralıkta belirli bir değerin var olup olmadığını belirlemek için kullanılır.Fonksiyon, arama işlemini gerçekleştirmeden önce aralığı sıralamaz.Bu nedenle, sıralanmamış bir aralık üzerinde std::binary_search() işlevini çağırdığınızda, sonuç beklenmeyen bir şekilde yanlış olabilir.
-
-- Bununla birlikte, std::binary_search() işlevi, aralık öğelerinin sıralanmasını gerektirir.Eğer aralık sıralanmamışsa, işlev yanlış sonuçlar verebilir.Bu nedenle, std::binary_search() işlevini kullanmadan önce, aralığı sıralamak için önce std::sort() işlevini çağırmak gerekir
-
-# erase - unique
-
-```CPP
-// C++ program to demonstrate working
-// of erase
-#include <algorithm>
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int main()
-{
-    // Initializing vector with array values
-    int arr[] = { 5, 10, 15, 20, 20, 23, 42, 45 };
-    int n = sizeof(arr) / sizeof(arr[0]);
-    vector<int> vect(arr, arr + n);
-
-    cout << "Given Vector is:\n";
-    for (int i = 0; i < n; i++)
-        cout << vect[i] << " ";
-
-    vect.erase(find(vect.begin(), vect.end(), 10));
-    cout << "\nVector after erasing element:\n";
-    for (int i = 0; i < vect.size(); i++)
-        cout << vect[i] << " ";
-
-    vect.erase(unique(vect.begin(), vect.end()),
-        vect.end());
-    cout << "\nVector after removing duplicates:\n";
-    for (int i = 0; i < vect.size(); i++)
-        cout << vect[i] << " ";
-
-    return 0;
-}
-```
-
-# next_permutation - prev_permutation
-
-```CPP
-// C++ program to demonstrate working
-// of next_permutation()
-// and prev_permutation()
-#include <algorithm>
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int main()
-{
-	// Initializing vector with array values
-	int arr[] = { 5, 10, 15, 20, 20, 23, 42, 45 };
-	int n = sizeof(arr) / sizeof(arr[0]);
-	vector<int> vect(arr, arr + n);
-
-	cout << "Given Vector is:\n";
-	for (int i = 0; i < n; i++)
-		cout << vect[i] << " ";
-
-	for (int i = 0; i <= 5; i++)
-	{
-		// modifies vector to its next permutation order
-		next_permutation(vect.begin(), vect.end());
-		cout << "\nVector after performing next permutation:\n";
-		for (int i = 0; i < n; i++)
-			cout << vect[i] << " ";
-	}
-
-	cout << "\n\n\n";
-
-	for (int i = 0; i <= 5; i++)
-	{
-		// modifies vector to its next permutation order
-		prev_permutation(vect.begin(), vect.end());
-		cout << "\nVector after performing next permutation:\n";
-		for (int i = 0; i < n; i++)
-			cout << vect[i] << " ";
-	}
-
-	return 0;
+void print_num(int num) {
+  std::cout << num << " ";
 }
 
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
 
-```
+  std::for_each(my_vec.begin(), my_vec.end(), print_num);
 
-#  distance
-
-```CPP
-#include <algorithm>
-#include <iostream>
-#include <vector>
-using namespace std;
-
-int main()
-{
-	int arr[] = { 5,7,3,8,5,16,5,87 };
-	int size = sizeof(arr) / sizeof(arr[0]);
-
-	vector <int> vect(arr, arr + size);
-
-	cout << distance(min_element(vect.begin(),vect.end()),
-		max_element(vect.begin(), vect.end()));
+  return 0;
 }
+
 ```
+> Bu örnek kod, std::for_each() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki her öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each() işlevi, print_num() işlevini her öğe için çağırır ve sonuç olarak 1 2 3 4 5 değerlerini ekrana yazdırır.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri bir dizi işlem için kullanmak istediğiniz durumlarda oldukça yaygındır. Örneğin, bir vektördeki tüm öğeleri toplamak veya bir dosyadaki tüm satırları okumak için kullanılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
