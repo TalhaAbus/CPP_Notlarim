@@ -127,47 +127,50 @@
 
 # Sorting Operations
 
-- is_sorted
-- is_sorted_until
-- sort
-- partial_sort
-- partial_sort_copy
-- stable_sort
-- nth_element
+- **is_sorted()**
+> bir aralıktaki öğelerin belirli bir sıraya göre sıralanıp sıralanmadığını kontrol eder. 
+- **is_sorted_until()**
+> bir aralıktaki öğelerin belirli bir sıraya göre sıralanmış olduğu son öğenin işaretçisini döndürür. Bu işlev, std::is_sorted() işlevine benzerdir ancak sıralı olan öğelerin sonuncusunu işaret eder.
+- **sort()**
+> bir aralıktaki öğeleri belirli bir sıraya göre sıralar. Bu işlev, C++'ın standart kitaplığındaki en önemli ve en sık kullanılan işlevlerden biridir.
+- partial_sort()
+- partial_sort_copy()
+- stable_sort()
+- nth_element()
 
 # Binary Search Operations (On Sorted Ranges)
-- lower_bound
-- upper_bound
-- binary_search
-- equal_range
+- lower_bound()
+- upper_bound()
+- binary_search()
+- equal_range()
 
 # Other Operations on Sorted Ranges
 - merge
 - inplace_merge
 
 # Set Operations (On Sorted Ranges)
-- includes
-- set_difference
-- set_intersections
-- set_symmetric_difference
-- set_union
+- includes()
+- set_difference()
+- set_intersections()
+- set_symmetric_difference()
+- set_union()
 
 # Heap Operations
-- is_heap
-- is_heap_until
-- make_heap
-- push_heap
-- pop_heap
-- sort_heap
+- is_heap()
+- is_heap_until()
+- make_heap()
+- push_heap()
+- pop_heap()
+- sort_heap()
 
 # Minimum/ Maximum Operations
-- max
-- max_element
-- min
-- min_element
-- minmax
-- minmax_element
-- clamp
+- max()
+- max_element()
+- min()
+- min_element()
+- minmax()
+- minmax_element()
+- clamp()
 
 # Comparison Operations
 - equal
@@ -1930,6 +1933,130 @@ int main() {
 > Bu örnek kod, std::partition_point() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partition() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, std::partition_point() işlevini kullanarak bölme noktasını buluyoruz ve ilk tek sayıyı yazdırıyoruz.
 
 - Bu işlevin kullanımı, özellikle std::partition() işlevi ile birlikte kullanıldığında oldukça faydalıdır ve bir aralıktaki öğelerin belirli bir ölçüte göre bölündükten sonra hangi noktada bölündüğünü bulmak gerektiğinde kullanılabilir.
+
+### is_sorted()
+
+- std::is_sorted() işlevi, bir aralıktaki öğelerin belirli bir sıraya göre sıralanıp sıralanmadığını kontrol eder. Eğer belirtilen aralıktaki öğeler belirtilen sıraya göre sıralanmışsa, işlev true değerini döndürür. Aksi takdirde, false değerini döndürür.
+
+- std::is_sorted() işlevi, bir aralık için iki adet işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğelerin sıralanma durumunu kontrol eder.
+
+- İşte örnek bir kod parçası, std::is_sorted() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5, 6};
+  std::vector<int> v2 {1, 3, 2, 4, 5, 6};
+
+  std::cout << std::boolalpha;
+  std::cout << "v1 is sorted: " << std::is_sorted(v1.begin(), v1.end()) << std::endl;
+  std::cout << "v2 is sorted: " << std::is_sorted(v2.begin(), v2.end()) << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::is_sorted() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz. Ardından, std::is_sorted() işlevini kullanarak v1 ve v2 vektörlerinin sıralı olup olmadığını kontrol ediyoruz. Son olarak, her iki vektörün sıralı olup olmadığını yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir sıraya göre sıralanmış olup olmadığını kontrol etmek gerektiğinde oldukça yaygındır.
+
+### is_sorted_until()
+
+- std::is_sorted_until() işlevi, bir aralıktaki öğelerin belirli bir sıraya göre sıralanmış olduğu son öğenin işaretçisini döndürür. Bu işlev, std::is_sorted() işlevine benzerdir ancak sıralı olan öğelerin sonuncusunu işaret eder.
+
+- std::is_sorted_until() işlevi, bir aralık için iki adet işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğelerin sıralanma durumunu kontrol eder ve sıralı olan son öğenin işaretçisini döndürür.
+
+- İşte örnek bir kod parçası, std::is_sorted_until() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5, 6};
+  std::vector<int> v2 {1, 3, 2, 4, 5, 6};
+
+  auto it1 = std::is_sorted_until(v1.begin(), v1.end());
+  auto it2 = std::is_sorted_until(v2.begin(), v2.end());
+
+  if (it1 == v1.end()) {
+    std::cout << "v1 is sorted" << std::endl;
+  } else {
+    std::cout << "v1 is not sorted up to " << *it1 << std::endl;
+  }
+
+  if (it2 == v2.end()) {
+    std::cout << "v2 is sorted" << std::endl;
+  } else {
+    std::cout << "v2 is not sorted up to " << *it2 << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::is_sorted_until() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz. Ardından, std::is_sorted_until() işlevini kullanarak v1 ve v2 vektörlerinin sıralı olup olmadığını kontrol ediyoruz. Son olarak, her iki vektörün sıralı olup olmadığını ve sıralı olmayan son öğeyi yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir sıraya göre sıralanmış olduğu son öğeyi bulmak gerektiğinde oldukça faydalıdır.
+
+### sort()
+
+- std::sort() işlevi, bir aralıktaki öğeleri belirli bir sıraya göre sıralar. Bu işlev, C++'ın standart kitaplığındaki en önemli ve en sık kullanılan işlevlerden biridir.
+
+- std::sort() işlevi, bir aralık için iki adet işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri sıralar. std::sort() işlevi, genellikle C++'ın standart sıralama algoritması olan quicksort algoritmasını kullanır. Bu algoritma, bir aralıktaki öğeleri hızlı bir şekilde sıralamak için etkilidir.
+
+- İşte örnek bir kod parçası, std::sort() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {5, 2, 4, 6, 1, 3};
+
+  std::sort(v.begin(), v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::sort() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::sort() işlevini kullanarak v vektöründeki öğeleri sıralıyoruz. Son olarak, sıralanmış öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri belirli bir sıraya göre sıralamak gerektiğinde oldukça faydalıdır.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
