@@ -133,15 +133,22 @@
 > bir aralıktaki öğelerin belirli bir sıraya göre sıralanmış olduğu son öğenin işaretçisini döndürür. Bu işlev, std::is_sorted() işlevine benzerdir ancak sıralı olan öğelerin sonuncusunu işaret eder.
 - **sort()**
 > bir aralıktaki öğeleri belirli bir sıraya göre sıralar. Bu işlev, C++'ın standart kitaplığındaki en önemli ve en sık kullanılan işlevlerden biridir.
-- partial_sort()
-- partial_sort_copy()
-- stable_sort()
-- nth_element()
+- **partial_sort()**
+> bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralar. Bu işlev, genellikle öncelikli olarak ilk N öğeyi sıralamak istediğiniz durumlarda kullanılır.
+- **partial_sort_copy()**
+>  bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralar ve sıralanmış öğeleri başka bir aralığa kopyalar. Bu işlev, std::partial_sort() işlevine benzer, ancak sıralanmış öğeleri yeni bir aralığa kopyalar.
+- **stable_sort()**
+> bir aralıktaki öğeleri belirli bir sıraya göre sıralar. Bu işlev, std::sort() işlevine benzer, ancak sıralama işlemi sırasında öğelerin orijinal sıralama ilişkisi korunur. Bu nedenle, std::stable_sort() işlevi, öğelerin birbirine göre ilişkisini korumak istediğiniz durumlarda kullanılabilir.
+- **nth_element()**
+> bir aralıktaki öğelerin sadece belirli bir sıralamada olan n'inci öğesini bulmak için kullanılır. Bu işlev, özellikle büyük aralıkların sıralanması gerektiğinde ve sadece birkaç öğenin sıralanması gerektiğinde faydalıdır.
 
 # Binary Search Operations (On Sorted Ranges)
-- lower_bound()
-- upper_bound()
-- binary_search()
+- **lower_bound()**
+> bir aralıkta belirli bir değere veya daha büyük ilk değere sahip olan ilk öğenin konumunu (iterator'ünü) döndürür. Bu işlev, özellikle sıralanmış bir aralıkta bir değerin veya belirli bir değerden büyük ilk öğenin konumunu bulmak için kullanılır.
+- **upper_bound()**
+> bir aralıkta belirli bir değerden büyük ilk öğenin konumunu (iterator'ünü) döndürür. Bu işlev, özellikle sıralanmış bir aralıkta bir değerden büyük ilk öğenin konumunu bulmak için kullanılır.
+- **binary_search()**
+> sıralı bir aralıkta belirli bir değerin olup olmadığını kontrol eder. Eğer aralıkta değer varsa, true değerini döndürür; yoksa false değerini döndürür.
 - equal_range()
 
 # Other Operations on Sorted Ranges
@@ -2034,39 +2041,1054 @@ int main() {
 
 - Bu işlevin kullanımı, bir aralıktaki öğeleri belirli bir sıraya göre sıralamak gerektiğinde oldukça faydalıdır.
 
+### partial_sort()
+- std::partial_sort() işlevi, bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralar. Bu işlev, genellikle öncelikli olarak ilk N öğeyi sıralamak istediğiniz durumlarda kullanılır.
+
+- std::partial_sort() işlevi, bir aralık için üç adet işaretçi parametresi alır. İlk parametre, sıralanacak aralığın başlangıcını işaret eder. İkinci parametre, sıralanacak aralığın sonunu işaret eder. Üçüncü parametre ise, sıralanacak öğelerin son sıralı konumunun işaretçisi olarak kullanılır. Bu işlevin çalışma mantığı, belirtilen son sıralı konumun sol tarafındaki öğeleri sıralamak ve son sıralı konumun sağ tarafındaki öğeleri sıralamamaktır.
+
+- şte örnek bir kod parçası, std::partial_sort() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {5, 2, 4, 6, 1, 3};
+
+  std::partial_sort(v.begin(), v.begin() + 3, v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::partial_sort() işlevinin kullanımını göstermektedir. İlk olarak, std::vector< int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partial_sort() işlevini kullanarak v vektöründeki ilk üç öğeyi sıralıyoruz. Son olarak, sıralanmış öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralamak istediğiniz durumlarda oldukça faydalıdır.
+
+### partial_sort_copy
+
+- std::partial_sort_copy() işlevi, bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralar ve sıralanmış öğeleri başka bir aralığa kopyalar. Bu işlev, std::partial_sort() işlevine benzer, ancak sıralanmış öğeleri yeni bir aralığa kopyalar.
+
+- std::partial_sort_copy() işlevi, bir aralık için üç adet işaretçi parametresi ve başka bir aralık için iki adet işaretçi parametresi alır. İlk üç parametre, sıralanacak aralığın başlangıcını, sonunu ve son sıralı konumunun işaretçisini işaret eder. Dördüncü ve beşinci parametreler ise, sıralanmış öğelerin kopyalanacağı yeni aralığın başlangıcını ve sonunu işaret eder.
+
+- İşte örnek bir kod parçası, std::partial_sort_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {5, 2, 4, 6, 1, 3};
+  std::vector<int> v2(3);
+
+  std::partial_sort_copy(v.begin(), v.end(), v2.begin(), v2.end());
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::partial_sort_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v isimli bir vektör oluşturuyoruz. Ardından, std::vector int  türünde v2 isimli bir başka vektör oluşturuyoruz. Daha sonra, std::partial_sort_copy() işlevini kullanarak v vektöründeki öğelerin ilk üçünü sıralıyoruz ve v2 vektörüne kopyalıyoruz. Son olarak, sıralanmış öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin bir kısmını belirli bir sıraya göre sıralamak ve sıralanmış öğeleri başka bir aralığa kopyalamak istediğiniz durumlarda oldukça faydalıdır.
+
+### stable_sort()
+  
+- std::stable_sort() işlevi, bir aralıktaki öğeleri belirli bir sıraya göre sıralar. Bu işlev, std::sort() işlevine benzer, ancak sıralama işlemi sırasında öğelerin orijinal sıralama ilişkisi korunur. Bu nedenle, std::stable_sort() işlevi, öğelerin birbirine göre ilişkisini korumak istediğiniz durumlarda kullanılabilir.
+
+- std::stable_sort() işlevi, bir aralık için iki adet işaretçi parametresi alır. İlk parametre, sıralanacak aralığın başlangıcını işaret eder. İkinci parametre, sıralanacak aralığın sonunu işaret eder. Bu işlevin çalışma mantığı, öğeleri sıralama işlemi sırasında orijinal sıralama ilişkisini koruyacak şekilde sıralamaktır.
+
+- İşte örnek bir kod parçası, std::stable_sort() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {5, 2, 4, 6, 1, 3};
+
+  std::stable_sort(v.begin(), v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::stable_sort() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::stable_sort() işlevini kullanarak v vektöründeki öğeleri sıralıyoruz. Son olarak, sıralanmış öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, öğelerin orijinal sıralama ilişkisini korumak istediğiniz durumlarda oldukça faydalıdır.
+
+### nth_element
+
+- std::nth_element() işlevi, bir aralıktaki öğelerin sadece belirli bir sıralamada olan n'inci öğesini bulmak için kullanılır. Bu işlev, özellikle büyük aralıkların sıralanması gerektiğinde ve sadece birkaç öğenin sıralanması gerektiğinde faydalıdır.
+
+std::nth_element() işlevi, bir aralık için üç adet işaretçi parametresi alır. İlk parametre, sıralanacak aralığın başlangıcını işaret eder. İkinci parametre, sıralanacak aralığın sonunu işaret eder. Üçüncü parametre ise, sıralanacak öğelerin n'inci öğesi olacak şekilde belirtilir.
+
+- İşte örnek bir kod parçası, std::nth_element() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {5, 2, 4, 6, 1, 3};
+  int n = 3;
+
+  std::nth_element(v.begin(), v.begin() + n, v.end());
+
+  std::cout << "The " << n << "th element is " << v[n] << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::nth_element() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz ve n değişkenine 3 değerini atıyoruz. Ardından, std::nth_element() işlevini kullanarak v vektöründeki öğelerin 3'üncü öğesini belirliyoruz. Son olarak, belirtilen öğeyi yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin sadece belirli bir sıralamada olan n'inci öğesini bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### lower_bound()
+
+- std::lower_bound() işlevi, bir aralıkta belirli bir değere veya daha büyük ilk değere sahip olan ilk öğenin konumunu (iterator'ünü) döndürür. Bu işlev, özellikle sıralanmış bir aralıkta bir değerin veya belirli bir değerden büyük ilk öğenin konumunu bulmak için kullanılır.
+
+- std::lower_bound() işlevi, bir aralık için iki adet işaretçi parametresi ve bir değer parametresi alır. İlk parametre, aralığın başlangıcını işaret eder. İkinci parametre, aralığın sonunu işaret eder. Üçüncü parametre ise, aralıkta aranan değerdir.
+
+- İşte örnek bir kod parçası, std::lower_bound() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6};
+  int x = 4;
+
+  auto it = std::lower_bound(v.begin(), v.end(), x);
+
+  if (it != v.end()) {
+    std::cout << "The first element >= " << x << " is at position " << (it - v.begin()) << std::endl;
+  } else {
+    std::cout << "No element found" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::lower_bound() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz ve x değişkenine 4 değerini atıyoruz. Ardından, std::lower_bound() işlevini kullanarak v vektöründe x değerinden büyük veya eşit ilk öğenin konumunu belirliyoruz. Son olarak, bu konumu yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıkta belirli bir değere veya daha büyük ilk değere sahip olan ilk öğenin konumunu (iterator'ünü) bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### upper_bound
+- std::upper_bound() işlevi, bir aralıkta belirli bir değerden büyük ilk öğenin konumunu (iterator'ünü) döndürür. Bu işlev, özellikle sıralanmış bir aralıkta bir değerden büyük ilk öğenin konumunu bulmak için kullanılır.
+
+- std::upper_bound() işlevi, bir aralık için iki adet işaretçi parametresi ve bir değer parametresi alır. İlk parametre, aralığın başlangıcını işaret eder. İkinci parametre, aralığın sonunu işaret eder. Üçüncü parametre ise, aralıkta aranan değerdir.
+
+- İşte örnek bir kod parçası, std::upper_bound() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6};
+  int x = 4;
+
+  auto it = std::upper_bound(v.begin(), v.end(), x);
+
+  if (it != v.end()) {
+    std::cout << "The first element > " << x << " is at position " << (it - v.begin()) << std::endl;
+  } else {
+    std::cout << "No element found" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::upper_bound() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz ve x değişkenine 4 değerini atıyoruz. Ardından, std::upper_bound() işlevini kullanarak v vektöründe x değerinden büyük ilk öğenin konumunu belirliyoruz. Son olarak, bu konumu yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıkta belirli bir değerden büyük ilk öğenin konumunu (iterator'ünü) bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### equal_range
+
+- std::binary_search() işlevi, sıralı bir aralıkta belirli bir değerin olup olmadığını kontrol eder. Eğer aralıkta değer varsa, true değerini döndürür; yoksa false değerini döndürür.
+
+- std::binary_search() işlevi, bir aralık için iki adet işaretçi parametresi ve bir değer parametresi alır. İlk parametre, aralığın başlangıcını işaret eder. İkinci parametre, aralığın sonunu işaret eder. Üçüncü parametre ise, aralıkta aranan değerdir.
+
+- İşte örnek bir kod parçası, std::binary_search() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6};
+  int x = 4;
+
+  if (std::binary_search(v.begin(), v.end(), x)) {
+    std::cout << "The value " << x << " exists in the vector" << std::endl;
+  } else {
+    std::cout << "The value " << x << " does not exist in the vector" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::binary_search() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz ve x değişkenine 4 değerini atıyoruz. Ardından, std::binary_search() işlevini kullanarak v vektöründe x değerinin olup olmadığını kontrol ediyoruz. Son olarak, sonucu yazdırıyoruz.
+
+- Bu işlevin kullanımı, sıralı bir aralıkta belirli bir değerin olup olmadığını kontrol etmek istediğiniz durumlarda oldukça faydalıdır.
+
+### merge
+
+- std::merge() işlevi, iki sıralı aralığı birleştirerek yeni bir sıralı aralık oluşturur. Birleştirme, iki aralıktaki tüm öğeleri sıralı bir şekilde birleştirir ve sonuç olarak yeni bir aralık oluşturur.
+
+- std::merge() işlevi, üç adet işaretçi parametresi alır. İlk iki parametre, birleştirilecek iki sıralı aralığın başlangıç ve sonunu gösterir. Üçüncü parametre ise, birleştirilmiş aralığın başlangıcını gösterir. İşlev, birleştirilen aralığı tamamen sıralar, bu nedenle birleştirme işlemi öncesinde her iki aralık da sıralanmış olmalıdır.
+
+- İşte örnek bir kod parçası, std::merge() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 3, 5, 7};
+  std::vector<int> v2 {2, 4, 6, 8, 10};
+
+  std::vector<int> v3(v1.size() + v2.size());
+
+  std::merge(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
+
+  for (auto i : v3) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::merge() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve bu vektörleri sıralı hale getiriyoruz. Daha sonra, birleştirilmiş aralığı depolamak için yeni bir vektör oluşturuyoruz. std::merge() işlevini kullanarak v1 ve v2 vektörlerini birleştiriyoruz ve sonucu v3 vektörüne kaydediyoruz. Son olarak, v3 vektöründeki tüm öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki sıralı aralığı birleştirmek ve yeni bir sıralı aralık oluşturmak istediğiniz durumlarda oldukça faydalıdır.
+
+### inplace_merge
+
+- std::inplace_merge() işlevi, bir sıralı aralıktaki iki sıralı alt aralığı birleştirerek mevcut aralığı sıralı hale getirir. Bu işlev, özellikle sıralı bir aralıkta iki alt aralığı birleştirmek ve sonucu mevcut aralığa kaydetmek istediğiniz durumlarda kullanışlıdır.
+
+- std::inplace_merge() işlevi, üç adet işaretçi parametresi alır. İlk iki parametre, birleştirilecek iki sıralı alt aralığın başlangıç ve sonunu gösterir. Üçüncü parametre ise, birleştirilen aralığın sonunu gösterir. İşlev, belirtilen iki alt aralığı birleştirir ve sonucunu, mevcut aralığın belirtilen sonu (üçüncü parametre) ile sınırlandırılmış bölgesine kaydeder.
+
+- İşte örnek bir kod parçası, std::inplace_merge() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  auto mid = v.begin() + 5;
+
+  std::inplace_merge(v.begin(), mid, v.end());
+
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::inplace_merge() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz ve bu vektörü yazdırıyoruz. Daha sonra, mid adlı bir işaretçi oluşturuyoruz ve bu işaretçi, vektörün 5. öğesini işaret eder. std::inplace_merge() işlevini kullanarak, v vektöründe ilk 5 öğeyi ve sonraki öğeleri birleştiriyoruz. Son olarak, v vektöründeki tüm öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir sıralı aralıktaki iki alt aralığı birleştirmek ve sonucu mevcut aralığa kaydetmek istediğiniz durumlarda oldukça faydalıdır.
+
+### includes()
+
+- std::includes() işlevi, birinci sıralı aralığın ikinci sıralı aralığı içerip içermediğini kontrol eder. İkinci sıralı aralık, birinci sıralı aralığın bir alt kümesi olabilir veya olmayabilir.
+
+- std::includes() işlevi, dört adet işaretçi parametresi alır. İlk iki parametre, birinci sıralı aralığın başlangıcını ve sonunu gösterir. Üçüncü ve dördüncü parametreler, ikinci sıralı aralığın başlangıcını ve sonunu gösterir. İşlev, ikinci sıralı aralığın birinci sıralı aralığı içerip içermediğini kontrol eder ve sonuç olarak true veya false değeri döndürür.
+
+- İşte örnek bir kod parçası, std::includes() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5, 6};
+  std::vector<int> v2 {3, 4, 5};
+
+  if (std::includes(v1.begin(), v1.end(), v2.begin(), v2.end())) {
+    std::cout << "The second vector is a subset of the first vector" << std::endl;
+  } else {
+    std::cout << "The second vector is not a subset of the first vector" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::includes() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz. Ardından, std::includes() işlevini kullanarak, v2 vektörünün v1 vektörünün bir alt kümesi olup olmadığını kontrol ediyoruz. Son olarak, sonucu yazdırıyoruz.
+
+- Bu işlevin kullanımı, birinci sıralı aralığın ikinci sıralı aralığı içerip içermediğini kontrol etmek istediğiniz durumlarda oldukça faydalıdır.
+
+### set_difference()
+
+- std::set_difference() işlevi, iki sıralı aralık arasındaki farkı hesaplar ve sonucu yeni bir sıralı aralıkta depolar. İlk sıralı aralıktaki öğelerden, ikinci sıralı aralıktaki öğeleri çıkararak yeni bir sıralı aralık oluşturur.
+
+- std::set_difference() işlevi, dört adet işaretçi parametresi alır. İlk iki parametre, birinci sıralı aralığın başlangıcını ve sonunu gösterir. Üçüncü ve dördüncü parametreler, ikinci sıralı aralığın başlangıcını ve sonunu gösterir. İşlev, ilk sıralı aralıktan ikinci sıralı aralıkta olmayan öğeleri yeni bir aralıkta depolar ve sonuc olarak bu yeni aralığı döndürür.
+
+- İşte örnek bir kod parçası, std::set_difference() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {3, 4, 5, 6, 7};
+  std::vector<int> v3(v1.size() + v2.size());
+
+  std::set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
+
+  for (auto i : v3) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::set_difference() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve bu vektörleri sıralı hale getiriyoruz. Daha sonra, v3 adlı yeni bir vektör oluşturuyoruz ve std::set_difference() işlevini kullanarak v1 vektöründeki öğelerden v2 vektöründeki öğeleri çıkararak yeni bir vektör oluşturuyoruz. Son olarak, bu yeni vektördeki tüm öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki sıralı aralık arasındaki farkı hesaplamak ve sonucu yeni bir sıralı aralıkta depolamak istediğiniz durumlarda oldukça faydalıdır.
+
+### set_intersection()
+
+- std::set_intersection() işlevi, iki sıralı aralık arasındaki kesişimi hesaplar ve sonucu yeni bir sıralı aralıkta depolar. Yani, iki sıralı aralıkta ortak olan öğelerden yeni bir aralık oluşturur.
+
+- std::set_intersection() işlevi, dört adet işaretçi parametresi alır. İlk iki parametre, birinci sıralı aralığın başlangıcını ve sonunu gösterir. Üçüncü ve dördüncü parametreler, ikinci sıralı aralığın başlangıcını ve sonunu gösterir. İşlev, iki sıralı aralıkta ortak olan öğeleri yeni bir aralıkta depolar ve sonuc olarak bu yeni aralığı döndürür.
+
+- İşte örnek bir kod parçası, std::set_intersection() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {3, 4, 5, 6, 7};
+  std::vector<int> v3(std::min(v1.size(), v2.size()));
+
+  auto it = std::set_intersection(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
+
+  for (auto i = v3.begin(); i != it; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::set_intersection() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve bu vektörleri sıralı hale getiriyoruz. Daha sonra, std::min() işlevini kullanarak v1 ve v2 vektörlerinin boyutlarından daha küçük olan bir boyutta v3 adlı yeni bir vektör oluşturuyoruz. std::set_intersection() işlevini kullanarak, v1 ve v2 vektörlerindeki ortak öğeleri v3 vektöründe saklıyoruz. Son olarak, v3 vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki sıralı aralık arasındaki kesişimi hesaplamak ve sonucu yeni bir sıralı aralıkta depolamak istediğiniz durumlarda oldukça faydalıdır.
+
+### set_symmetric_difference()
+
+- std::set_symmetric_difference() işlevi, iki sıralı aralık arasındaki simetrik farkı hesaplar ve sonucu yeni bir sıralı aralıkta depolar. İki sıralı aralıkta birinde olup diğerinde olmayan öğelerden yeni bir aralık oluşturur.
+
+- std::set_symmetric_difference() işlevi, dört adet işaretçi parametresi alır. İlk iki parametre, birinci sıralı aralığın başlangıcını ve sonunu gösterir. Üçüncü ve dördüncü parametreler, ikinci sıralı aralığın başlangıcını ve sonunu gösterir. İşlev, iki sıralı aralıkta birinde olup diğerinde olmayan öğeleri yeni bir aralıkta depolar ve sonuc olarak bu yeni aralığı döndürür.
+
+- İşte örnek bir kod parçası, std::set_symmetric_difference() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {3, 4, 5, 6, 7};
+  std::vector<int> v3(v1.size() + v2.size());
+
+  auto it = std::set_symmetric_difference(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
+
+  for (auto i = v3.begin(); i != it; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::set_symmetric_difference() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve bu vektörleri sıralı hale getiriyoruz. Daha sonra, v1 ve v2 vektörlerindeki öğelerden birinde olup diğerinde olmayan öğeleri std::set_symmetric_difference() işlevini kullanarak v3 adlı yeni bir vektörde saklıyoruz. Son olarak, v3 vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki sıralı aralık arasındaki simetrik farkı hesaplamak ve sonucu yeni bir sıralı aralıkta depolamak istediğiniz durumlarda oldukça faydalıdır.
+
+### set_union()
+
+- std::set_union() işlevi, iki sıralı aralık arasındaki birleşimi hesaplar ve sonucu yeni bir sıralı aralıkta depolar. İki sıralı aralıktaki öğelerin tümü yeni bir aralıkta birleştirilir.
+
+- std::set_union() işlevi, dört adet işaretçi parametresi alır. İlk iki parametre, birinci sıralı aralığın başlangıcını ve sonunu gösterir. Üçüncü ve dördüncü parametreler, ikinci sıralı aralığın başlangıcını ve sonunu gösterir. İşlev, iki sıralı aralıktaki öğelerin tümünü yeni bir aralıkta birleştirir ve sonuc olarak bu yeni aralığı döndürür.
+
+- İşte örnek bir kod parçası, std::set_union() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {3, 4, 5, 6, 7};
+  std::vector<int> v3(v1.size() + v2.size());
+
+  auto it = std::set_union(v1.begin(), v1.end(), v2.begin(), v2.end(), v3.begin());
+
+  for (auto i = v3.begin(); i != it; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::set_union() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve bu vektörleri sıralı hale getiriyoruz. Daha sonra, v1 ve v2 vektörlerindeki tüm öğeleri std::set_union() işlevini kullanarak v3 adlı yeni bir vektörde birleştiriyoruz. Son olarak, v3 vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki sıralı aralık arasındaki birleşimi hesaplamak ve sonucu yeni bir sıralı aralıkta depolamak istediğiniz durumlarda oldukça faydalıdır.
+
+### is_heap()
+
+- std::is_heap() işlevi, verilen aralığın bir maksimum yığın mı olduğunu kontrol eder. Bir maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::is_heap() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, verilen aralığın bir maksimum yığın olup olmadığını kontrol eder ve sonucu bir bool değer olarak döndürür.
+
+- İşte örnek bir kod parçası, std::is_heap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {1, 3, 2, 4, 5};
+
+  std::cout << std::boolalpha << std::is_heap(v1.begin(), v1.end()) << std::endl;
+  std::cout << std::boolalpha << std::is_heap(v2.begin(), v2.end()) << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::is_heap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve v1 vektörü bir maksimum yığın iken v2 vektörü bir maksimum yığın değildir. Daha sonra, std::is_heap() işlevini kullanarak v1 ve v2 vektörlerinin maksimum yığın olup olmadığını kontrol ediyoruz ve sonucu ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, verilen bir aralığın maksimum yığın olup olmadığını kontrol etmek istediğiniz durumlarda oldukça faydalıdır.
+
+### is_heap_until()
+
+- std::is_heap_until() işlevi, verilen aralığın maksimum yığın özelliği gösteren bölgenin sonunu döndürür. Maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::is_heap_until() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, verilen aralığın maksimum yığın özelliği gösteren bölgenin sonunu döndürür.
+
+- İşte örnek bir kod parçası, std::is_heap_until() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {1, 3, 2, 4, 5};
+
+  auto it1 = std::is_heap_until(v1.begin(), v1.end());
+  auto it2 = std::is_heap_until(v2.begin(), v2.end());
+
+  std::cout << "v1: ";
+  for (auto i = v1.begin(); i != it1; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "v2: ";
+  for (auto i = v2.begin(); i != it2; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::is_heap_until() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz ve v1 vektörü bir maksimum yığın iken v2 vektörü bir maksimum yığın değildir. Daha sonra, std::is_heap_until() işlevini kullanarak v1 ve v2 vektörlerinin maksimum yığın özelliği gösteren bölgenin sonunu buluyoruz ve sonucu ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, verilen bir aralığın maksimum yığın özelliği gösteren bölgesinin sonunu bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### make_heap()
+
+- std::make_heap() işlevi, verilen bir aralığı maksimum yığın haline getirir. Maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::make_heap() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, verilen aralığı maksimum yığın haline getirir.
+
+- İşte örnek bir kod parçası, std::make_heap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  std::make_heap(v.begin(), v.end());
+
+  std::cout << "v: ";
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::make_heap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::make_heap() işlevini kullanarak v vektörünü maksimum yığın haline getiriyoruz ve sonucu ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığı maksimum yığın haline getirmek istediğiniz durumlarda oldukça faydalıdır.
+
+### push_heap()
+
+- std::push_heap() işlevi, verilen bir aralığın sonuna yeni bir eleman ekleyerek maksimum yığın özelliğini yeniden oluşturur. Maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::push_heap() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, yeni eklenen elemanı yığın haline getirir.
+
+- İşte örnek bir kod parçası, std::push_heap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  v.push_back(7);
+  std::push_heap(v.begin(), v.end());
+
+  std::cout << "v: ";
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::push_heap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, v vektörüne push_back() işlevi ile yeni bir eleman ekliyoruz ve std::push_heap() işlevini kullanarak v vektörünü maksimum yığın haline getiriyoruz. Son olarak, v vektörünü ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığa yeni bir eleman ekledikten sonra maksimum yığın özelliğini yeniden oluşturmak istediğiniz durumlarda oldukça faydalıdır.
+
+### pop_heap()
+
+- std::pop_heap() işlevi, maksimum yığın özelliğine sahip bir aralığın en büyük elemanını, aralığın sonundan çıkartır. Daha sonra, en büyük eleman aralığın sonuna yerleştirilir. Maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::pop_heap() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, en büyük elemanı aralığın sonuna yerleştirir.
+
+- İşte örnek bir kod parçası, std::pop_heap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  std::pop_heap(v.begin(), v.end());
+  int max = v.back();
+  v.pop_back();
+
+  std::cout << "max: " << max << std::endl;
+
+  std::cout << "v: ";
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::pop_heap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::pop_heap() işlevini kullanarak v vektörünün en büyük elemanını aralığın sonuna yerleştiriyoruz. Daha sonra, en büyük elemanı back() işlevi ile alıyoruz ve aralıktan çıkartıyoruz. Son olarak, en büyük elemanı ve aralığı ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir maksimum yığın özelliğine sahip bir aralıktan en büyük elemanı çıkartmak istediğiniz durumlarda oldukça faydalıdır.
+
+### sort_heap()
+
+- std::sort_heap() işlevi, bir aralığın maksimum yığın özelliğine sahip olduğu varsayımını kullanarak aralığı sıralar. Maksimum yığın, herhangi bir düğümün çocuklarından daha büyük veya eşit olduğu bir ağaçtır.
+
+- std::sort_heap() işlevi, iki adet işaretçi parametresi alır. İlk parametre, aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. İşlev, aralığı sıralar.
+
+- İşte örnek bir kod parçası, std::sort_heap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  std::make_heap(v.begin(), v.end());
+  std::sort_heap(v.begin(), v.end());
+
+  std::cout << "v: ";
+  for (auto i : v) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::sort_heap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::make_heap() işlevini kullanarak v vektörünü maksimum yığın haline getiriyoruz. Son olarak, std::sort_heap() işlevini kullanarak v vektörünü sıralıyoruz ve aralığı ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığın maksimum yığın özelliğine sahip olduğu durumlarda aralığı sıralamak istediğiniz durumlarda oldukça faydalıdır.
+
+### max()
+
+- std::max() işlevi, verilen iki argüman arasındaki en büyük değeri döndürür. İki argüman aynı türden olmalıdır ve argümanlar karşılaştırılabilir olmalıdır (yani, < ve > operatörleri kullanılabilir).
+
+- std::max() işlevi, iki adet argüman alır. İlk argüman, karşılaştırılacak ilk değerdir. İkinci argüman, karşılaştırılacak ikinci değerdir. İşlev, bu iki değer arasındaki en büyük değeri döndürür.
+
+- İşte örnek bir kod parçası, std::max() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+
+int main() {
+  int x = 10;
+  int y = 20;
+
+  int max_value = std::max(x, y);
+
+  std::cout << "max value: " << max_value << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::max() işlevinin kullanımını göstermektedir. İlk olarak, x ve y isimli iki tamsayı değişkeni oluşturuyoruz. Daha sonra, std::max() işlevini kullanarak x ve y arasındaki en büyük değeri hesaplıyoruz ve max_value isimli bir değişkende saklıyoruz. Son olarak, max_value değişkenini ekrana yazdırıyoruz.
+
+Bu işlevin kullanımı, iki argüman arasındaki en büyük değeri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### max_element()
+
+- std::max_element() işlevi, bir aralıktaki en büyük değeri bulmak için kullanılır. İşlev, iki adet işaretçi parametresi alır: aralığın başlangıcını ve sonunu gösteren işaretçiler. Aralıktaki en büyük değeri içeren işaretçi, işlev tarafından geri döndürülür.
+
+- İşlev, aralıkta bulunan elemanları karşılaştırmak için < operatörünü kullanır. Karşılaştırma işlemi, elemanların türündeki < operatörüne göre yapılır. Bu nedenle, aralıktaki elemanların bu operatöre sahip olması gerekmektedir.
+
+- İşte örnek bir kod parçası, std::max_element() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  auto max_element_ptr = std::max_element(v.begin(), v.end());
+
+  std::cout << "max element: " << *max_element_ptr << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::max_element() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::max_element() işlevini kullanarak v vektöründeki en büyük elemanı içeren bir işaretçi alıyoruz. Son olarak, en büyük elemanı ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki en büyük değeri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### min()
+
+- std::min() işlevi, verilen iki argüman arasındaki en küçük değeri döndürür. İki argüman aynı türden olmalıdır ve argümanlar karşılaştırılabilir olmalıdır (yani, < ve > operatörleri kullanılabilir).
+
+- std::min() işlevi, iki adet argüman alır. İlk argüman, karşılaştırılacak ilk değerdir. İkinci argüman, karşılaştırılacak ikinci değerdir. İşlev, bu iki değer arasındaki en küçük değeri döndürür.
+
+- İşte örnek bir kod parçası, std::min() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+
+int main() {
+  int x = 10;
+  int y = 20;
+
+  int min_value = std::min(x, y);
+
+  std::cout << "min value: " << min_value << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::min() işlevinin kullanımını göstermektedir. İlk olarak, x ve y isimli iki tamsayı değişkeni oluşturuyoruz. Daha sonra, std::min() işlevini kullanarak x ve y arasındaki en küçük değeri hesaplıyoruz ve min_value isimli bir değişkende saklıyoruz. Son olarak, min_value değişkenini ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki argüman arasındaki en küçük değeri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### min_element()
+
+- std::min_element() işlevi, bir aralıktaki en küçük değeri bulmak için kullanılır. İşlev, iki adet işaretçi parametresi alır: aralığın başlangıcını ve sonunu gösteren işaretçiler. Aralıktaki en küçük değeri içeren işaretçi, işlev tarafından geri döndürülür.
+
+- İşlev, aralıkta bulunan elemanları karşılaştırmak için < operatörünü kullanır. Karşılaştırma işlemi, elemanların türündeki < operatörüne göre yapılır. Bu nedenle, aralıktaki elemanların bu operatöre sahip olması gerekmektedir.
+
+- İşte örnek bir kod parçası, std::min_element() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  auto min_element_ptr = std::min_element(v.begin(), v.end());
+
+  std::cout << "min element: " << *min_element_ptr << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::min_element() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::min_element() işlevini kullanarak v vektöründeki en küçük elemanı içeren bir işaretçi alıyoruz. Son olarak, en küçük elemanı ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki en küçük değeri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### minmax()
+
+- std::minmax() işlevi, bir aralıktaki en küçük ve en büyük değerleri bulmak için kullanılır. İşlev, iki adet işaretçi parametresi alır: aralığın başlangıcını ve sonunu gösteren işaretçiler. Aralıktaki en küçük ve en büyük değerleri içeren bir std::pair nesnesi, işlev tarafından geri döndürülür.
+
+- İşlev, aralıkta bulunan elemanları karşılaştırmak için < operatörünü kullanır. Karşılaştırma işlemi, elemanların türündeki < operatörüne göre yapılır. Bu nedenle, aralıktaki elemanların bu operatöre sahip olması gerekmektedir.
+
+- İşte örnek bir kod parçası, std::minmax() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  auto minmax_pair = std::minmax_element(v.begin(), v.end());
+
+  std::cout << "min element: " << *minmax_pair.first << std::endl;
+  std::cout << "max element: " << *minmax_pair.second << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::minmax() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::minmax_element() işlevini kullanarak v vektöründeki en küçük ve en büyük elemanları içeren bir std::pair nesnesi alıyoruz. Son olarak, en küçük ve en büyük elemanları ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki en küçük ve en büyük değerleri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### minmax_element()
+
+- std::minmax_element() işlevi, bir aralıktaki en küçük ve en büyük değerleri bulmak için kullanılır. İşlev, iki adet işaretçi parametresi alır: aralığın başlangıcını ve sonunu gösteren işaretçiler. Aralıktaki en küçük ve en büyük değerleri içeren bir std::pair nesnesi, işlev tarafından geri döndürülür.
+
+- İşlev, aralıkta bulunan elemanları karşılaştırmak için < operatörünü kullanır. Karşılaştırma işlemi, elemanların türündeki < operatörüne göre yapılır. Bu nedenle, aralıktaki elemanların bu operatöre sahip olması gerekmektedir.
+
+- İşte örnek bir kod parçası, std::minmax_element() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5};
+
+  auto minmax_element_pair = std::minmax_element(v.begin(), v.end());
+
+  std::cout << "min element: " << *minmax_element_pair.first << std::endl;
+  std::cout << "max element: " << *minmax_element_pair.second << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::minmax_element() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Daha sonra, std::minmax_element() işlevini kullanarak v vektöründeki en küçük ve en büyük elemanları içeren bir std::pair nesnesi alıyoruz. Son olarak, en küçük ve en büyük elemanları ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki en küçük ve en büyük değerleri bulmak istediğiniz durumlarda oldukça faydalıdır.
+
+### clamp()
+
+- std::clamp() işlevi, bir değerin belirli bir aralıkta olmasını sağlamak için kullanılır. İşlev, üç adet parametre alır: değer, alt sınır ve üst sınır. Eğer değer alt sınırdan küçükse, alt sınır değeri döndürülür. Eğer değer üst sınırdan büyükse, üst sınır değeri döndürülür. Aksi takdirde, değer kendisi döndürülür.
+
+- std::clamp() işlevi, std::min() ve std::max() işlevlerinin birleşimi olarak düşünülebilir. İşte örnek bir kod parçası, std::clamp() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+
+int main() {
+  int x = 5;
+
+  // Clamping x to the range [1, 10]
+  x = std::clamp(x, 1, 10);
+
+  std::cout << "x: " << x << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::clamp() işlevinin kullanımını göstermektedir. İlk olarak, int türünde x isimli bir değişken oluşturuyoruz. Daha sonra, std::clamp() işlevini kullanarak x değerini 1 ile 10 arasında kalmak üzere kısıtlıyoruz. Son olarak, x değerini ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir değerin belirli bir aralıkta kalmasını sağlamak istediğiniz durumlarda oldukça faydalıdır.
+
+### equal()
+
+- std::equal() işlevi, iki aralıktaki elemanların eşit olup olmadığını kontrol etmek için kullanılır. İşlev, iki adet işaretçi parametresi alır: ilk aralığın başlangıcını ve sonunu gösteren işaretçiler ve ikinci aralığın başlangıcını gösteren bir işaretçi. Eğer iki aralıkta aynı elemanlar varsa, işlev true değerini döndürür. Aksi takdirde, false değerini döndürür.
+
+- İşlev, aralıktaki elemanları karşılaştırmak için == operatörünü kullanır. Karşılaştırma işlemi, elemanların türündeki == operatörüne göre yapılır. Bu nedenle, aralıktaki elemanların bu operatöre sahip olması gerekmektedir.
+
+- İşte örnek bir kod parçası, std::equal() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {1, 2, 3, 4, 5};
+  std::vector<int> v3 {5, 4, 3, 2, 1};
+
+  bool result1 = std::equal(v1.begin(), v1.end(), v2.begin());
+  bool result2 = std::equal(v1.begin(), v1.end(), v3.begin());
+
+  std::cout << "v1 and v2 are equal: " << result1 << std::endl;
+  std::cout << "v1 and v3 are equal: " << result2 << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::equal() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1, v2 ve v3 isimli üç vektör oluşturuyoruz. Daha sonra, std::equal() işlevini kullanarak v1 ve v2 vektörleri ile v1 ve v3 vektörleri arasındaki eşitliği kontrol ediyoruz. Son olarak, bu eşitlikleri ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki aralık arasındaki eşitliği kontrol etmek istediğiniz durumlarda oldukça faydalıdır.
+
+### lexicographical_compare()
+
+- std::lexicographical_compare() işlevi, iki aralıktaki elemanların leksikografik olarak karşılaştırılmasını sağlar. İşlev, iki adet işaretçi parametresi alır: ilk aralığın başlangıcını ve sonunu gösteren işaretçiler ve ikinci aralığın başlangıcını gösteren bir işaretçi. İşlev, iki aralıktaki elemanları sırayla karşılaştırarak ilerler. Eğer ilk aralıktaki eleman, ikinci aralıktaki elemandan küçükse, işlev true değerini döndürür. Eğer ilk aralıktaki eleman, ikinci aralıktaki elemandan büyükse, işlev false değerini döndürür. Eğer iki eleman eşitse, işlev karşılaştırmaya devam eder. Eğer ilk aralıktaki elemanlar tamamen ikinci aralıktaki elemanlardan küçükse, işlev true değerini döndürür. Aksi takdirde, false değerini döndürür.
+
+- İşte örnek bir kod parçası, std::lexicographical_compare() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {1, 2, 3, 4, 6};
+  std::vector<int> v3 {1, 2, 3, 4, 4};
+
+  bool result1 = std::lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
+  bool result2 = std::lexicographical_compare(v1.begin(), v1.end(), v3.begin(), v3.end());
+
+  std::cout << "v1 is less than v2: " << result1 << std::endl;
+  std::cout << "v1 is less than v3: " << result2 << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::lexicographical_compare() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1, v2 ve v3 isimli üç vektör oluşturuyoruz. Daha sonra, std::lexicographical_compare() işlevini kullanarak v1 ve v2 vektörlerinin leksikografik olarak karşılaştırılması ile v1 ve v3 vektörleri arasındaki karşılaştırmanın sonuçlarını hesaplıyoruz. Son olarak, bu sonuçları ekrana yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki aralık arasındaki leksikografik sıralamayı karşılaştırmak istediğiniz durumlarda oldukça faydalıdır.
+
+### lexicographical_compare_three_way()
+
+- std::lexicographical_compare_three_way() işlevi, iki aralıktaki elemanların üçlü karşılaştırmasını yapar ve sonuç olarak std::strong_ordering türünden bir değer döndürür. İşlev, iki adet işaretçi parametresi alır: ilk aralığın başlangıcını ve sonunu gösteren işaretçiler ve ikinci aralığın başlangıcını gösteren bir işaretçi. İşlev, iki aralıktaki elemanları sırayla karşılaştırarak ilerler. İlk olarak, iki elemanın karşılaştırması yapılır. Eğer iki eleman eşitse, karşılaştırmaya devam edilir. Eğer ilk aralıktaki eleman, ikinci aralıktaki elemandan küçükse, işlev std::strong_ordering::less değerini döndürür. Eğer ilk aralıktaki eleman, ikinci aralıktaki elemandan büyükse, işlev std::strong_ordering::greater değerini döndürür. Eğer iki eleman eşitse, karşılaştırmaya devam edilir. Eğer ilk aralıktaki elemanlar tamamen ikinci aralıktaki elemanlardan küçükse, işlev std::strong_ordering::less değerini döndürür. Eğer ilk aralıktaki elemanlar tamamen ikinci aralıktaki elemanlardan büyükse, işlev std::strong_ordering::greater değerini döndürür. Eğer iki aralıkta elemanlar aynıysa, işlev std::strong_ordering::equal değerini döndürür.
+
+- İşte örnek bir kod parçası, std::lexicographical_compare_three_way() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {1, 2, 3, 4, 6};
+  std::vector<int> v3 {1, 2, 3, 4, 4};
+
+  auto result1 = std::lexicographical_compare_three_way(v1.begin(), v1.end(), v2.begin(), v2.end());
+  auto result2 = std::lexicographical_compare_three_way(v1.begin(), v1.end(), v3.begin(), v3.end());
+
+  std::cout << "v1 is less than v2: " << (result1 == std::strong_ordering::less) << std::endl;
+  std::cout << "v1 is less than v3: " << (result2 == std::strong_ordering::less) << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::lexicographical_compare_three_way() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1, v2 ve v3 isimli üç vektör oluşturuy. Daha sonra, std::lexicographical_compare_three_way() işlevini kullanarak v1 ve v2 vektörlerinin üçlü karşılaştırmasını yaparak sonucu result1 değişkeninde saklıyoruz. Benzer şekilde, v1 ve v3 vektörleri arasındaki üçlü karşılaştırmanın sonucunu result2 değişkeninde saklıyoruz. Son olarak, bu sonuçları ekrana yazdırıyoruz. std::strong_ordering::less değeri, karşılaştırılan ilk aralığın elemanlarının ikinci aralıktakinin elemanlarından küçük olduğunu gösterir.
+
+Bu işlevin kullanımı, iki aralık arasındaki leksikografik sıralamayı karşılaştırmak istediğiniz durumlarda oldukça faydalıdır. std::lexicographical_compare() işlevinden farklı olarak, std::lexicographical_compare_three_way() işlevi üçlü karşılaştırma yapar ve sonuç olarak std::strong_ordering türünden bir değer döndürür. Bu sayede, karşılaştırma sonucu ile ilgili daha fazla bilgi elde edilebilir.
+
+### is_permutation()
 
 
+- std::is_permutation() işlevi, iki aralıkta bulunan elemanların birbirlerinin permütasyonu olup olmadığını kontrol eder. Yani, her iki aralıkta da aynı elemanlar varsa ve sıraları da farklı olabilir, ancak her bir eleman yalnızca bir kez geçiyorsa, bu durumda iki aralık birbirinin permütasyonudur.
 
+- İşlev, üç parametre alır: iki aralık ve bir karşılaştırma işlevi (opsiyonel). Karşılaştırma işlevi, iki elemanı karşılaştırmak için kullanılır. Varsayılan olarak, std::equal_to<> kullanılır.
 
+- İşlev, bool türünden bir değer döndürür. Eğer iki aralık birbirinin permütasyonuysa true değerini, aksi takdirde false değerini döndürür.
 
+- İşte örnek bir kullanımı:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+int main() {
+    std::vector<int> v1 = {1, 2, 3, 4, 5};
+    std::vector<int> v2 = {3, 5, 1, 4, 2};
+    std::vector<int> v3 = {1, 2, 3, 4, 4};
 
+    bool result1 = std::is_permutation(v1.begin(), v1.end(), v2.begin());
+    bool result2 = std::is_permutation(v1.begin(), v1.end(), v3.begin());
 
+    std::cout << std::boolalpha;
+    std::cout << "v1 is permutation of v2: " << result1 << '\n';
+    std::cout << "v1 is permutation of v3: " << result2 << '\n';
 
+    return 0;
+}
 
+```
 
+> Bu örnek kodda, std::vector int  türünden v1, v2 ve v3 isimli üç farklı vektör oluşturulmuştur. Daha sonra, std::is_permutation() işlevi kullanılarak v1 ve v2 vektörleri arasında bir permütasyon olup olmadığı kontrol edilmiş ve sonuç result1 değişkeninde saklanmıştır. Benzer şekilde, v1 ve v3 vektörleri arasında bir permütasyon olup olmadığı kontrol edilerek sonuç result2 değişkeninde saklanmıştır.
 
+- Son olarak, sonuçlar ekrana yazdırılmıştır. std::boolalpha manipülatörü kullanılarak true veya false değerleri yerine true veya false yazıları yazdırılmıştır.
 
+### next_permutation()
 
+- std::next_permutation() işlevi, bir aralıktaki elemanların permütasyonlarını bulmaya yarayan bir işlemdir. İlk çağrıda, işlev, aralıktaki elemanları küçükten büyüğe doğru sıralar. Daha sonra, her çağrıda bir sonraki permütasyonu bulur. Eğer aralıktaki son permütasyona gelinirse, işlev false değerini döndürür. Bu durumda, aralıktaki elemanlar tekrar ilk permütasyona döndürülür.
 
+- İşlev, iki parametre alır: başlangıç ve bitiş iterator'ları. İkinci parametre opsiyoneldir ve aralık sonunda bulunan "bir sonraki" permütasyonun bulunup bulunmadığını gösteren bir bool değeri döndürür. Varsayılan olarak, bu parametre true olarak ayarlanmıştır.
 
+- İşte örnek bir kullanımı:
 
+```CPP
 
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+int main() {
+    std::vector<int> v = {1, 2, 3};
 
+    do {
+        for (auto i : v) {
+            std::cout << i << ' ';
+        }
+        std::cout << '\n';
+    } while (std::next_permutation(v.begin(), v.end()));
 
+    return 0;
+}
 
+```
 
+> Bu örnek kodda, std::vector int  türünden v isimli bir vektör oluşturulmuştur. Daha sonra, do-while döngüsü kullanılarak, std::next_permutation() işlevi kullanılarak tüm permütasyonlar elde edilir ve ekrana yazdırılır.
 
+- İlk çağrıda, v vektöründeki elemanlar küçükten büyüğe doğru sıralanır. Daha sonra, do-while döngüsü kullanılarak, std::next_permutation() işlevi kullanılarak tüm permütasyonlar elde edilir ve ekrana yazdırılır. Son olarak, std::next_permutation() işlevi false değerini döndürdüğünde, döngü sonlanır.
 
+### prev_permutation()
 
+- std::prev_permutation() işlevi, std::next_permutation() işlevinin tam tersi olan bir işlemdir. Bu işlev, bir aralıktaki elemanların permütasyonlarını bulmaya yarar. İlk çağrıda, işlev, aralıktaki elemanları büyükten küçüğe doğru sıralar. Daha sonra, her çağrıda bir önceki permütasyonu bulur. Eğer aralıktaki ilk permütasyona gelinirse, işlev false değerini döndürür. Bu durumda, aralıktaki elemanlar tekrar son permütasyona döndürülür.
 
+- İşlev, iki parametre alır: başlangıç ve bitiş iterator'ları. İkinci parametre opsiyoneldir ve aralık sonunda bulunan "bir önceki" permütasyonun bulunup bulunmadığını gösteren bir bool değeri döndürür. Varsayılan olarak, bu parametre true olarak ayarlanmıştır.
 
+- İşte örnek bir kullanımı:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+int main() {
+    std::vector<int> v = {3, 2, 1};
 
+    do {
+        for (auto i : v) {
+            std::cout << i << ' ';
+        }
+        std::cout << '\n';
+    } while (std::prev_permutation(v.begin(), v.end()));
 
+    return 0;
+}
+
+```
+
+> Bu örnek kodda, std::vector<int> türünden v isimli bir vektör oluşturulmuştur. Daha sonra, do-while döngüsü kullanılarak, std::prev_permutation() işlevi kullanılarak tüm permütasyonlar elde edilir ve ekrana yazdırılır.
+
+- İlk çağrıda, v vektöründeki elemanlar büyükten küçüğe doğru sıralanır. Daha sonra, do-while döngüsü kullanılarak, std::prev_permutation() işlevi kullanılarak tüm permütasyonlar elde edilir ve ekrana yazdırılır. Son olarak, std::prev_permutation() işlevi false değerini döndürdüğünde, döngü sonlanır.
 
 
 
