@@ -299,15 +299,46 @@ int main() {
 
 - Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir değere eşit olup olmadığını kontrol etmek için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakterin kaç kez geçtiğini saymak veya bir dosyadaki belirli bir kelime sayısını saymak için kullanılabilir.
 
+### count_if
 
+- std::count_if() C++ algoritması, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir özelliğe sahip olan öğe sayısını bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 
+- std::count_if() işlevi, bir aralık ve belirli bir özelliği kontrol eden bir işlev verildiğinde, aralıktaki öğelerin kaçının belirtilen özelliğe sahip olduğunu sayar. İşlevin sözdizimi şu şekildedir:
 
+```CPP
+template <class InputIt, class UnaryPredicate>
+typename iterator_traits<InputIt>::difference_type count_if(InputIt first, InputIt last, UnaryPredicate p);
 
+```
 
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son parametre, her öğe için çağrılacak bir işlev nesnesidir ve belirli bir özelliği kontrol eder. İşlev, aralıktaki öğelerin kaçının belirtilen özelliğe sahip olduğunu sayar ve sonuç olarak belirtilen özelliğe sahip olan öğe sayısını döndürür.
 
+- İşte bir örnek kod parçası, std::count_if() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+bool is_even(int num) {
+  return num % 2 == 0;
+}
 
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
+
+  int count = std::count_if(my_vec.begin(), my_vec.end(), is_even);
+
+  std::cout << "Vektördeki çift sayıların sayısı: " << count << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::count_if() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki çift sayıların sayısını saymak için is_even() işlevini kullanıyoruz. std::count_if() işlevi, vektördeki çift sayıların sayısını sayar ve sonuç olarak 2 değerini döndürür.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için oldukça yaygındır. Örneğin, bir dosyadaki belirli bir kelimeyi içeren satırların sayısını saymak veya bir dosyadaki belirli bir karakterin sayısını saymak için kullanılabilir.
 
 
 
