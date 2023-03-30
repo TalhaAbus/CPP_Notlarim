@@ -51,9 +51,9 @@
 > bir aralıktaki öğeleri belirli bir koşulu sağlayan öğeleri başka bir aralığa kopyalamak için kullanılır. Bu işlevin kullanımı, std::copy() işlevine benzerdir, ancak kopyalanacak öğeler için bir koşul belirtilir.
 - **copy_n()**
 > bir aralıktan belirli bir sayıda öğeyi başka bir aralığa kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktan belirli bir sayıda öğe kopyalamak istediğinizde kullanımı kolay bir seçenek sunmaktır.
-- copy_backward()
+- **copy_backward()**
 > bir aralıktaki öğeleri başka bir aralığa sondan başlayarak kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
-- move
+- **move()**
 - move_backward
 - fill
 - fill_n
@@ -781,16 +781,41 @@ int main() {
 
 ```
 
-> Bu örnek kod, std::copy_backward() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy_backward() işlevini kullanarak src vektöründeki öğeleri sondan başlayarak dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
+> Bu örnek kod, std::copy_backward() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::copy_backward() işlevini kullanarak src vektöründeki öğeleri sondan başlayarak dest vektörüne kopyalıyoruz. Son olarak, dest vektöründeki öğeleri yazdırıyoruz.
 
 - Bu işlevin kullanımı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak için oldukça yaygındır. Örneğin, bir dosyada sondan başlayarak belirli bir karakter dizisi aramak veya bir veritabanında sondan başlayarak belirli bir sayıda kayıtları kopyalamak için kullanılabilir.
 
+### move
 
+- std::move() C++ algoritması, bir nesneyi taşımak (move) için kullanılır. Bu işlev, bir nesneyi başka bir nesneye atarken, kaynak nesnenin özelliklerinin çalınması (move) için kullanılır. Bu, özellikle büyük nesnelerin kopyalanması için zaman ve bellek kullanımı açısından daha verimli olabilir.
 
+- std::move() işlevi, bir nesneyi taşımak için kullanılır. Bu işlev, bir nesnenin içeriğini değiştirmeden, sadece nesnenin sahipliğini başka bir nesneye aktarmak için kullanılır. Özellikle büyük veri yapıları ve nesnelerin kopyalanması için zaman ve bellek kullanımı açısından daha verimlidir.
 
+- std::move() işlevi, C++11 ile birlikte standart kütüphaneye eklenmiştir ve utility başlık dosyasında tanımlanmıştır.
 
+- İşte örnek bir kod parçası, std::move() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <utility>
+#include <vector>
 
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest;
+
+  dest = std::move(src);
+
+  std::cout << "src vector size: " << src.size() << std::endl;
+  std::cout << "dest vector size: " << dest.size() << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::move() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::move() işlevini kullanarak src vektörünü dest vektörüne taşıyoruz. Son olarak, src ve dest vektörlerinin boyutlarını yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir nesnenin sahipliğini transfer etmek için oldukça yaygındır. Örneğin, bir sınıf nesnesinin içeriğini başka bir sınıf nesnesine taşımak veya bir dizi büyük veri yapısını kopyalamak yerine, bunları taşımak için kullanılabilir.
 
 
 
