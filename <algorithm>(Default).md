@@ -63,7 +63,7 @@ int main() {
 > Bu kodda, önce bir std::vectorint oluşturulur ve bu vektörün içine 1'den 10'a kadar olan sayılar eklenir. Daha sonra, std::count_if algoritma fonksiyonu, vec.begin() ve vec.end() aralığında bulunan elemanlar arasında gezinerek, tek sayıların sayısını hesaplar. std::transform algoritma fonksiyonu ise, vec.begin() ve vec.end() aralığındaki her elemanı iki katına çıkarır. Son olarak, for döngüsü ile yeni vektör yazdırılır.
 
 
-# Ornek: (sort - reverse - *max_element - *min_element - accumulate)  
+# sort - reverse - max_element - min_element - accumulate 
 
 ```CPP
 #include <iostream>
@@ -131,7 +131,7 @@ int main()
 }
 ```
 
-# Ornek (count - find)
+# count - find
 
 ```CPP
 #include <iostream>
@@ -165,7 +165,7 @@ int main()
 }
 ```
 
-# Ornek : (binary_search - lower_bound - upper_bound)
+# binary_search - lower_bound - upper_bound
 
 ```CPP
 #include <iostream>
@@ -209,7 +209,7 @@ int main()
 
 - Bununla birlikte, std::binary_search() işlevi, aralık öğelerinin sıralanmasını gerektirir.Eğer aralık sıralanmamışsa, işlev yanlış sonuçlar verebilir.Bu nedenle, std::binary_search() işlevini kullanmadan önce, aralığı sıralamak için önce std::sort() işlevini çağırmak gerekir
 
-# Ornek (erase - unique)
+# erase - unique
 
 ```CPP
 // C++ program to demonstrate working
@@ -245,7 +245,7 @@ int main()
 }
 ```
 
-# Ornek (next_permutation - prev_permutation)
+# next_permutation - prev_permutation
 
 ```CPP
 // C++ program to demonstrate working
@@ -293,7 +293,7 @@ int main()
 
 ```
 
-# Ornek (distance) 
+#  distance
 
 ```CPP
 #include <algorithm>
