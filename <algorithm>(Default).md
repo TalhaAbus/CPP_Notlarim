@@ -114,9 +114,12 @@
 
 # Partitioning operations
 
-- is_pratitioned
-- partition
-- partition_copy
+- **is_pratitioned()**
+>  belirtilen aralıkta öğelerin belirli bir ölçüte göre bölünüp bölünmediğini kontrol eder.
+- partition()
+> bir aralıktaki öğeleri belirli bir ölçüte göre bölerek, ölçüye uyan öğeleri bir tarafa yerleştirir ve uymayanları diğer tarafa yerleştirir. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde sıklıkla kullanılır. Örneğin, bir listedeki çift sayıların tek sayılardan ayrılması gibi durumlarda kullanılabilir.
+- partition_copy()
+> bir aralıktaki öğeleri belirli bir ölçüte göre böler ve iki farklı aralıkta sonuçları saklar. Ölçüye uyan öğeleri birinci aralığa, uymayan öğeleri ikinci aralığa kopyalar. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması ve sonuçların ayrı ayrı saklanması gerektiğinde sıklıkla kullanılır.
 - stable_partition
 - partition_point
 
@@ -1731,30 +1734,132 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::unique_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde v isimli bir vektör oluşturuyoruz. Ardından, std::unique_copy() işlevini kullanarak v vektöründeki tekrarlayan öğeleri kaldırıp kopyalıyoruz. Son olarak, kopyalanan benzersiz öğeleri yeni bir vektöre yerleştiriyoruz ve bu öğeleri yazdırıyoruz.
+> Bu örnek kod, std::unique_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::unique_copy() işlevini kullanarak v vektöründeki tekrarlayan öğeleri kaldırıp kopyalıyoruz. Son olarak, kopyalanan benzersiz öğeleri yeni bir vektöre yerleştiriyoruz ve bu öğeleri yazdırıyoruz.
 
 - Bu işlevin kullanımı, özellikle bir aralıktaki ardışık tekrarlayan öğelerin kaldırılması ve kopyalanması gerektiğinde oldukça yaygındır.
 
+### is_partitioned
 
+- std::is_partitioned() işlevi, belirtilen aralıkta öğelerin belirli bir ölçüte göre bölünüp bölünmediğini kontrol eder.
 
+- Bu algoritma, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde sıklıkla kullanılır. Örneğin, bir listedeki çift sayıların tek sayılardan ayrılması gibi durumlarda kullanılabilir.
 
+- std::is_partitioned() işlevi, bir aralık ve bölme noktası için bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğelerin belirtilen ölçüte göre bölünüp bölünmediğini kontrol eder ve bool türünde bir değer döndürür.
 
+- İşte örnek bir kod parçası, std::is_partitioned() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+bool is_even(int i) {
+  return i % 2 == 0;
+}
 
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
+  auto it = std::partition(v.begin(), v.end(), is_even);
 
+  bool result = std::is_partitioned(v.begin(), v.end(), is_even);
 
+  std::cout << std::boolalpha << result << std::endl;
 
+  return 0;
+}
 
+```
 
+> Bu örnek kod, std::is_partitioned() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partition() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, std::is_partitioned() işlevini kullanarak, v vektöründeki öğelerin belirtilen ölçüte göre bölünüp bölünmediğini kontrol ediyoruz ve sonucu yazdırıyoruz.
 
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde oldukça yaygındır.
 
+### partition
 
+- std::partition() işlevi, bir aralıktaki öğeleri belirli bir ölçüte göre bölerek, ölçüye uyan öğeleri bir tarafa yerleştirir ve uymayanları diğer tarafa yerleştirir. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde sıklıkla kullanılır. Örneğin, bir listedeki çift sayıların tek sayılardan ayrılması gibi durumlarda kullanılabilir.
 
+- std::partition() işlevi, bir aralık ve bölme noktası için bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri belirtilen ölçüte göre bölerek, ölçüye uyan öğeleri aralığın baş tarafına, uymayan öğeleri ise aralığın son tarafına yerleştirir.
 
+- İşte örnek bir kod parçası, std::partition() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+bool is_even(int i) {
+  return i % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  auto it = std::partition(v.begin(), v.end(), is_even);
+
+  std::cout << "Evens: ";
+  for (auto i = v.begin(); i != it; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "Odds: ";
+  for (auto i = it; i != v.end(); ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::partition() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partition() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, çift ve tek sayıları ayrı ayrı yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması gerektiğinde oldukça yaygındır.
+
+### partition_copy()
+
+- std::partition_copy() işlevi, bir aralıktaki öğeleri belirli bir ölçüte göre böler ve iki farklı aralıkta sonuçları saklar. Ölçüye uyan öğeleri birinci aralığa, uymayan öğeleri ikinci aralığa kopyalar. Bu işlev, bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması ve sonuçların ayrı ayrı saklanması gerektiğinde sıklıkla kullanılır.
+
+- std::partition_copy() işlevi, bir kaynak aralığı, hedef aralıklarını, ve bölme noktası için bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri belirtilen ölçüte göre böler ve sonuçları iki farklı aralıkta saklar.
+
+- İşte örnek bir kod parçası, std::partition_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int i) {
+  return i % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> evens(v.size());
+  std::vector<int> odds(v.size());
+
+  auto it = std::partition_copy(v.begin(), v.end(), evens.begin(), odds.begin(), is_even);
+
+  std::cout << "Evens: ";
+  for (auto i = evens.begin(); i != it.first; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  std::cout << "Odds: ";
+  for (auto i = odds.begin(); i != it.second; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::partition_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::partition_copy() işlevini kullanarak v vektöründeki çift sayıları önce, sonra da tek sayıları yerleştiriyoruz. Son olarak, çift ve tek sayıları ayrı ayrı yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir ölçüte göre ayrılması ve sonuçların ayrı ayrı saklanması gerektiğinde oldukça yaygındır.
 
 
 
