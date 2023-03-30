@@ -62,6 +62,177 @@ int main() {
 ```
 > Bu kodda, önce bir std::vectorint oluşturulur ve bu vektörün içine 1'den 10'a kadar olan sayılar eklenir. Daha sonra, std::count_if algoritma fonksiyonu, vec.begin() ve vec.end() aralığında bulunan elemanlar arasında gezinerek, tek sayıların sayısını hesaplar. std::transform algoritma fonksiyonu ise, vec.begin() ve vec.end() aralığındaki her elemanı iki katına çıkarır. Son olarak, for döngüsü ile yeni vektör yazdırılır.
 
+# Fonksiyolar
+
+- all_of 
+- any_of
+- none_of
+- for_each
+- for_each_n
+- count
+- count_if
+- mismatch
+- find
+- find_if
+- find_if_not
+- find_end
+- find_first_of
+- adjacent_find
+- search
+- search_n
+
+# Modifying sequence operations
+
+- copy
+- copy_if
+- copy_n
+- copy_backward
+- move
+- move_backward
+- fill
+- fill_n
+- transform
+- generate
+- generate_n
+- remove
+- remove_if
+- remove_copy
+- remove_copy_if
+- replace
+- replace_if
+- replace_copy
+- replace_copy_if
+- swap
+- swap_ranges
+- iter_ranges
+- iter_swap
+- reverse
+- reverse_copy
+- rotate
+- rotate_copy
+- shift_left
+- shift_right
+- random_shuffle
+- shuffle
+- sample
+- unique
+- unique_copy
+
+# Partitioning operations
+
+- is_pratitioned
+- partition
+- partition_copy
+- stable_partition
+- partition_point
+
+# Sorting Operations
+
+- is_sorted
+- is_sorted_until
+- sort
+- partial_sort
+- partial_sort_copy
+- stable_sort
+- nth_element
+
+# Binary Search Operations (On Sorted Ranges)
+- lower_bound
+- upper_bound
+- binary_search
+- equal_range
+
+# Other Operations on Sorted Ranges
+- merge
+- inplace_merge
+
+# Set Operations (On Sorted Ranges)
+- includes
+- set_difference
+- set_intersections
+- set_symmetric_difference
+- set_union
+
+# Heap Operations
+- is_heap
+- is_heap_until
+- make_heap
+- push_heap
+- pop_heap
+- sort_heap
+
+# Minimum/ Maximum Operations
+- max
+- max_element
+- min
+- min_element
+- minmax
+- minmax_element
+- clamp
+
+# Comparison Operations
+- equal
+- lexicographical_compare
+- lexicographical_compare_three_way
+
+# Permutation Operations
+- is_permuatation
+- next_permutation
+- prev_permutation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # sort - reverse - max_element - min_element - accumulate 
 
