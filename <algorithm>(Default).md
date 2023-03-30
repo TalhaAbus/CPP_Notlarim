@@ -6,6 +6,8 @@
 
 - Örneğin, std::sort, std::find, std::count_if, std::transform gibi algoritma fonksiyonları, bir vector veya list gibi bir container içeriğindeki verileri sıralamak, aramak, saymak veya dönüştürmek için kullanılabilir.
 
+sol | orta | sağ
+ali | mehmnet | veli
 
 # Fonksiyolar
 
