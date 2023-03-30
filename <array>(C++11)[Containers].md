@@ -8,12 +8,12 @@
 
 # Classes
 
-- array
-> **std::array**, sabit boyutlu dizileri C++ standart kütüphanesi ile kullanmak için sağlanan bir sınıftır. 
-- tuple_size
-> **std::tuple_size** işlevi, std::tuple gibi bir sınıfın boyutunu, yani kaç eleman içerdiğini sağlar. İşlev, bir sınıfın std::tuple gibi öğelerinin sayısını hesaplamak için kullanılabilir.
-- tuple_element
-> **std::tuple_element** sınıf şablonu, bir std::tuple veya std::array nesnesinin belirli bir konumundaki elemanın türünü elde etmek için kullanılır.
+- **array**
+> std::array, sabit boyutlu dizileri C++ standart kütüphanesi ile kullanmak için sağlanan bir sınıftır. 
+- **tuple_size**
+> std::tuple_size işlevi, std::tuple gibi bir sınıfın boyutunu, yani kaç eleman içerdiğini sağlar. İşlev, bir sınıfın std::tuple gibi öğelerinin sayısını hesaplamak için kullanılabilir.
+- **tuple_element**
+> std::tuple_element sınıf şablonu, bir std::tuple veya std::array nesnesinin belirli bir konumundaki elemanın türünü elde etmek için kullanılır.
 
 # Functions
 - **operator==**
