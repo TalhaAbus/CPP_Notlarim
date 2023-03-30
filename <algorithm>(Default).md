@@ -13,7 +13,7 @@
 - **std::any_of(first, last, pred):** aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
 - **std::none_of(first, last, pred):** aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
 - **std::for_each()** işlevi, bir işlev nesnesi ve bir aralık verildiğinde, aralıktaki her öğe için işlevi çağırır. 
-- for_each_n
+- **std::for_each_n()** C++ algoritması, belirli bir sayıda öğe üzerinde bir işlev işlevini uygular. 
 - count
 - count_if
 - mismatch
@@ -210,9 +210,62 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::for_each() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki her öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each() işlevi, print_num() işlevini her öğe için çağırır ve sonuç olarak 1 2 3 4 5 değerlerini ekrana yazdırır.
+> Bu örnek kod, std::for_each() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektördeki her öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each() işlevi, print_num() işlevini her öğe için çağırır ve sonuç olarak 1 2 3 4 5 değerlerini ekrana yazdırır.
 
 - Bu işlevin kullanımı, bir aralıktaki öğeleri bir dizi işlem için kullanmak istediğiniz durumlarda oldukça yaygındır. Örneğin, bir vektördeki tüm öğeleri toplamak veya bir dosyadaki tüm satırları okumak için kullanılabilir.
+
+### for_each_n 
+
+- std::for_each_n() C++ algoritması, belirli bir sayıda öğe üzerinde bir işlev işlevini uygular. 
+- std::for_each_n() işlevi, std::for_each() işlevine benzer şekilde çalışır, ancak işlemin uygulanacağı öğe sayısı belirtilir. Bu, özellikle büyük aralıklarda sadece belirli bir sayıda öğe üzerinde işlem yapmak istediğinizde faydalıdır.
+
+- std::for_each_n() işlevi, bir işlev nesnesi ve bir başlangıç konumu ve işlemin uygulanacak öğe sayısı verildiğinde, belirtilen sayıdaki öğeler için işlevi çağırır. İşlev nesnesi, her öğe için çağrılacak işlevi belirtir. İşlevin sözdizimi şu şekildedir:
+
+```CPP
+template <class InputIt, class Size, class UnaryFunction>
+InputIt for_each_n(InputIt first, Size count, UnaryFunction f);
+
+```
+
+- Bu işlevin ilk parametresi, işlem başlangıç noktasını gösteren bir işaretçidir. İkinci parametre, işlem yapılacak öğe sayısını belirtir. Son parametre, aralıktaki her öğe için çağrılacak işlevi belirten bir işlev nesnesidir. İşlev, belirtilen sayıdaki öğeler için çağrılır ve son öğenin ardından işaretçi döndürülür.
+
+- İşte bir örnek kod parçası, std::for_each_n() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+void print_num(int num) {
+  std::cout << num << " ";
+}
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
+
+  std::for_each_n(my_vec.begin(), 3, print_num);
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::for_each_n() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve ilk üç öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each_n() işlevi, print_num() işlevini ilk üç öğe için çağırır ve sonuç olarak 1 2 3 değerlerini ekrana yazdırır.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir sayıda öğesine işlem yapmak istediğiniz durumlarda oldukça yaygındır. Örneğin, bir dosyadaki ilk 10 satırı okumak için kullanılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
