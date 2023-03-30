@@ -9,12 +9,12 @@
 
 # Fonksiyolar
 
-- **std::all_of(first, last, pred):** aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
-- **std::any_of(first, last, pred):** aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
-- **std::none_of(first, last, pred):** aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
-- **std::for_each()** işlevi, bir işlev nesnesi ve bir aralık verildiğinde, aralıktaki her öğe için işlevi çağırır. 
-- **std::for_each_n()** C++ algoritması, belirli bir sayıda öğe üzerinde bir işlev işlevini uygular. 
-- count
+- **all_of(first, last, pred):** aralıktaki tüm öğelerin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder. first ve last aralığın başlangıç ve sonunu gösteren işaretçilerdir, pred ise kontrol edilecek özelliği belirten bir işlev nesnesidir.
+- **any_of(first, last, pred):** aralıktaki en az bir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **none_of(first, last, pred):** aralıktaki hiçbir öğenin pred işlevi tarafından belirtilen özelliğe sahip olup olmadığını kontrol eder.
+- **for_each()** işlevi, bir işlev nesnesi ve bir aralık verildiğinde, aralıktaki her öğe için işlevi çağırır. 
+- **for_each_n()**  belirli bir sayıda öğe üzerinde bir işlev işlevini uygular. 
+- **std::count()**  bir aralıktaki öğelerin belirli bir değere eşit olup olmadığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir öğe sayısını bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 - count_if
 - mismatch
 - find
@@ -249,21 +249,46 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::for_each_n() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve ilk üç öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each_n() işlevi, print_num() işlevini ilk üç öğe için çağırır ve sonuç olarak 1 2 3 değerlerini ekrana yazdırır.
+> Bu örnek kod, std::for_each_n() işlevinin kullanımını göstermektedir. std::vectorint türünde bir vektör oluşturuyoruz ve ilk üç öğeyi ekrana yazdırmak için print_num() işlevini kullanıyoruz. std::for_each_n() işlevi, print_num() işlevini ilk üç öğe için çağırır ve sonuç olarak 1 2 3 değerlerini ekrana yazdırır.
 
 - Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir sayıda öğesine işlem yapmak istediğiniz durumlarda oldukça yaygındır. Örneğin, bir dosyadaki ilk 10 satırı okumak için kullanılabilir.
 
+### count
 
+- std::count() C++ algoritması, bir aralıktaki öğelerin belirli bir değere eşit olup olmadığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir öğe sayısını bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 
+- std::count() işlevi, bir aralık ve belirli bir değer verildiğinde, aralıktaki öğelerin kaçının belirtilen değere eşit olduğunu sayar. İşlevin sözdizimi şu şekildedir:
 
+```CPP
+template <class InputIt, class T>
+typename iterator_traits<InputIt>::difference_type count(InputIt first, InputIt last, const T& value);
 
+```
 
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son parametre, sayılacak öğelerin değeridir. İşlev, aralıktaki öğelerin kaçının belirtilen değere eşit olduğunu sayar ve sonuç olarak belirtilen değere eşit olan öğe sayısını döndürür.
 
+- İşte bir örnek kod parçası, std::count() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+int main() {
+  std::vector<int> my_vec {1, 2, 2, 3, 2, 4, 2, 5};
 
+  int count = std::count(my_vec.begin(), my_vec.end(), 2);
 
+  std::cout << "Vektördeki 2 sayısı " << count << " kez geçiyor" << std::endl;
 
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::count() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektördeki 2 sayısının kaç kez geçtiğini saymak için std::count() işlevini kullanıyoruz. std::count() işlevi, vektördeki 2 sayısının 4 kez geçtiğini sayar ve sonuç olarak 4 değerini döndürür.
+
+- Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir değere eşit olup olmadığını kontrol etmek için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakterin kaç kez geçtiğini saymak veya bir dosyadaki belirli bir kelime sayısını saymak için kullanılabilir.
 
 
 
