@@ -15,61 +15,65 @@
 > bir std::atomic nesnesinin değerini okumak için kullanılır. Bu işlev, varsayılan olarak güçlü atomik işlem kullanır. Bu, işlemin tüm diğer işlemlere karşı atomik olduğu anlamına gelir.
 - **atomic_exchange**
 - **atomic_exchange_explicit**
-> 
+> bir std::atomic nesnesinin değerini başka bir değerle değiştirmek için kullanılır.
 - **atomic_compare_exchange_weak**
 - **atomic_compare_exchange_weak_explicit**
-> 
+> bir std::atomic nesnesinin değerini belirli bir değerle değiştirmek için kullanılır, ancak bu işlem yalnızca belirli bir koşulu karşıladığında gerçekleştirilir. 
 - **atomic_compare_exchange_strong**
 - **atomic_compare_exchange_strong_explicit**
-> 
+> bir std::atomic nesnesinin değerini belirli bir değerle değiştirmek için kullanılır, ancak bu işlem yalnızca belirli bir koşulu karşıladığında gerçekleştirilir. 
 - **atomic_fetch_add**
 - **atomic_fetch_add_explicit**
-> 
+> bir std::atomic nesnesinin değerini belirli bir tamsayı değeriyle artırmak için kullanılır ve artırma işlemi atomik olarak gerçekleştirilir.
 - **atomic_fetch_sub**
 - **atomic_fetch_sub_explicit**
-> 
+> bir std::atomic nesnesinin değerini belirli bir tamsayı değeriyle azaltmak için kullanılır ve azaltma işlemi atomik olarak gerçekleştirilir.
 - **atomic_fetch_and**
 - **atomic_fetch_and_explicit**
-> 
+> bir std::atomic nesnesinin değerine belirli bir tamsayı değerini bit düzeyinde "ve" işlemi yaparak uygulamak için kullanılır.
 - **atomic_fetch_or**
 - **atomic_fetch_or_explicit**
-> 
+>  bir std::atomic nesnesinin değerine belirli bir tamsayı değerini bit düzeyinde "veya" işlemi yaparak uygulamak için kullanılır.
 - **atomic_fetch_xor**
 - **atomic_fetch_xor_explicit**
-> 
+> bir std::atomic nesnesinin değerine belirli bir tamsayı değerini bit düzeyinde "XOR" işlemi yaparak uygulamak için kullanılır. 
 - **atomic_wait**
 - **atomic_wait_explicit**
-> 
+> bir std::atomic nesnesinin değerinin belirli bir değere eşit olmasını beklemek için kullanılır. Bu işlev, belirtilen std::memory_order parametresi tarafından belirtilen hafıza düzenlemesi sırasına göre atomik bir bekleme işlemi gerçekleştirir.
 - **atomic_notify_one**
+> C++11'de tanıtılan bir std::condition_variable_any nesnesini bildiren bir işlevdir. Bu işlev, bir veya daha fazla bekleyen thread'in uyandırılmasına neden olur.
 - **atomic_notify_all**
-> 
+> std::atomic_notify_all() fonksiyonu, belirtilen std::condition_variable nesnesine bağlı olan tüm bekleme noktalarını uyandırır. Yani, bu fonksiyon çağrıldığında bekleyen tüm iş parçacıkları uyandırılır ve tekrar çalışmaya başlar.
 - **atomic_flag_test**
 - **atomic_flag_test_explicit**
-> 
+> belirtilen std::atomic_flag nesnesinin değerini okur ve nesnenin belirtilen değere eşit olup olmadığını kontrol eder. Bu fonksiyon, nesnenin değerinin okunmasını sağlamak için kullanılır.
 - **atomic_flag_test_and_set**
 - **atomic_flag_test_and_set_explicit**
-> 
+> belirtilen std::atomic_flag nesnesinin değerini atomik olarak ayarlar ve önceki değerini döndürür. Bu fonksiyon, bir semafor olarak kullanılabilir.
 - **atomic_flag_clear**
 - **atomic_flag_clear_explicit**
-> 
+> bir std::atomic_flag nesnesinin değerini temizler (sıfırlar).
 - **atomic_flag_wait**
 - **atomic_flag_wait_explicit**
-> 
+> bir std::atomic_flag nesnesi üzerinde bir değişiklik beklemek için kullanılır.
 - **atomic_flag_notify_one**
+> atomic_flag_wait() işlevini kullanarak bekleyen bir threadi uyandırır. Eğer birden fazla thread bekliyorsa, hangi threadin uyandırılacağı belirli değildir.
 - **atomic_flag_notify_all**
-> 
+> belirtilen bayrağa bağlı bekleyen tüm iş parçacıklarını uyandırır. atomic_flag_clear() fonksiyonuna benzer şekilde, bu fonksiyonu çağıran iş parçacığından farklı bir iş parçacığı tarafından beklenen bir bayrağın değerini değiştirirken dikkatli olunmalıdır.
 - **atomic_init**
-> 
+> bir std::atomic nesnesini belirtilen değerle başlatmak için kullanılır. Fonksiyon, ilgili std::atomic türüne bağlı olarak değişken sayıda argüman kabul eder.
 - **kill_dependency**
-> 
+> bir yazma işleminden sonra okuma işlemine kadar ki bir sıralama ilişkisini önlemek için kullanılır. Bu işlev, optimize edicilerin, yazma işlemi ile okuma işlemi arasındaki ilişkiyi yok saymasını önler.
 - **atomic_thread_fence**
-> 
+> herhangi bir veri türünden herhangi bir bellek erişimindeki kodun sıralamasını değiştirmeyen bir engelleme işlemi gerçekleştirir. Bu işlev, kodun çıktısını belirli bir şekilde yapılandırmaya yardımcı olmak için kullanılabilir.
 - **atomic_signal_fence**
-> 
+> işlemci tarafından üretilen sinyallerin, std::atomic tipi değişkenlerin işlemleri için tamponlarına yazılmadan önce gönderilmesini sağlar. 
 
 # Macros
 - **ATOMIC_VAR_INIT**
+> bir atomik değişkenin başlatılmasına yardımcı olur. Bu makro, bir atomik değişkenin başlatılmasında kullanılmak üzere sabit bir değer sağlar.
 - **ATOMIC_FLAG_INIT**
+> bir atomik bayrak değişkeninin başlatılmasına yardımcı olur. Bu makro, bir atomik bayrak değişkeninin başlatılmasında kullanılmak üzere sabit bir değer sağlar.
 
 # FONKSİYONLAR
 
