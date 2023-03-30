@@ -380,7 +380,7 @@ int main() {
 
 - Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için oldukça yaygındır. Örneğin, bir dosyadaki belirli bir kelimeyi içeren satırların sayısını saymak veya bir dosyadaki belirli bir karakterin sayısını saymak için kullanılabilir.
 
-# mismatch
+### mismatch
 
 - std::mismatch() C++ algoritması, iki aralık arasındaki ilk farklı öğeleri bulmak için kullanılır. Bu algoritmanın amacı, iki aralık arasındaki farklılıkları bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 
