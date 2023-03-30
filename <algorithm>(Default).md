@@ -95,15 +95,22 @@
 > bir aralıktaki öğelerin sırasını tersine çevirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirmektir.
 - **reverse_copy()**
 > bir aralıktaki öğelerin sırasını tersine çevirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirerek yeni bir aralık oluşturmaktır.
-- rotate
-- rotate_copy
-- shift_left
-- shift_right
-- random_shuffle
-- shuffle
-- sample
-- unique
-- unique_copy
+- **rotate()**
+> bir aralıktaki öğeleri belirli bir konuma kadar döndürmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin belirli bir konuma kadar döndürülmesini sağlamaktır.
+- **rotate_copy()**
+> bir aralıktaki öğeleri belirli bir konuma kadar döndürerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin belirli bir konuma kadar döndürülmesini sağlayarak yeni bir aralık oluşturmaktır.
+- **shift_left()**
+> bir aralıktaki öğeleri belirli bir sayıda sol tarafa kaydırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir sayıda sola kaydırarak yeni bir aralık oluşturmaktır.
+- **shift_right()**
+> bir aralıktaki öğeleri belirli bir sayıda sağ tarafa kaydırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir sayıda sağa kaydırarak yeni bir aralık oluşturmaktır.
+- **shuffle()**
+> bir aralıktaki öğeleri rastgele bir sıraya yerleştirir. Bu algoritmanın amacı, bir aralıktaki öğelerin rastgele bir sıraya yerleştirilmesidir.
+- **sample()**
+>  bir aralıktan belirli bir sayıda öğeyi rastgele örneklemek için kullanılır.
+- **unique()**
+> bir aralıktaki ardışık tekrarlayan öğeleri kaldırır ve ardışık olmayan tekrarlayan öğelerin bir kopyasını yeni bir aralıkta oluşturur.
+- **unique_copy()**
+> bir aralıktaki ardışık tekrarlayan öğeleri kaldırır ve ardışık olmayan tekrarlayan öğelerin bir kopyasını yeni bir aralıkta oluşturur. std::unique() işlevine benzer, ancak farklı olarak, std::unique_copy() işlevi, kopyalanan benzersiz öğeleri yeni bir aralığa yerleştirir, orijinal aralığı değiştirmez.
 
 # Partitioning operations
 
@@ -1459,22 +1466,274 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::reverse_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde v isimli bir vektör oluşturuyoruz. Ardından, v_reverse isimli bir başka vektör oluşturuyoruz ve std::reverse_copy() işlevini kullanarak v vektörünü tersine çevirerek v_reverse vektörüne kopyalıyoruz. Son olarak, v_reverse vektöründeki öğeleri yazdırıyoruz.
+> Bu örnek kod, std::reverse_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, v_reverse isimli bir başka vektör oluşturuyoruz ve std::reverse_copy() işlevini kullanarak v vektörünü tersine çevirerek v_reverse vektörüne kopyalıyoruz. Son olarak, v_reverse vektöründeki öğeleri yazdırıyoruz.
 
 - Bu işlevin kullanımı, özellikle ters sıralama yaparak yeni bir aralık oluşturmak ve ters diziler oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisini ters çevirerek yeni bir karakter dizisi oluşturmak veya bir matrisin sütunlarını tersine çevirerek yeni bir matris oluşturmak için kullanılabilir.
 
+### rotate
 
+- std::rotate() C++ algoritması, bir aralıktaki öğeleri belirli bir konuma kadar döndürmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin belirli bir konuma kadar döndürülmesini sağlamaktır.
 
+- std::rotate() işlevi, bir aralık ve dönüşümün başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen konuma kadar olan öğeleri aralığın sonuna taşır ve belirtilen konumda öğelerin yeni başlangıcını belirler. Bu işlem, döndürülen öğelerin sayısı ve aralıktaki öğelerin türüne göre özelleştirilebilir.
 
+- İşte örnek bir kod parçası, std::rotate() işlevinin nasıl kullanılabileceğini gösteriyor:
 
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
 
+  std::rotate(v.begin(), v.begin() + 3, v.end());
 
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
 
+  return 0;
+}
 
+```
+> Bu örnek kod, std::rotate() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::rotate() işlevini kullanarak v vektöründeki öğeleri üçüncü öğeden başlayarak döndürüyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
 
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir konuma kadar döndürülmesi gerektiğinde oldukça yaygındır. Örneğin, bir karakter dizisini belirli bir konuma kadar döndürmek veya bir matrisin satırlarını döndürmek için kullanılabilir.
 
+### rotate_copy
 
+- std::rotate_copy() C++ algoritması, bir aralıktaki öğeleri belirli bir konuma kadar döndürerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin belirli bir konuma kadar döndürülmesini sağlayarak yeni bir aralık oluşturmaktır.
+
+- std::rotate_copy() işlevi, bir aralık, dönüşümün başlangıç konumunu gösteren bir işaretçi parametresi ve hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen konuma kadar olan öğeleri aralığın sonuna taşır ve belirtilen konumda öğelerin yeni başlangıcını belirler. Bu işlem, döndürülen öğelerin sayısı ve aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::rotate_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v_rotated(v.size());
+
+  std::rotate_copy(v.begin(), v.begin() + 3, v.end(), v_rotated.begin());
+
+  for (auto it = v_rotated.begin(); it != v_rotated.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::rotate_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, v_rotated isimli bir başka vektör oluşturuyoruz ve std::rotate_copy() işlevini kullanarak v vektöründeki öğeleri üçüncü öğeden başlayarak döndürerek v_rotated vektörüne kopyalıyoruz. Son olarak, v_rotated vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir konuma kadar döndürülerek yeni bir aralık oluşturulması gerektiğinde oldukça yaygındır. Örneğin, bir karakter dizisini belirli bir konuma kadar döndürerek yeni bir karakter dizisi oluşturmak veya bir matrisin satırlarını döndürerek yeni bir matris oluşturmak için kullanılabilir.
+
+### shift_left()
+
+- std::shift_left() C++20 algoritması, bir aralıktaki öğeleri belirli bir sayıda sol tarafa kaydırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir sayıda sola kaydırarak yeni bir aralık oluşturmaktır.
+
+- std::shift_left() işlevi, bir aralık, kaydırma miktarını gösteren bir sayı ve hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen sayıda öğeyi sola kaydırarak hedef aralıkta yeni bir aralık oluşturur. Bu işlem, kaydırılan öğelerin sayısı ve aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::shift_left() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v_shifted(v.size());
+
+  std::shift_left(v.begin(), v.end(), 2, v_shifted.begin());
+
+  for (auto it = v_shifted.begin(); it != v_shifted.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::shift_left() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, v_shifted isimli bir başka vektör oluşturuyoruz ve std::shift_left() işlevini kullanarak v vektöründeki öğeleri iki adet sola kaydırarak v_shifted vektörüne kopyalıyoruz. Son olarak, v_shifted vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir sayıda sola kaydırılması gerektiğinde oldukça yaygındır. Örneğin, bir karakter dizisini belirli bir sayıda sola kaydırmak veya bir matrisin sütunlarını belirli bir sayıda sola kaydırmak için kullanılabilir.
+
+### shift_right
+
+- std::shift_right() C++20 algoritması, bir aralıktaki öğeleri belirli bir sayıda sağ tarafa kaydırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir sayıda sağa kaydırarak yeni bir aralık oluşturmaktır.
+
+- std::shift_right() işlevi, bir aralık, kaydırma miktarını gösteren bir sayı ve hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen sayıda öğeyi sağa kaydırarak hedef aralıkta yeni bir aralık oluşturur. Bu işlem, kaydırılan öğelerin sayısı ve aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::shift_right() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v_shifted(v.size());
+
+  std::shift_right(v.begin(), v.end(), 2, v_shifted.begin());
+
+  for (auto it = v_shifted.begin(); it != v_shifted.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::shift_right() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, v_shifted isimli bir başka vektör oluşturuyoruz ve std::shift_right() işlevini kullanarak v vektöründeki öğeleri iki adet sağa kaydırarak v_shifted vektörüne kopyalıyoruz. Son olarak, v_shifted vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin belirli bir sayıda sağa kaydırılması gerektiğinde oldukça yaygındır. Örneğin, bir karakter dizisini belirli bir sayıda sağa kaydırmak veya bir matrisin sütunlarını belirli bir sayıda sağa kaydırmak için kullanılabilir.
+
+### shuffle
+
+- std::shuffle() C++20 algoritması, bir aralıktaki öğeleri rastgele bir sıraya yerleştirir. Bu algoritmanın amacı, bir aralıktaki öğelerin rastgele bir sıraya yerleştirilmesidir.
+
+- std::shuffle() işlevi, bir aralık, rastgele sayı üreteci, hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğeleri rastgele bir şekilde karıştırarak hedef aralıkta yeni bir aralık oluşturur. Bu işlem, karıştırılacak öğelerin sayısı, kullanılacak rastgele sayı üretecinin türü ve aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::shuffle() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <random>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::shuffle(v.begin(), v.end(), g);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::shuffle() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, rastgele sayı üreteci için bir std::mt19937 nesnesi oluşturuyoruz ve std::shuffle() işlevini kullanarak v vektöründeki öğeleri rastgele bir şekilde karıştırıyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki öğelerin rastgele bir sıraya yerleştirilmesi gerektiğinde oldukça yaygındır. Örneğin, bir kart destesini karıştırmak veya bir dizi sayıyı rastgele bir sıraya yerleştirmek için kullanılabilir.
+
+### sample
+
+- std::sample() C++17'de eklenen bir algoritmadır ve bir aralıktan belirli bir sayıda öğeyi rastgele örneklemek için kullanılır.
+
+std::sample() işlevi, bir aralık, örneklem boyutu, rastgele sayı üreteci, hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen aralıktan rastgele öğeler seçerek hedef aralıkta yeni bir aralık oluşturur. Bu işlem, örneklem boyutu ve aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+İşte örnek bir kod parçası, std::sample() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <random>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> sample(5);
+
+  std::random_device rd;
+  std::mt19937 g(rd());
+  std::sample(v.begin(), v.end(), sample.begin(), 5, g);
+
+  for (auto it = sample.begin(); it != sample.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::sample() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, sample isimli başka bir vektör oluşturuyoruz ve std::sample() işlevini kullanarak v vektöründen beş adet rastgele öğe seçiyoruz. Son olarak, seçilen öğeleri sample vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktan belirli bir sayıda öğe örneklemek gerektiğinde oldukça yaygındır. Örneğin, bir reklam kampanyası için bir müşteri örnekleminin seçilmesi veya bir popülasyon örnekleminin analiz edilmesi için kullanılabilir.
+
+### unique()
+
+- std::unique() algoritması, bir aralıktaki ardışık tekrarlayan öğeleri kaldırır ve ardışık olmayan tekrarlayan öğelerin bir kopyasını yeni bir aralıkta oluşturur.
+
+- Bu algoritma, bir aralıktaki öğelerin benzersiz hale getirilmesi gerektiğinde sıklıkla kullanılır. Örneğin, bir dizi sayıdaki yinelenen öğelerin kaldırılması veya bir cümle içindeki yinelenen kelimelerin kaldırılması gibi durumlarda kullanılabilir.
+
+- std::unique() işlevi, bir aralık ve hedef aralığın başlangıç konumunu gösteren bir işaretçi parametresi alır. İşlev, belirtilen aralıktaki öğelerden ardışık olarak tekrarlananları kaldırır ve hedef aralıkta yeni bir aralık oluşturur. Bu işlem, kopyalanan öğelerin türüne ve hedef aralıktaki öğelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::unique() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+
+  auto it = std::unique(v.begin(), v.end());
+
+  for (auto i = v.begin(); i != it; ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::unique() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::unique() işlevini kullanarak v vektöründeki tekrarlayan öğeleri kaldırıyoruz. Son olarak, kopyalanan benzersiz öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki ardışık tekrarlayan öğelerin kaldırılması gerektiğinde oldukça yaygındır.
+
+### unique_copy()
+
+- std::unique_copy() algoritması, bir aralıktaki ardışık tekrarlayan öğeleri kaldırır ve ardışık olmayan tekrarlayan öğelerin bir kopyasını yeni bir aralıkta oluşturur. std::unique() işlevine benzer, ancak farklı olarak, std::unique_copy() işlevi, kopyalanan benzersiz öğeleri yeni bir aralığa yerleştirir, orijinal aralığı değiştirmez.
+
+- Bu algoritma, bir aralıktaki öğelerin benzersiz hale getirilmesi ve kopyalanması gerektiğinde sıklıkla kullanılır. Örneğin, bir dizi sayıdaki yinelenen öğelerin kaldırılması ve kopyalanması veya bir cümle içindeki yinelenen kelimelerin kaldırılması ve kopyalanması gibi durumlarda kullanılabilir.
+
+- std::unique_copy() işlevi, bir aralık, hedef aralık ve eşsiz öğelerin karşılaştırılması için bir işlev veya işlev nesnesi parametresi alır. İşlev, belirtilen aralıktaki öğelerden ardışık olarak tekrarlananları kaldırır ve hedef aralıkta yeni bir aralık oluşturur. Bu işlem, kopyalanan öğelerin türüne, hedef aralıktaki öğelerin türüne ve eşsizlik testi için kullanılan işlevin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::unique_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 2, 3, 3, 3, 4, 4, 4, 4};
+  std::vector<int> v2;
+
+  std::unique_copy(v.begin(), v.end(), std::back_inserter(v2));
+
+  for (auto i = v2.begin(); i != v2.end(); ++i) {
+    std::cout << *i << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::unique_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde v isimli bir vektör oluşturuyoruz. Ardından, std::unique_copy() işlevini kullanarak v vektöründeki tekrarlayan öğeleri kaldırıp kopyalıyoruz. Son olarak, kopyalanan benzersiz öğeleri yeni bir vektöre yerleştiriyoruz ve bu öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle bir aralıktaki ardışık tekrarlayan öğelerin kaldırılması ve kopyalanması gerektiğinde oldukça yaygındır.
 
 
 
