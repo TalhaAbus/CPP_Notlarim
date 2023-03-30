@@ -45,6 +45,8 @@
 > bir koleksiyonun veya bir dizi gibi bir sıralı veri yapısının boş olup olmadığını kontrol etmek için kullanılır. Eğer koleksiyon boşsa, true döndürür; aksi takdirde false döndürür.
 - **data**
 > bir koleksiyonun veya bir dizinin bellek adresini döndürür. Bu işlev, koleksiyonun veya dizinin bellek bloğuna erişmek için kullanılabilir.
+# ÖRNEKLER
+
 ### std::array
 
 - std::array, sabit boyutlu dizileri C++ standart kütüphanesi ile kullanmak için sağlanan bir sınıftır. std::array sınıfı, C tarzı dizilerin birçok dezavantajını giderir ve STL algoritmaları ve işlevleriyle uyumlu çalışabilmesi için bir dizi STL tarzı arayüz sağlar.
@@ -115,7 +117,7 @@ int main() {
 
 > Bu örnekte, std::tuple_element sınıf şablonu, decltype(myArray) ile birlikte kullanılarak 2 numaralı elemanın türünü int olarak belirler. type üye özelliği, belirli konumdaki elemanın türüne karşılık gelir.
 
-# ÖRNEKLER
+
 
 # Functions
 
