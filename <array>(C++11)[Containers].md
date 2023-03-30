@@ -115,6 +115,8 @@ int main() {
 
 > Bu örnekte, std::tuple_element sınıf şablonu, decltype(myArray) ile birlikte kullanılarak 2 numaralı elemanın türünü int olarak belirler. type üye özelliği, belirli konumdaki elemanın türüne karşılık gelir.
 
+# ÖRNEKLER
+
 # Functions
 
 ### std::swap()
