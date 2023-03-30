@@ -591,58 +591,271 @@ int main() {
 ```
 > Bu örnekte, std::atomic_flag_clear() fonksiyonu, flag adlı bir std::atomic_flag nesnesinin değerini temizler. func() işlevi, flag nesnesinin değerini ayarlamak ve temizlemek için yarışır. Bu işlemler, diğer işlem tarafından bayrağın temizlenmediği duruma kadar tekrarlanır.
 
+### atomic_flag_wait()
 
+- std::atomic_flag_wait() fonksiyonu, bir std::atomic_flag nesnesi üzerinde bir değişiklik beklemek için kullanılır.
 
+- Bu fonksiyon, belirtilen expected değeri flag nesnesinin mevcut değerine eşit olmadığı sürece, işlemciye dinlenme (wait) emri verir. Dinlenme (wait) sırasında diğer iş parçacıkları çalışabilir. Değer değişirse, işlemci uyanır ve devam eder.
 
+- Aşağıdaki gibi kullanılabilir:
+```CPP
+#include <iostream>
+#include <atomic>
+#include <thread>
 
+std::atomic_flag flag = ATOMIC_FLAG_INIT;
 
+void func() {
+    std::cout << "func() waiting for the flag\n";
+    while (flag.test_and_set(std::memory_order_acquire)) {
+        std::this_thread::yield();
+    }
 
+    std::cout << "func() acquired the flag\n";
 
+    // do some work
 
+    flag.clear(std::memory_order_release);
+    std::cout << "func() cleared the flag\n";
+}
 
+int main() {
+    std::thread t(func);
+    // wait for func to acquire the flag
+    while (flag.test_and_set(std::memory_order_acquire)) {
+        std::this_thread::yield();
+    }
+    std::cout << "main() acquired the flag\n";
 
+    // do some work
 
+    flag.clear(std::memory_order_release);
+    std::cout << "main() cleared the flag\n";
 
+    t.join();
 
+    return 0;
+}
 
+```
+> Bu örnekte, std::atomic_flag_wait() fonksiyonu, flag adlı bir std::atomic_flag nesnesinin belirli bir değere eşit olmasını bekler. func() ve main() işlevleri, flag nesnesinin değerini ayarlamak ve temizlemek için yarışır. Bu işlemler, diğer işlemin bayrağı temizlediği duruma kadar tekrarlanır.
 
+### atomic_flag_notify_one()
 
+- atomic_flag_notify_one() işlevi, atomic_flag_wait() işlevini kullanarak bekleyen bir threadi uyandırır. Eğer birden fazla thread bekliyorsa, hangi threadin uyandırılacağı belirli değildir. Bu işlevin kullanımı, atomic_flag tipi bir değişkenin paylaşıldığı senaryolarda kullanılabilir.
 
+- Aşağıdaki örnek, atomic_flag tipi bir değişkenin kullanımını ve atomic_flag_notify_one() ve atomic_flag_wait() işlevlerinin kullanımını göstermektedir:
 
+```CPP
+#include <iostream>
+#include <atomic>
+#include <thread>
+#include <chrono>
 
+int main() {
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
 
+    std::thread t1([&]() {
+        std::this_thread::sleep_for(std::chrono::seconds(2));
+        flag.test_and_set();
+        std::cout << "Flag set by thread 1\n";
+    });
 
+    std::thread t2([&]() {
+        flag.wait(true);
+        std::cout << "Flag is set. Thread 2 notified\n";
+    });
 
+    std::thread t3([&]() {
+        flag.wait(true);
+        std::cout << "Flag is set. Thread 3 notified\n";
+    });
 
+    t1.join();
 
+    flag.notify_one();
 
+    t2.join();
+    t3.join();
 
+    return 0;
+}
 
+```
+> Bu örnek, std::atomic_flag tipi bir değişken kullanılarak iki threadin senkronize edilmesini gösterir. İlk thread, flag adlı değişkeni 2 saniye sonra set eder. İkinci ve üçüncü threadler, flag değişkeninin true olmasını bekleyerek uyutulur. Sonra, ilk thread flag değişkenini set eder ve notify_one() işlevini çağırarak bekleyen threadlerden birini uyandırır. Uyanan thread, wait() işlevinden döner ve "Flag is set. Thread 2 notified" veya "Flag is set. Thread 3 notified" mesajlarını yazdırır.
 
+### atomic_flag_notify_all()
 
+- atomic_flag_notify_all() fonksiyonu, belirtilen bayrağa bağlı bekleyen tüm iş parçacıklarını uyandırır. atomic_flag_clear() fonksiyonuna benzer şekilde, bu fonksiyonu çağıran iş parçacığından farklı bir iş parçacığı tarafından beklenen bir bayrağın değerini değiştirirken dikkatli olunmalıdır.
 
+- Aşağıda bir örnek verilmiştir:
 
+```CPP
+#include <iostream>
+#include <thread>
+#include <atomic>
 
+int main() {
+    std::atomic_flag flag = ATOMIC_FLAG_INIT;
+    std::thread threads[5];
 
+    for (int i = 0; i < 5; i++) {
+        threads[i] = std::thread([&]() {
+            while(flag.test_and_set(std::memory_order_acquire)) {
+                std::this_thread::yield();
+            }
 
+            std::cout << "Thread ID " << std::this_thread::get_id() << " entered critical section\n";
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::cout << "Thread ID " << std::this_thread::get_id() << " left critical section\n";
 
+            flag.clear(std::memory_order_release);
+        });
+    }
 
+    std::this_thread::sleep_for(std::chrono::seconds(3));
 
+    std::cout << "Notifying all threads to enter critical section\n";
+    flag.notify_all();
 
+    for (int i = 0; i < 5; i++) {
+        threads[i].join();
+    }
 
+    return 0;
+}
 
+```
 
+> Bu örnekte, std::atomic_flag tipinde bir bayrak flag oluşturulur ve ATOMIC_FLAG_INIT sabiti ile başlatılır. Ardından, 5 iş parçacığı oluşturulur ve her biri kritik bölgeye girip çıkmak için bayrağı kullanır. İlk önce, flag.test_and_set(std::memory_order_acquire) fonksiyonu çağrılarak bayrağın değeri ayarlanır ve std::this_thread::yield() fonksiyonu ile iş parçacığı kilitli bir döngüde bekletilir. Sonra, kritik bölgeye girmek için bayrak değiştirilir ve çıkış için bayrak temizlenir. Son olarak, tüm iş parçacıklarına bayrağı beklemeleri için bir sinyal göndermek için flag.notify_all() fonksiyonu çağrılır.
 
+### atomic_init()
 
+- std::atomic_init fonksiyonu, bir std::atomic nesnesini belirtilen değerle başlatmak için kullanılır. Fonksiyon, ilgili std::atomic türüne bağlı olarak değişken sayıda argüman kabul eder.
+```CPP
+void atomic_init(std::atomic<T>* obj, T desired);
 
+```
+- Örneğin, aşağıdaki kod, bir std::atomic int  nesnesini 0 ile başlatır:
 
+```CPP
+#include <atomic>
+#include <iostream>
 
+int main() {
+    std::atomic<int> a;
+    std::atomic_init(&a, 0);
 
+    std::cout << "Value of a is " << a << '\n';
 
+    return 0;
+}
 
+```
+### kill_dependency
 
+- std::kill_dependency işlevi, bir yazma işleminden sonra okuma işlemine kadar ki bir sıralama ilişkisini önlemek için kullanılır. Bu işlev, optimize edicilerin, yazma işlemi ile okuma işlemi arasındaki ilişkiyi yok saymasını önler.
 
+- Bu işlev, genellikle bir std::memory_order_consume içeren bir okuma işleminden sonra bir std::memory_order_relaxed içeren bir yazma işlemine kadar olan sıralama ilişkisini sağlamak için kullanılır.
 
+- Örneğin:
+
+```CPP
+#include <atomic>
+#include <iostream>
+
+int main() {
+    std::atomic<int> a(0);
+    std::atomic<int> b(0);
+
+    a.store(1, std::memory_order_relaxed);
+    b.store(2, std::memory_order_relaxed);
+
+    int x = a.load(std::memory_order_consume);
+    int y = b.load(std::memory_order_relaxed);
+
+    // Sıralama ilişkisi garantisi yok.
+    std::cout << "x: " << x << ", y: " << y << '\n';
+
+    x = std::kill_dependency(x);
+    b.store(3, std::memory_order_relaxed);
+
+    // Sıralama ilişkisi garantisi var.
+    std::cout << "x: " << x << ", y: " << y << '\n';
+
+    return 0;
+}
+
+```
+
+> Bu örnekte, a ve b adında iki adet std::atomic int nesnesi oluşturulmuştur. Daha sonra, a ve b'ye sırasıyla 1 ve 2 değerleri atanmıştır. Sonra a'nın load işlemi, std::memory_order_consume ile yapılmıştır. Ancak, bu işlem y'ye atanmadan önce gerçekleştirilmiştir. Bu nedenle, y'nin değerini okurken, x'in değeri 1 veya 2 olabilir. Ancak x, std::kill_dependency işlevi ile işaretlendikten sonra b'ye 3 atanmadan önce güncellendiği için, x'in değeri artık 1 veya 2 olamaz.
+
+### atomic_thread_fence()
+
+- atomic_thread_fence() fonksiyonu, herhangi bir veri türünden herhangi bir bellek erişimindeki kodun sıralamasını değiştirmeyen bir engelleme işlemi gerçekleştirir. Bu işlev, kodun çıktısını belirli bir şekilde yapılandırmaya yardımcı olmak için kullanılabilir.
+
+- atomic_thread_fence() işlevi, belirli bir bellek düzenlemesi türünden (örneğin, bellek erişimi öncesinde yazma işlemini barındıran) herhangi bir bellek erişiminden önce ve sonra çağrılmalıdır.
+
+- Bu işlevin örnek kullanımı şöyle olabilir:
+
+```CPP
+#include <atomic>
+#include <thread>
+
+std::atomic<int> a;
+int b;
+
+void thread_1() {
+    a.store(1, std::memory_order_relaxed);
+    std::atomic_thread_fence(std::memory_order_acquire);
+    b = a.load(std::memory_order_relaxed);
+}
+
+void thread_2() {
+    a.store(2, std::memory_order_relaxed);
+    std::atomic_thread_fence(std::memory_order_acquire);
+    b = a.load(std::memory_order_relaxed);
+}
+
+```
+
+> Bu örnekte, std::atomic_thread_fence(std::memory_order_acquire) işlevi, belirli bir bellek düzenlemesi türünden bellek erişiminden önce ve sonra çağrılır. Bu, kodun çıktısını yapılandırmaya yardımcı olur ve beklenmeyen davranışları önler.
+
+### atomic_signal_fence()
+
+- atomic_signal_fence() işlemci tarafından üretilen sinyallerin, std::atomic tipi değişkenlerin işlemleri için tamponlarına yazılmadan önce gönderilmesini sağlar. Yani, atomic_signal_fence() işlemci tarafından üretilen sinyallerin (örneğin SIGINT) std::atomic tipi değişkenlerdeki işlemlerle karışmamasını garanti eder.
+
+- Bu fonksiyon, belirtilen yerde bir sinyal bariyeri oluşturur ve değişkenler üzerindeki tüm okuma/yazma işlemlerinin tamponlardan gerçek hafızaya doğru yürütülmesini garanti eder.
+
+- Örneğin, bir sinyal (örneğin SIGINT) ile ayrılmış iki iş parçacığı olduğunu ve bir iş parçacığının std::atomic tipi bir değişkene yazdığını ve diğer iş parçacığının okuduğunu düşünelim. Bu işlemlerin bir sinyal bariyeri olmadan yapılması durumunda, sinyalin bu işlemlere müdahale etmesi mümkündür. Ancak atomic_signal_fence() kullanarak sinyal bariyeri oluşturursak, bu tür bir müdahale engellenir ve değişkenlerin doğru değerleri korunur.
+
+### ATOMIC_VAR_INIT
+- ATOMIC_VAR_INIT bir makro olup, bir atomik değişkenin başlatılmasına yardımcı olur. Bu makro, bir atomik değişkenin başlatılmasında kullanılmak üzere sabit bir değer sağlar.
+
+- Örneğin, aşağıdaki kodda x adında bir atomik bir tamsayı değişkeni tanımlanmaktadır ve 0 ile başlatılmaktadır:
+
+```CPP
+#include <atomic>
+
+std::atomic<int> x(ATOMIC_VAR_INIT(0));
+
+```
+
+> Bu makro, birçok derleyicide, aynı zamanda C++11'in önerdiği std::atomic_init işlevi yerine de kullanılabilir.
+
+### ATOMIC_FLAG_INIT
+
+- ATOMIC_FLAG_INIT bir makro olup, bir atomik bayrak değişkeninin başlatılmasına yardımcı olur. Bu makro, bir atomik bayrak değişkeninin başlatılmasında kullanılmak üzere sabit bir değer sağlar.
+
+- Örneğin, aşağıdaki kodda flag adında bir atomik bayrak değişkeni tanımlanmaktadır ve ATOMIC_FLAG_INIT kullanılarak başlatılmaktadır:
+
+```CPP
+#include <atomic>
+
+std::atomic_flag flag = ATOMIC_FLAG_INIT;
+
+```
+> Bu makro, birçok derleyicide, aynı zamanda C++11'in önerdiği std::atomic_flag_init işlevi yerine de kullanılabilir.
 
 
 
