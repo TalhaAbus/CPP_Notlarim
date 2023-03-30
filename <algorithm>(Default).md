@@ -32,7 +32,8 @@
 > işlevi, bir aralık ve belirli bir özelliğe sahip olan bir işlev nesnesi verildiğinde, aralıkta öğenin var olup olmadığını kontrol eder.
 - **find_if_not()**
 > belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
-- find_end
+- **find_end()**
+> bir aralıkta belirli bir alt aralığın son konumunu bulmak için kullanılır. Bu algoritmanın amacı, belirli bir alt aralığın varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
 - find_first_of
 - adjacent_find
 - search
@@ -452,11 +453,74 @@ int main() {
 
 ```
 
-> Bu örnek kod, std::find_if() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki ilk çift sayıyı bulmak için is_even() işlevini kullanıyoruz. std::find_if() işlevi, vektördeki ilk çift sayıyı tespit eder ve sonuç olarak çift sayının konumunu gösteren bir işaretçi döndürür.
+> Bu örnek kod, std::find_if() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektördeki ilk çift sayıyı bulmak için is_even() işlevini kullanıyoruz. std::find_if() işlevi, vektördeki ilk çift sayıyı tespit eder ve sonuç olarak çift sayının konumunu gösteren bir işaretçi döndürür.
 
 - std::find_if_not() işlevinin kullanımı da benzerdir, ancak belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
 
 - Bu işlevlerin kullanımı, bir aralıkta belirli bir öğenin varlığını veya belirli bir özelliğe sahip olan veya sahip olmayan öğeleri bulmak için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakterin var olup olmadığını kontrol etmek veya bir dosyada belirli bir kelimeyi içeren satırı bulmak için kullanılabilir.
+
+### find_end
+
+- std::find_end() C++ algoritması, bir aralıkta belirli bir alt aralığın son konumunu bulmak için kullanılır. Bu algoritmanın amacı, belirli bir alt aralığın varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::find_end() işlevi, birinci aralık ve ikinci alt aralık verildiğinde, ikinci alt aralığın son konumunu bulur. İşlevin sözdizimi şu şekildedir:
+
+```CPP
+template <class ForwardIt1, class ForwardIt2>
+ForwardIt1 find_end(ForwardIt1 first1, ForwardIt1 last1, ForwardIt2 first2, ForwardIt2 last2);
+
+```
+
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son iki parametre ise alt aralığın başlangıç ve sonunu gösteren işaretçilerdir. İşlev, ilk aralıkta ikinci alt aralığın son konumunu bulduğunda, öğenin konumunu gösteren bir işaretçi döndürür. Alt aralık bulunamadığında ise son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::find_end() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5, 1, 2, 3};
+
+  std::vector<int> sub_vec {1, 2, 3};
+
+  auto it = std::find_end(my_vec.begin(), my_vec.end(), sub_vec.begin(), sub_vec.end());
+
+  if (it != my_vec.end()) {
+    std::cout << "Alt aralık son konumu: " << std::distance(my_vec.begin(), it) << std::endl;
+  } else {
+    std::cout << "Alt aralık bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::find_end() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki alt aralığın son konumunu bulmak için std::find_end() işlevini kullanıyoruz. İkinci vektör, alt aralığı temsil eder. std::find_end() işlevi, vektördeki alt aralığın son konumunu tespit eder ve sonuç olarak alt aralığın son konumunu gösteren bir işaretçi döndürür.
+
+- Bu işlevin kullanımı, bir aralıkta belirli bir alt aralığın son konumunu bulmak için oldukça yaygındır. Örneğin, bir dosyadaki belirli bir kelimeyi içeren son satırın konumunu bulmak veya bir veritabanındaki belirli bir kaydın son konumunu bulmak için kullanılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
