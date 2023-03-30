@@ -54,26 +54,47 @@
 - **copy_backward()**
 > bir aralıktaki öğeleri başka bir aralığa sondan başlayarak kopyalamak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 - **move()**
-- move_backward
-- fill
-- fill_n
-- transform
-- generate
-- generate_n
-- remove
-- remove_if
-- remove_copy
-- remove_copy_if
-- replace
-- replace_if
-- replace_copy
-- replace_copy_if
-- swap
-- swap_ranges
-- iter_ranges
-- iter_swap
-- reverse
-- reverse_copy
+> bir nesneyi taşımak (move) için kullanılır. Bu işlev, bir nesneyi başka bir nesneye atarken, kaynak nesnenin özelliklerinin çalınması (move) için kullanılır. Bu, özellikle büyük nesnelerin kopyalanması için zaman ve bellek kullanımı açısından daha verimli olabilir.
+- **move_backward()**
+> bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak (move) için kullanılır. Bu işlev, bir nesnenin içeriğini değiştirmeden, sadece nesnenin sahipliğini başka bir nesneye aktarmak için kullanılır. Özellikle büyük veri yapıları ve nesnelerin taşınması için zaman ve bellek kullanımı açısından daha verimlidir.
+- **fill()**
+>  bir aralığı belirli bir değerle doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir değerle kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **fill_n()**
+>  bir aralığı belirli bir değerle belirli bir sayıda doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir değerle kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **transform()**
+> bir aralıktaki öğeleri başka bir aralığa dönüştürmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir işlemle değiştirerek başka bir aralığa aktarmak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **generate()**
+> bir aralığı belirli bir işleme göre doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir işleme göre kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **generate_n()**
+> bir aralığı belirli bir işleme göre belirli bir sayıda doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir işleme göre kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **remove()**
+> bir aralıktaki öğelerden belirli bir değeri kaldırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **remove_if()**
+> bir aralıktaki öğelerden belirli bir koşulu sağlayanları kaldırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **remove_copy()**
+> bir aralıktan belirli bir öğeyi kaldırarak yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca kopyalamak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **remove_copy_if()**
+> bir aralıktan belirli bir koşulu sağlayan öğeleri kaldırarak yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca kopyalamak ve bu işlemi hızlı bir şekilde yapmaktır.
+- **replace()**
+> bir aralıktaki belirli bir değeri başka bir değerle değiştirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **replace_if()**
+> bir aralıktaki belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **replace_copy()**
+> bir aralıktan belirli bir değeri başka bir değerle değiştirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **replace_copy_if()**
+> bir aralıktan belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+- **swap()**
+> iki nesnenin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki nesnenin değerlerini hızlı bir şekilde değiştirmektir
+- **swap_ranges()**
+> iki aralıktaki öğelerin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki aralıktaki öğelerin değerlerini hızlı bir şekilde değiştirmektir.
+- **iter_ranges()**
+> iki nesnenin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki nesnenin değerlerini hızlı bir şekilde değiştirmektir.
+- **iter_swap()**
+> iki nesnenin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki nesnenin değerlerini hızlı bir şekilde değiştirmektir.
+- **reverse()**
+> bir aralıktaki öğelerin sırasını tersine çevirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirmektir.
+- **reverse_copy()**
+> bir aralıktaki öğelerin sırasını tersine çevirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirerek yeni bir aralık oluşturmaktır.
 - rotate
 - rotate_copy
 - shift_left
@@ -813,9 +834,652 @@ int main() {
 }
 
 ```
-> Bu örnek kod, std::move() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::move() işlevini kullanarak src vektörünü dest vektörüne taşıyoruz. Son olarak, src ve dest vektörlerinin boyutlarını yazdırıyoruz.
+> Bu örnek kod, std::move() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::move() işlevini kullanarak src vektörünü dest vektörüne taşıyoruz. Son olarak, src ve dest vektörlerinin boyutlarını yazdırıyoruz.
 
 - Bu işlevin kullanımı, bir nesnenin sahipliğini transfer etmek için oldukça yaygındır. Örneğin, bir sınıf nesnesinin içeriğini başka bir sınıf nesnesine taşımak veya bir dizi büyük veri yapısını kopyalamak yerine, bunları taşımak için kullanılabilir.
+
+### move_backward
+
+- std::move_backward() C++ algoritması, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak (move) için kullanılır. Bu işlev, bir nesnenin içeriğini değiştirmeden, sadece nesnenin sahipliğini başka bir nesneye aktarmak için kullanılır. Özellikle büyük veri yapıları ve nesnelerin taşınması için zaman ve bellek kullanımı açısından daha verimlidir.
+
+- std::move_backward() işlevi, birinci ve ikinci parametre olarak taşınacak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, taşınacak aralığın sonunu gösteren işaretçidir. Dördüncü parametre, taşıma işleminin yapılacağı hedefin sonunu gösteren işaretçidir. İşlev, taşıma işlemini gerçekleştirdikten sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::move_backward() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> src {1, 2, 3, 4, 5};
+  std::vector<int> dest(src.size());
+
+  std::move_backward(src.begin(), src.end(), dest.end());
+
+  std::cout << "src vector size: " << src.size() << std::endl;
+  std::cout << "dest vector size: " << dest.size() << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::move_backward() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde src ve dest isimli iki vektör oluşturuyoruz. Ardından, std::move_backward() işlevini kullanarak src vektöründeki öğeleri sondan başlayarak dest vektörüne taşıyoruz. Son olarak, src ve dest vektörlerinin boyutlarını yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri sondan başlayarak başka bir aralığa taşımak için oldukça yaygındır. Örneğin, bir dosyada sondan başlayarak belirli bir karakter dizisi aramak veya bir veritabanında sondan başlayarak belirli bir sayıda kayıtları taşımak için kullanılabilir.
+
+### fill
+
+- std::fill() C++ algoritması, bir aralığı belirli bir değerle doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir değerle kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::fill() işlevi, birinci ve ikinci parametre olarak doldurulacak aralığın başlangıcını ve sonunu gösteren işaretçileri alır. Üçüncü parametre, aralığın doldurulacağı değerdir. İşlev, belirtilen aralığı belirtilen değerle doldurduktan sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::fill() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v(5);
+
+  std::fill(v.begin(), v.end(), 42);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::fill() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v isimli bir vektör oluşturuyoruz. Ardından, std::fill() işlevini kullanarak v vektörünü 42 değeriyle dolduruyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığı belirli bir değerle doldurmak için oldukça yaygındır. Örneğin, bir dizi bellek bloğunu sıfırlamak veya bir veritabanındaki boş alanları belirli bir değerle doldurmak için kullanılabilir.
+
+### fill_n()
+
+- std::fill_n() C++ algoritması, bir aralığı belirli bir değerle belirli bir sayıda doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir değerle kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::fill_n() işlevi, birinci parametre olarak doldurulacak aralığın başlangıcını gösteren bir işaretçi alır. İkinci parametre, aralığın doldurulacak eleman sayısıdır. Üçüncü parametre, aralığın doldurulacağı değerdir. İşlev, belirtilen aralığı belirtilen değerle doldurduktan sonra son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::fill_n() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v(5);
+
+  std::fill_n(v.begin(), 3, 42);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::fill_n() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v isimli bir vektör oluşturuyoruz. Ardından, std::fill_n() işlevini kullanarak v vektörünün ilk üç öğesini 42 değeriyle dolduruyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığı belirli bir değerle belirli bir sayıda doldurmak için oldukça yaygındır. Örneğin, bir bellek bloğunu belirli bir değerle sıfırlamak veya bir veritabanındaki boş alanları belirli bir değerle doldurmak için kullanılabilir.
+
+### transform()
+
+- std::transform() C++ algoritması, bir aralıktaki öğeleri başka bir aralığa dönüştürmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir işlemle değiştirerek başka bir aralığa aktarmak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::transform() işlevi, üç parametre alır. İlk iki parametre, dönüştürülecek aralığın başlangıcını ve sonunu gösteren işaretçilerdir. Üçüncü parametre, dönüştürülen öğelerin yazılacağı hedef aralığın başlangıcını gösteren bir işaretçidir. Dördüncü parametre, her öğe üzerinde uygulanacak dönüştürme işlevi olan bir fonksiyon nesnesidir. İşlev, dönüştürülen öğelerin yazıldığı son konumu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::transform() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2(v1.size());
+
+  std::transform(v1.begin(), v1.end(), v2.begin(), [](int i) { return i * 2; });
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::transform() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 isimli bir vektör oluşturuyoruz. Ardından, v1 vektörünün boyutuna eşit bir v2 vektörü oluşturuyoruz. Sonra, std::transform() işlevini kullanarak v1 vektöründeki öğeleri iki katına çıkararak v2 vektörüne dönüştürüyoruz. Son olarak, v2 vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki öğeleri belirli bir işlemle dönüştürmek için oldukça yaygındır. Örneğin, bir dosyadaki karakterleri büyük harflere dönüştürmek veya bir dizi sayının karelerini hesaplamak için kullanılabilir.
+
+### generate()
+
+- std::generate() C++ algoritması, bir aralığı belirli bir işleme göre doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir işleme göre kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::generate() işlevi, iki parametre alır. İlk parametre, doldurulacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın doldurulacak son elemanının işaretçisidir. Üçüncü parametre, aralığı doldurmak için kullanılacak işlevdir. Bu işlev, aralığın her bir elemanı için çağrılır ve elemanın değeri bu işlevin dönüş değeri ile belirlenir. İşlev, doldurulan aralığın son konumunu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::generate() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v(5);
+
+  std::generate(v.begin(), v.end(), []() { static int i = 0; return ++i; });
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::generate() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::generate() işlevini kullanarak v vektörünü sıralı sayılarla dolduruyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığı belirli bir işlemle doldurmak için oldukça yaygındır. Örneğin, bir dizi bellek bloğunu rastgele sayılarla doldurmak veya bir veritabanındaki boş alanları rastgele sayılarla doldurmak için kullanılabilir.
+
+### generate_n()
+
+- std::generate_n() C++ algoritması, bir aralığı belirli bir işleme göre belirli bir sayıda doldurmak için kullanılır. Bu algoritmanın amacı, bir aralığı belirli bir işleme göre kolayca doldurmak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::generate_n() işlevi, üç parametre alır. İlk parametre, doldurulacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, doldurulacak eleman sayısıdır. Üçüncü parametre, aralığı doldurmak için kullanılacak işlevdir. Bu işlev, aralığın her bir elemanı için çağrılır ve elemanın değeri bu işlevin dönüş değeri ile belirlenir. İşlev, doldurulan aralığın son konumunu gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::generate_n() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v(5);
+
+  std::generate_n(v.begin(), 3, []() { static int i = 0; return ++i; });
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::generate_n() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::generate_n() işlevini kullanarak v vektörünün ilk üç öğesini sıralı sayılarla dolduruyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralığı belirli bir işlemle belirli bir sayıda doldurmak için oldukça yaygındır. Örneğin, bir bellek bloğunu rastgele sayılarla doldurmak veya bir veritabanındaki boş alanları rastgele sayılarla doldurmak için kullanılabilir.
+
+### remove()
+
+- std::remove() C++ algoritması, bir aralıktaki öğelerden belirli bir değeri kaldırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::remove() işlevi, iki parametre alır. İlk parametre, kaldırılacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, kaldırılacak değerin değeridir. İşlev, belirtilen değerle eşleşen tüm öğeleri aralığın sonuna taşıyarak aralığın yeni sonunu gösteren bir işaretçi döndürür.
+
+- Ancak, bu işlev belirtilen değeri gerçekten aralıktan kaldırmaz, yalnızca aralıktan dışarı taşır. Bu nedenle, aralığın sonundan geriye doğru yeni aralık boyutunu hesaplamak ve aralığı bu boyuta yeniden boyutlandırmak için std::vector::erase() işlevi kullanılmalıdır.
+
+- İşte örnek bir kod parçası, std::remove() ve std::vector::erase() işlevlerinin nasıl kullanılabileceğini gösteriyo
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 2, 4, 2, 5};
+
+  auto new_end = std::remove(v.begin(), v.end(), 2);
+  v.erase(new_end, v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::remove() ve std::vector::erase() işlevlerinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::remove() işlevini kullanarak v vektöründeki tüm 2 değerlerini kaldırıyoruz ve aralığın yeni sonunu gösteren bir işaretçi elde ediyoruz. Son olarak, std::vector::erase() işlevini kullanarak aralığı yeniden boyutlandırıyoruz ve v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir değeri kaldırmak veya değiştirmek için oldukça yaygındır. Örneğin, bir dizi karakterden belirli bir karakteri kaldırmak veya bir dizi sayıdan belirli bir sayıyı değiştirmek için kullanılabilir.
+
+### remove_if()
+
+- std::remove_if() C++ algoritması, bir aralıktaki öğelerden belirli bir koşulu sağlayanları kaldırmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::remove_if() işlevi, iki parametre alır. İlk parametre, kaldırılacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, kaldırılacak öğelerin belirlenmesi için kullanılacak koşulu tanımlayan bir fonksiyon nesnesidir. İşlev, belirtilen koşulu sağlayan tüm öğeleri aralığın sonuna taşıyarak aralığın yeni sonunu gösteren bir işaretçi döndürür.
+
+- Ancak, bu işlev belirtilen öğeleri gerçekten aralıktan kaldırmaz, yalnızca aralıktan dışarı taşır. Bu nedenle, aralığın sonundan geriye doğru yeni aralık boyutunu hesaplamak ve aralığı bu boyuta yeniden boyutlandırmak için std::vector::erase() işlevi kullanılmalıdır.
+
+- İşte örnek bir kod parçası, std::remove_if() ve std::vector::erase() işlevlerinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int n) {
+  return n % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  auto new_end = std::remove_if(v.begin(), v.end(), is_even);
+  v.erase(new_end, v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::remove_if() ve std::vector::erase() işlevlerinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::remove_if() işlevini kullanarak v vektöründeki tüm çift sayıları kaldırıyoruz ve aralığın yeni sonunu gösteren bir işaretçi elde ediyoruz. Son olarak, std::vector::erase() işlevini kullanarak aralığı yeniden boyutlandırıyoruz ve v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir koşulu sağlayan öğeleri kaldırmak veya değiştirmek için oldukça yaygındır. Örneğin, bir karakter dizisinden belirli bir karakteri kaldırmak veya bir dizi sayıdan belirli bir koşulu sağlayan öğeleri kaldırmak için kullanılabilir.
+
+### remove_copy()
+
+- std::remove_copy() C++ algoritması, bir aralıktan belirli bir öğeyi kaldırarak yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca kopyalamak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::remove_copy() işlevi, üç parametre alır. İlk parametre, kopyalanacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, kopyalanacak aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, kaldırılacak öğenin değeridir. Dördüncü parametre, yeni aralığın başlangıcını gösteren bir işaretçidir. İşlev, belirtilen öğeyi kaldırarak yeni aralığı oluşturur ve yeni aralığın sonunu gösteren bir işaretçi döndürür.
+
+- std::remove_copy() işlevi, orijinal aralığı değiştirmez. Bunun yerine, yeni bir aralık oluşturur ve orijinal aralığın değerlerini bu aralığa kopyalar. Bu nedenle, orijinal aralık ve yeni aralık farklı olabilir.
+
+- İşte örnek bir kod parçası, std::remove_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 2, 4, 2, 5};
+  std::vector<int> v2(v.size());
+
+  std::remove_copy(v.begin(), v.end(), v2.begin(), 2);
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::remove_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::remove_copy() işlevini kullanarak v vektöründeki tüm 2 değerlerini kaldırarak yeni bir vektör oluşturuyoruz. Son olarak, yeni vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktan belirli bir öğeyi kaldırarak yeni bir aralık oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisinden belirli bir karakteri kaldırmak veya bir dizi sayıdan belirli bir koşulu sağlayan öğeleri kaldırmak için kullanılabilir.
+
+### remove_copy_if()
+
+- std::remove_copy_if() C++ algoritması, bir aralıktan belirli bir koşulu sağlayan öğeleri kaldırarak yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca kopyalamak ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::remove_copy_if() işlevi, dört parametre alır. İlk parametre, kopyalanacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, kopyalanacak aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, kaldırılacak öğelerin belirlenmesi için kullanılacak koşulu tanımlayan bir fonksiyon nesnesidir. Dördüncü parametre, yeni aralığın başlangıcını gösteren bir işaretçidir. İşlev, belirtilen koşulu sağlayan öğeleri kaldırarak yeni aralığı oluşturur ve yeni aralığın sonunu gösteren bir işaretçi döndürür.
+
+- std::remove_copy_if() işlevi, orijinal aralığı değiştirmez. Bunun yerine, yeni bir aralık oluşturur ve orijinal aralığın değerlerini bu aralığa kopyalar. Bu nedenle, orijinal aralık ve yeni aralık farklı olabilir.
+
+- İşte örnek bir kod parçası, std::remove_copy_if() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int n) {
+  return n % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  std::vector<int> v2(v.size());
+
+  std::remove_copy_if(v.begin(), v.end(), v2.begin(), is_even);
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::remove_copy_if() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::remove_copy_if() işlevini kullanarak v vektöründeki tüm çift sayıları kaldırarak yeni bir vektör oluşturuyoruz. Son olarak, yeni vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktan belirli bir koşulu sağlayan öğeleri kaldırarak yeni bir aralık oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisinden belirli bir karakteri kaldırmak veya bir dizi sayıdan belirli bir koşulu sağlayan öğeleri kaldırmak için kullanılabilir.
+
+### replace()
+
+- std::replace() C++ algoritması, bir aralıktaki belirli bir değeri başka bir değerle değiştirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::replace() işlevi, üç parametre alır. İlk parametre, değiştirilecek aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, değiştirilecek aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, değiştirilecek öğenin değeridir. Dördüncü parametre, öğelerin değiştirileceği yeni değeri gösteren bir değerdir. İşlev, belirtilen değere sahip tüm öğeleri yeni değerle değiştirir.
+
+- std::replace() işlevi, orijinal aralığı değiştirir. Bu nedenle, orijinal aralık değiştirilmeden önce yedeklenmelidir.
+
+- İşte örnek bir kod parçası, std::replace() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+
+  std::replace(v.begin(), v.end(), 3, 6);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::replace() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::replace() işlevini kullanarak v vektöründeki tüm 3 değerlerini 6 ile değiştiriyoruz. Son olarak, vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir değeri başka bir değerle değiştirmek için oldukça yaygındır. Örneğin, bir karakter dizisindeki belirli bir karakteri başka bir karakterle değiştirmek veya bir dizi sayıdaki belirli bir değeri başka bir değerle değiştirmek için kullanılabilir.
+
+### replace_if()
+
+- std::replace_if() C++ algoritması, bir aralıktaki belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::replace_if() işlevi, dört parametre alır. İlk parametre, değiştirilecek aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, değiştirilecek aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, öğelerin değiştirilip değiştirilmeyeceğini belirlemek için kullanılacak koşulu tanımlayan bir fonksiyon nesnesidir. Dördüncü parametre, öğelerin değiştirileceği yeni değeri gösteren bir değerdir. İşlev, belirtilen koşulu sağlayan tüm öğeleri yeni değerle değiştirir.
+
+- std::replace_if() işlevi, orijinal aralığı değiştirir. Bu nedenle, orijinal aralık değiştirilmeden önce yedeklenmelidir.
+
+- İşte örnek bir kod parçası, std::replace_if() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int n) {
+  return n % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+
+  std::replace_if(v.begin(), v.end(), is_even, 0);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::replace_if() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::replace_if() işlevini kullanarak v vektöründeki tüm çift sayıları 0 ile değiştiriyoruz. Son olarak, vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirmek için oldukça yaygındır. Örneğin, bir karakter dizisindeki belirli bir karakterleri başka bir karakterle değiştirmek veya bir dizi sayıdaki belirli bir koşulu sağlayan değerleri başka bir değerle değiştirmek için kullanılabilir.
+
+### replace_copy()
+- std::replace_copy() C++ algoritması, bir aralıktan belirli bir değeri başka bir değerle değiştirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir değere göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::replace_copy() işlevi, dört parametre alır. İlk parametre, kopyalanacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, kopyalanacak aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, değiştirilecek öğenin değeridir. Dördüncü parametre, öğelerin değiştirileceği yeni değeri gösteren bir değerdir. Beşinci parametre, yeni aralığın başlangıcını gösteren bir işaretçidir. İşlev, belirtilen değere sahip tüm öğeleri yeni değerle değiştirerek yeni aralığı oluşturur ve yeni aralığın sonunu gösteren bir işaretçi döndürür.
+
+- std::replace_copy() işlevi, orijinal aralığı değiştirmez. Bunun yerine, yeni bir aralık oluşturur ve orijinal aralığın değerlerini bu aralığa kopyalar. Bu nedenle, orijinal aralık ve yeni aralık farklı olabilir.
+
+- İşte örnek bir kod parçası, std::replace_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v2(v.size());
+
+  std::replace_copy(v.begin(), v.end(), v2.begin(), 3, 6);
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::replace_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v isimli bir vektör oluşturuyoruz. Ardından, std::replace_copy() işlevini kullanarak v vektöründeki tüm 3 değerlerini 6 ile değiştirerek yeni bir vektör oluşturuyoruz. Son olarak, yeni vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir değeri başka bir değerle değiştirerek yeni bir aralık oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisindeki belirli bir karakterleri başka bir karakterle değiştirerek yeni bir karakter dizisi oluşturmak veya bir dizi sayıdaki belirli bir değeri başka bir değerle değiştirerek yeni bir dizi oluşturmak için kullanılabilir.
+
+### replace_copy_if()
+- std::replace_copy_if() C++ algoritması, bir aralıktan belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğeleri belirli bir koşula göre kolayca değiştirmek ve bu işlemi hızlı bir şekilde yapmaktır.
+
+- std::replace_copy_if() işlevi, beş parametre alır. İlk parametre, kopyalanacak aralığın başlangıcını gösteren bir işaretçidir. İkinci parametre, kopyalanacak aralığın sonunu gösteren bir işaretçidir. Üçüncü parametre, öğelerin değiştirilip değiştirilmeyeceğini belirlemek için kullanılacak koşulu tanımlayan bir fonksiyon nesnesidir. Dördüncü parametre, öğelerin değiştirileceği yeni değeri gösteren bir değerdir. Beşinci parametre, yeni aralığın başlangıcını gösteren bir işaretçidir. İşlev, belirtilen koşulu sağlayan tüm öğeleri yeni değerle değiştirerek yeni aralığı oluşturur ve yeni aralığın sonunu gösteren bir işaretçi döndürür.
+
+- std::replace_copy_if() işlevi, orijinal aralığı değiştirmez. Bunun yerine, yeni bir aralık oluşturur ve orijinal aralığın değerlerini bu aralığa kopyalar. Bu nedenle, orijinal aralık ve yeni aralık farklı olabilir.
+
+- İşte örnek bir kod parçası, std::replace_copy_if() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int n) {
+  return n % 2 == 0;
+}
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v2(v.size());
+
+  std::replace_copy_if(v.begin(), v.end(), v2.begin(), is_even, 0);
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::replace_copy_if() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int türünde v isimli bir vektör oluşturuyoruz. Ardından, std::replace_copy_if() işlevini kullanarak v vektöründeki tüm çift sayıları 0 ile değiştirerek yeni bir vektör oluşturuyoruz. Son olarak, yeni vektördeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, bir aralıktaki belirli bir koşulu sağlayan öğeleri başka bir değerle değiştirerek yeni bir aralık oluşturmak oldukça yaygındır. Örneğin, bir karakter dizisindeki belirli bir karakterleri başka bir karakterle değiştirerek yeni bir karakter dizisi oluşturmak veya bir dizi sayıdaki belirli bir koşulu sağlayan değerleri başka bir değerle değiştirerek yeni bir dizi oluşturmak için kullanılabilir.
+
+### swap()
+- std::swap() C++ algoritması, iki nesnenin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki nesnenin değerlerini hızlı bir şekilde değiştirmektir.
+
+- std::swap() işlevi, iki referans parametre alır ve bu parametrelerin değerlerini değiştirir. Bu işlev, C++ standart kütüphanesi tarafından sağlanır ve nesnelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::swap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+
+int main() {
+  int a = 10, b = 20;
+
+  std::cout << "a: " << a << " b: " << b << std::endl;
+
+  std::swap(a, b);
+
+  std::cout << "a: " << a << " b: " << b << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::swap() işlevinin kullanımını göstermektedir. İlk olarak, a ve b olmak üzere iki tamsayı değişkeni tanımlıyoruz. Ardından, std::swap() işlevini kullanarak a ve b değişkenlerinin değerlerini değiştiriyoruz. Son olarak, a ve b değişkenlerinin yeni değerlerini yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle sıralama ve diğer algoritmalarla birlikte kullanıldığında oldukça yaygındır. Örneğin, bir vektördeki iki öğenin yerini değiştirmek veya iki karakter dizisini yer değiştirmek için kullanılabilir.
+
+### swap_ranges
+
+- std::swap_ranges() C++ algoritması, iki aralıktaki öğelerin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki aralıktaki öğelerin değerlerini hızlı bir şekilde değiştirmektir.
+
+- std::swap_ranges() işlevi, iki aralık ve bunların başlangıç konumlarını gösteren iki işaretçi parametre alır. İşlev, iki aralık arasındaki öğelerin değerlerini tek tek değiştirerek bu işlemi gerçekleştirir. İşlev, değiştirilen son öğenin ardından ikinci aralığın başlangıcını gösteren bir işaretçi döndürür.
+
+- İşte örnek bir kod parçası, std::swap_ranges() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v1 {1, 2, 3, 4, 5};
+  std::vector<int> v2 {6, 7, 8, 9, 10};
+
+  std::swap_ranges(v1.begin(), v1.begin() + 3, v2.begin() + 2);
+
+  for (auto it = v1.begin(); it != v1.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  for (auto it = v2.begin(); it != v2.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::swap_ranges() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v1 ve v2 isimli iki vektör oluşturuyoruz. Ardından, std::swap_ranges() işlevini kullanarak v1 vektörünün ilk üç öğesini v2 vektörünün üçüncü öğesinden başlayarak değiştiriyoruz. Son olarak, v1 ve v2 vektörlerindeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, iki aralıktaki öğelerin değerlerini değiştirerek yeni bir aralık oluşturmak için oldukça yaygındır. Örneğin, iki karakter dizisindeki öğelerin yerini değiştirmek için kullanılabilir.
+
+### iter_swap()
+
+- std::iter_swap() C++ algoritması, iki nesnenin değerlerini değiştirmek için kullanılır. Bu algoritmanın amacı, iki nesnenin değerlerini hızlı bir şekilde değiştirmektir.
+
+- std::iter_swap() işlevi, iki işaretçi parametre alır ve bu parametrelerin gösterdiği iki nesnenin değerlerini değiştirir. Bu işlev, C++ standart kütüphanesi tarafından sağlanır ve nesnelerin türüne göre özelleştirilebilir.
+
+- İşte örnek bir kod parçası, std::iter_swap() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+
+  std::iter_swap(v.begin(), v.begin() + 3);
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::iter_swap() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::iter_swap() işlevini kullanarak v vektöründeki ilk öğe ile dördüncü öğenin yerlerini değiştiriyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle sıralama ve diğer algoritmalarla birlikte kullanıldığında oldukça yaygındır. Örneğin, bir vektördeki iki öğenin yerini değiştirmek veya iki karakter dizisini yer değiştirmek için kullanılabilir.
+
+### reverse
+
+- std::reverse() C++ algoritması, bir aralıktaki öğelerin sırasını tersine çevirmek için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirmektir.
+
+- std::reverse() işlevi, bir aralık ve bunun başlangıç konumunu gösteren iki işaretçi parametre alır. İşlev, aralıktaki öğelerin sırasını tersine çevirerek bu işlemi gerçekleştirir.
+
+- İşte örnek bir kod parçası, std::reverse() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+
+  std::reverse(v.begin(), v.end());
+
+  for (auto it = v.begin(); it != v.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::reverse() işlevinin kullanımını göstermektedir. İlk olarak, std::vector int  türünde v isimli bir vektör oluşturuyoruz. Ardından, std::reverse() işlevini kullanarak v vektöründeki öğelerin sırasını tersine çeviriyoruz. Son olarak, v vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle ters sıralama yapmak ve ters diziler oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisini ters çevirmek veya bir matrisin sütunlarını tersine çevirmek için kullanılabilir.
+
+### reverse_copy()
+
+- std::reverse_copy() C++ algoritması, bir aralıktaki öğelerin sırasını tersine çevirerek yeni bir aralık oluşturmak için kullanılır. Bu algoritmanın amacı, bir aralıktaki öğelerin sırasını hızlı bir şekilde tersine çevirerek yeni bir aralık oluşturmaktır.
+
+- std::reverse_copy() işlevi, bir aralık ve bunun başlangıç konumunu gösteren iki işaretçi parametre ile hedef aralığın başlangıç konumunu gösteren bir işaretçi parametre alır. İşlev, kaynak aralıktaki öğelerin sırasını tersine çevirerek hedef aralıkta yeni bir aralık oluşturur.
+
+- İşte örnek bir kod parçası, std::reverse_copy() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> v {1, 2, 3, 4, 5};
+  std::vector<int> v_reverse(v.size());
+
+  std::reverse_copy(v.begin(), v.end(), v_reverse.begin());
+
+  for (auto it = v_reverse.begin(); it != v_reverse.end(); ++it) {
+    std::cout << *it << " ";
+  }
+  std::cout << std::endl;
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::reverse_copy() işlevinin kullanımını göstermektedir. İlk olarak, std::vector<int> türünde v isimli bir vektör oluşturuyoruz. Ardından, v_reverse isimli bir başka vektör oluşturuyoruz ve std::reverse_copy() işlevini kullanarak v vektörünü tersine çevirerek v_reverse vektörüne kopyalıyoruz. Son olarak, v_reverse vektöründeki öğeleri yazdırıyoruz.
+
+- Bu işlevin kullanımı, özellikle ters sıralama yaparak yeni bir aralık oluşturmak ve ters diziler oluşturmak için oldukça yaygındır. Örneğin, bir karakter dizisini ters çevirerek yeni bir karakter dizisi oluşturmak veya bir matrisin sütunlarını tersine çevirerek yeni bir matris oluşturmak için kullanılabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
