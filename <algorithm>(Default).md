@@ -24,12 +24,14 @@
 > bir aralıktaki öğelerin belirli bir değere eşit olup olmadığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir öğe sayısını bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 - **count_if()** 
 > C++ algoritması, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir özelliğe sahip olan öğe sayısını bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
-
-
-- mismatch
-- find
-- find_if
-- find_if_not
+- **mismatch()** 
+> iki aralık arasındaki ilk farklı öğeleri bulmak için kullanılır. Bu algoritmanın amacı, iki aralık arasındaki farklılıkları bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **find()**
+> C++ algoritması, bir aralıkta belirli bir öğenin varlığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir öğenin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+- **find_if()**
+> işlevi, bir aralık ve belirli bir özelliğe sahip olan bir işlev nesnesi verildiğinde, aralıkta öğenin var olup olmadığını kontrol eder.
+- **find_if_not()**
+> belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
 - find_end
 - find_first_of
 - adjacent_find
@@ -341,11 +343,120 @@ int main() {
 
 - Bu işlevin kullanımı, bir aralıktaki öğelerin belirli bir özelliğe sahip olup olmadığını kontrol etmek için oldukça yaygındır. Örneğin, bir dosyadaki belirli bir kelimeyi içeren satırların sayısını saymak veya bir dosyadaki belirli bir karakterin sayısını saymak için kullanılabilir.
 
+# mismatch
 
+- std::mismatch() C++ algoritması, iki aralık arasındaki ilk farklı öğeleri bulmak için kullanılır. Bu algoritmanın amacı, iki aralık arasındaki farklılıkları bulmak istediğinizde kullanımı kolay bir seçenek sunmaktır.
 
+- std::mismatch() işlevi, iki aralık verildiğinde, aralıkların ilk farklı öğesinin konumunu döndürür. İşlevin sözdizimi şu şekildedir:
 
+```CPP
+template <class InputIt1, class InputIt2>
+std::pair<InputIt1, InputIt2> mismatch(InputIt1 first1, InputIt1 last1, InputIt2 first2);
 
+```
+> Bu işlevin ilk iki parametresi, karşılaştırılan ilk aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son parametre, karşılaştırılan ikinci aralığın başlangıç konumunu gösteren bir işaretçidir. İşlev, iki aralık arasında ilk farklı öğeyi bulduğunda, bir std::pair nesnesi döndürür ve bu nesnenin first elemanı ilk aralıktaki farklı öğenin konumunu, second elemanı ise ikinci aralıktaki farklı öğenin konumunu gösterir.
 
+- İşte bir örnek kod parçası, std::mismatch() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec1 {1, 2, 3, 4, 5};
+  std::vector<int> my_vec2 {1, 2, 3, 5, 4};
+
+  auto mismatch_pair = std::mismatch(my_vec1.begin(), my_vec1.end(), my_vec2.begin());
+
+  if (mismatch_pair.first != my_vec1.end()) {
+    std::cout << "İlk farklı öğe: " << *mismatch_pair.first << " ve " << *mismatch_pair.second << std::endl;
+  } else {
+    std::cout << "Aralıklar eşleşiyor" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+> Bu örnek kod, std::mismatch() işlevinin kullanımını göstermektedir. İki std::vector  int türünde vektör oluşturuyoruz ve std::mismatch() işlevini kullanarak iki vektör arasındaki ilk farklı öğeyi buluyoruz. İlk vektördeki 5 ve ikinci vektördeki 4 öğeleri farklı olduğu için std::mismatch() işlevi bir std::pair nesnesi döndürür ve bu nesnenin first elemanı 5'in konumunu, second elemanı ise 4'ün konumunu gösterir.
+
+- Bu işlevin kullanımı, iki aralık arasındaki farklılıkları kontrol etmek için oldukça yaygındır. Örneğin, iki dosya arasındaki farklılıkları bulmak veya iki veritabanı arasındaki farklılıkları kontrol etmek için kullanılabilir.
+
+### find - find_if - find_if_not
+
+- std::find() C++ algoritması, bir aralıkta belirli bir öğenin varlığını kontrol etmek için kullanılır. Bu algoritmanın amacı, belirli bir öğenin varlığını kontrol etmek istediğinizde kullanımı kolay bir seçenek sunmaktır.
+
+- std::find() işlevi, bir aralık ve aranacak öğenin değeri verildiğinde, aralıkta öğenin var olup olmadığını kontrol eder. İşlevin sözdizimi şu şekildedir:
+
+```CPP
+template <class InputIt, class T>
+InputIt find(InputIt first, InputIt last, const T& value);
+
+```
+- Bu işlevin ilk iki parametresi, aralığın başlangıç ve sonunu gösteren işaretçilerdir. Son parametre, aranacak öğenin değeridir. İşlev, aralıktaki öğeleri arar ve öğe bulunduğunda öğenin konumunu gösteren bir işaretçi döndürür. Öğe bulunamadığında ise son öğeyi gösteren bir işaretçi döndürülür.
+
+- std::find_if() ve std::find_if_not() işlevleri, belirli bir özelliğe sahip olan veya sahip olmayan öğeleri aramak için kullanılır. std::find_if() işlevi, bir aralık ve belirli bir özelliğe sahip olan bir işlev nesnesi verildiğinde, aralıkta öğenin var olup olmadığını kontrol eder. std::find_if_not() işlevi ise, belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
+
+- İşte örnek bir kod parçası, std::find() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+int main() {
+  std::vector<int> my_vec {1, 2, 3, 4, 5};
+
+  auto it = std::find(my_vec.begin(), my_vec.end(), 3);
+
+  if (it != my_vec.end()) {
+    std::cout << "Öğe bulundu: " << *it << std::endl;
+  } else {
+    std::cout << "Öğe bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::find() işlevinin kullanımını göstermektedir. std::vector int türünde bir vektör oluşturuyoruz ve vektörde 3 sayısının olup olmadığını kontrol etmek için std::find() işlevini kullanıyoruz. std::find() işlevi, vektörde 3 sayısının var olduğunu tespit eder ve sonuç olarak 3 sayısının konumunu gösteren bir işaretçi döndürür.
+
+- std::find_if() ve std::find_if_not() işlevlerinin kullanımı da benzerdir. İşlevin ilk iki parametresi aralık işaretçilerdir ve son parametre, bir işlev nesnesidir. İşlev nesnesi, belirli bir özelliğe sahip olan veya sahip olmayan öğeleri tanımlar. İşlev, aralıktaki öğeleri arar ve öğe bulunduğunda öğenin konumunu gösteren bir işaretçi döndürür. Öğe bulunamadığında ise son öğeyi gösteren bir işaretçi döndürülür.
+
+- İşte örnek bir kod parçası, std::find_if() işlevinin nasıl kullanılabileceğini gösteriyor:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+bool is_even(int num) {
+  return num % 2 == 0;
+}
+
+int main() {
+  std::vector<int> my_vec {1, 3, 5, 7, 8};
+
+  auto it = std::find_if(my_vec.begin(), my_vec.end(), is_even);
+
+  if (it != my_vec.end()) {
+    std::cout << "İlk çift sayı: " << *it << std::endl;
+  } else {
+    std::cout << "Çift sayı bulunamadı" << std::endl;
+  }
+
+  return 0;
+}
+
+```
+
+> Bu örnek kod, std::find_if() işlevinin kullanımını göstermektedir. std::vector<int> türünde bir vektör oluşturuyoruz ve vektördeki ilk çift sayıyı bulmak için is_even() işlevini kullanıyoruz. std::find_if() işlevi, vektördeki ilk çift sayıyı tespit eder ve sonuç olarak çift sayının konumunu gösteren bir işaretçi döndürür.
+
+- std::find_if_not() işlevinin kullanımı da benzerdir, ancak belirli bir özelliğe sahip olmayan öğeleri aramak için kullanılır.
+
+- Bu işlevlerin kullanımı, bir aralıkta belirli bir öğenin varlığını veya belirli bir özelliğe sahip olan veya sahip olmayan öğeleri bulmak için oldukça yaygındır. Örneğin, bir kelime içinde belirli bir karakterin var olup olmadığını kontrol etmek veya bir dosyada belirli bir kelimeyi içeren satırı bulmak için kullanılabilir.
 
 
 
