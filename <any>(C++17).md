@@ -45,9 +45,7 @@ int main() {
 
 ```
 > Bu örnekte, a örneği int türünden bir değer içeriyor, ancak std::string türüne dönüştürülmeye çalışılıyor. Bu nedenle, std::bad_any_cast istisnası fırlatılır ve what işlevi, "bad any cast" mesajını döndürür.
-    
-## Functions
-
+   
 ### swap()
 
 - std::swap(std::any) işlevi, std::any sınıfının bir örneğinin içeriğini başka bir std::any örneğinin içeriğiyle değiştirmek için kullanılır.
