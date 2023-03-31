@@ -4,6 +4,122 @@
 
 - std::bitset sınıfı, bit dizisindeki her bir bitin değerini 0 veya 1 olarak saklar. Bitleri kontrol etmek, ayarlamak veya temizlemek için birçok işlev sağlar. Ayrıca, std::bitset nesneleri, standart aritmetik operatörlerini (+, -, *, /, %, vb.) ve bit işlemleri operatörlerini (|, &, ^, vb.) destekler.
 
+# Member Functions
+
+- **set()**
+> bir std::bitset nesnesinin belirtilen indeksindeki bit değerini 1 olarak ayarlar.
+- **reset()**
+> belirtilen bitleri 0'a ayarlar (sıfırlar) ve bit dizisinin diğer bitleri üzerinde herhangi bir etkisi yoktur. reset() işlevi, set() işlevinin tam tersidir.
+- **flip()**
+> belirtilen pozisyondaki bitin değerini tersine çevirir ve bitset'i döndürür.
+- **count()**
+- **test()**
+- **any()**
+- **none()**
+- **all()**
+- **size()**
+- **to_string()**
+- **to_ulong()**
+- **to_ullong()**
+
+### set()
+
+- std::bitset::set() bir std::bitset nesnesinin belirtilen indeksindeki bit değerini 1 olarak ayarlar.
+
+- Örneğin, aşağıdaki kodda mybitset adında bir std::bitset nesnesi oluşturulur ve 2. indeksindeki bit değeri 1 olarak ayarlanır:
+
+```CPP
+#include <bitset>
+#include <iostream>
+
+int main() {
+  std::bitset<4> mybitset;  // 4 bit uzunluğunda bir bitset nesnesi oluşturur
+  mybitset.set(2);          // 2. indeksindeki bit değerini 1 olarak ayarlar
+
+  std::cout << mybitset << '\n';  // 0001
+  return 0;
+}
+
+```
+
+### reset()
+
+- reset() işlevi, belirtilen bitleri 0'a ayarlar (sıfırlar) ve bit dizisinin diğer bitleri üzerinde herhangi bir etkisi yoktur. reset() işlevi, set() işlevinin tam tersidir.
+
+- Örnek kullanımı:
+
+```CPP
+#include <bitset>
+#include <iostream>
+
+int main() {
+  std::bitset<8> bits("11011011");
+  std::cout << bits << '\n'; // 11011011
+
+  bits.reset(3);
+  std::cout << bits << '\n'; // 11010011
+
+  bits.reset();
+  std::cout << bits << '\n'; // 00000000
+}
+
+```
+> Bu örnekte, öncelikle 8 bitlik bir std::bitset örneği tanımlanır ve ilk değeri "11011011" olarak ayarlanır. Sonra, üçüncü biti sıfırlamak için reset() işlevi kullanılır ve sonuç olarak bit dizisi "11010011" olarak değiştirilir. Daha sonra tüm bitleri sıfırlamak için reset() işlevi bir kez daha çağrılır ve bit dizisi sıfırlanır (tüm bitler 0'a ayarlanır).
+
+### flip()
+
+- std::bitset::flip() fonksiyonu, belirtilen pozisyondaki bitin değerini tersine çevirir ve bitset'i döndürür.
+
+- Örneğin, aşağıdaki kod bir std::bitset oluşturur ve belirtilen pozisyonlardaki bitleri tersine çevirir:
+
+```CPP
+#include <iostream>
+#include <bitset>
+
+int main() {
+  std::bitset<8> mybits("00001111");
+  std::cout << "Before flip: " << mybits << '\n';
+
+  mybits.flip(2);
+  mybits.flip(5);
+
+  std::cout << "After flip: " << mybits << '\n';
+
+  return 0;
+}
+
+```
+> Bu kod örneği, aşağıdaki çıktıyı üretir:
+
+```CPP
+Before flip: 00001111
+After flip: 00101011
+
+```
+
+> Burada, mybits bit kümesi önce 00001111 olarak tanımlanır ve sonra 2. ve 5. bitler tersine çevrilir. flip() fonksiyonu, her bir belirtilen pozisyondaki bitin değerini tersine çevirir. Sonuç olarak, çıktıda 2. ve 5. bitlerin değeri 1, diğer bitlerin ise 0 olduğu görülür.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 - İşte bir örnek:
 
 ```CPP
