@@ -15,12 +15,19 @@
 - **count()**
 > belirtilen bit setindeki 1 bitlerinin sayısını hesaplar ve döndürür. Fonksiyon, std::size_t türünde bir değer döndürür.
 - **test()**
+> belirtilen bitin değerini döndürür. Bit 1 olarak ayarlanmışsa true döner, aksi halde false döner.
 - **any()**
+> bit setinin herhangi bir bitinin ayarlanıp ayarlanmadığını sorgular. Eğer en az bir bit ayarlanmışsa, true değerini döndürür, aksi takdirde false değerini döndürür.
 - **none()**
+> bitset'teki tüm bitlerin 1 (true) olup olmadığını kontrol eder. Tüm bitler 1 ise all() fonksiyonu true değerini döndürür, aksi halde false değerini döndürür.
 - **all()**
+> bitset'teki tüm bitlerin 1 (true) olup olmadığını kontrol eder
 - **size()**
+> Bu fonksiyon, bit kümesindeki toplam bit sayısını verir.
 - **to_string()**
+> bir bit kümesini string bir biçime dönüştürür.
 - **to_ulong()**
+> bitset nesnesinde tutulan bitlerin bir unsigned long tamsayısına dönüştürülmesini sağlar. 
 - **to_ullong()**
 
 ### set()
@@ -126,96 +133,165 @@ Number of set bits: 4
 
 ```
 
+### test()
 
+- std::bitset::test() fonksiyonu, belirtilen bitin değerini döndürür. Bit 1 olarak ayarlanmışsa true döner, aksi halde false döner.
 
+- Örnek kullanımı aşağıdaki gibi olabilir:
 
+```CPP
+#include <bitset>
+#include <iostream>
 
+int main() {
+    std::bitset<8> mybits("01010101");
+    
+    bool bit_value = mybits.test(3); // mybits'teki 3. bitin değerini alır
 
+    std::cout << "3. bit value is " << bit_value << '\n';
 
+    return 0;
+}
 
+```
+> Bu örnek, "01010101" değerine sahip mybits bit kümesindeki 3. bitin değerini alır ve bunu bit_value değişkenine kaydeder. std::bitset::test() fonksiyonunun geri döndürdüğü bool değeri daha sonra ekrana yazdırılır.
 
+### any()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- İşte bir örnek:
+- any fonksiyonu, std::bitset sınıfının üye fonksiyonlarından biridir ve bit setinin herhangi bir bitinin ayarlanıp ayarlanmadığını sorgular. Eğer en az bir bit ayarlanmışsa, true değerini döndürür, aksi takdirde false değerini döndürür. Örneğin:
 
 ```CPP
 #include <iostream>
 #include <bitset>
 
 int main() {
-    // 8 bitlik bir std::bitset nesnesi oluşturma
-    std::bitset<8> bits("10101010");
+  std::bitset<4> bits;
+  bits.set(0);
+  bits.set(2);
 
-    // Bitlerin değerlerini yazdırma
-    std::cout << "Bitlerin değerleri: ";
-    for (int i = 0; i < bits.size(); ++i) {
-        std::cout << bits[i];
+  if (bits.any()) {
+    std::cout << "At least one bit is set.\n";
+  } else {
+    std::cout << "No bits are set.\n";
+  }
+  
+  return 0;
+}
+
+```
+
+> Bu örnekte, bits bit seti oluşturulur ve set() fonksiyonu kullanılarak 0. ve 2. bit ayarlanır. Daha sonra any() fonksiyonu kullanılarak bit setinin herhangi bir bitinin ayarlanıp ayarlanmadığı sorgulanır ve çıktı "At least one bit is set." şeklinde olur.
+
+### none()
+
+- none bir bit kümesinde tüm bitler 0 olduğunda true döndüren bir bit işlemidir. Bit kümesinde en az bir bit 1 ise false döndürür. Bu işlem, all işlemi ile tam tersidir.
+
+- Örneğin, aşağıdaki kodda a bit kümesinde hiçbir bit 1 değilken, b bit kümesinde en az bir bit 1 olduğu için none işlemi true değer döndürür.
+
+```CPP
+#include <bitset>
+#include <iostream>
+
+int main() {
+  std::bitset<4> a{0b0000};
+  std::bitset<4> b{0b0011};
+
+  std::cout << std::boolalpha;
+  std::cout << std::bitset<4>{a}.to_string() << " none: " << a.none() << '\n';
+  std::cout << std::bitset<4>{b}.to_string() << " none: " << b.none() << '\n';
+}
+
+```
+- Çıktı:
+```CPP
+0000 none: true
+0011 none: false
+
+```
+
+### all()
+
+- all() bitset sınıfının bir üye fonksiyonudur ve bitset'teki tüm bitlerin 1 (true) olup olmadığını kontrol eder. Tüm bitler 1 ise all() fonksiyonu true değerini döndürür, aksi halde false değerini döndürür.
+
+- Örneğin:
+
+```CPP
+#include <iostream>
+#include <bitset>
+
+int main() {
+    std::bitset<8> bits1("10101010");
+    std::bitset<8> bits2("11111111");
+
+    if (bits1.all()) {
+        std::cout << "Bits1 has all bits set to 1\n";
+    } else {
+        std::cout << "Bits1 does not have all bits set to 1\n";
     }
-    std::cout << std::endl;
 
-    // Bitleri tersine çevirme
-    bits.flip();
-
-    // Yeni bit değerlerini yazdırma
-    std::cout << "Yeni bit değerleri: " << bits.to_string() << std::endl;
+    if (bits2.all()) {
+        std::cout << "Bits2 has all bits set to 1\n";
+    } else {
+        std::cout << "Bits2 does not have all bits set to 1\n";
+    }
 
     return 0;
 }
 
 ```
 
-- Bu örnekte, önce bir std::bitset nesnesi oluşturulur. Bu nesne, "10101010" şeklinde bir bit dizisini temsil eder. Daha sonra, for döngüsü ile bitlerin değerleri yazdırılır. Son olarak, flip işlevi kullanılarak bitleri tersine çeviririz ve yeni bit değerleri yazdırılır.
+> Bu program "Bits1 does not have all bits set to 1" ve "Bits2 has all bits set to 1" çıktısını üretir.
 
-- std::bitset sınıfı, özellikle veri işleme uygulamalarında ve optimize edilmiş kod yazımında sık kullanılan bir araçtır.
+### to_string()
 
-# en sonda to_string ile donusum yaptin. Bunu yapmak zorunda miyiz
+- to_string() fonksiyonu C++'ın bitset kütüphanesinde bulunur ve bir bit kümesini string bir biçime dönüştürür.
 
-- Hayır, std::bitset sınıfının bir to_string() üye işlevi bulunur, bu nedenle bit dizisini bir dize olarak elde etmek için to_string() yöntemini kullanabilirsiniz. Ancak, to_string() yöntemi, bit dizisini bir std::string nesnesine dönüştürür, bu da gereksiz bir bellek kullanımına neden olabilir.
-
-- Yukarıdaki örnekte to_string() yöntemini kullanarak bit dizisini bir dizeye dönüştürdüm, ancak daha iyi bir seçenek, bit dizisini doğrudan yazdırmaktır. Bunun için, örneğin, operator<< işleci kullanılabilir:
+- Örnek kullanım:
 
 ```CPP
-std::cout << "Yeni bit değerleri: ";
-for (int i = 0; i < bits.size(); ++i) {
-    std::cout << bits[i];
+#include <iostream>
+#include <bitset>
+
+int main() {
+    std::bitset<8> bits{ 0b11001010 };
+    std::string bits_string = bits.to_string();
+
+    std::cout << bits_string << '\n';  // Output: 11001010
+    return 0;
 }
-std::cout << std::endl;
 
 ```
-> Bu örnekte, operator<< işleci kullanılarak, bit dizisi doğrudan std::cout akışına yazdırılır. Bu, to_string() yöntemini kullanmaktan daha az bellek kullanır ve daha hızlı çalışır.
-
-# o zaman neden daha verimsiz bir kod yazdin
-
-- Haklısınız, örneğimdeki kod to_string() yöntemini kullanarak biraz daha verimsiz oldu. Aslında, bit dizisini doğrudan yazdırmak daha verimlidir.
-
-- Bunun nedeni, to_string() yönteminin, bit dizisini bir std::string nesnesine dönüştürmek için gereksiz bir bellek kullanmasıdır. Özellikle büyük bit dizileri için, bu bellek kullanımı önemli hale gelebilir. Ayrıca, std::cout gibi bir çıktı akışına doğrudan yazdırarak, bir std::string nesnesinin oluşturulmasına gerek kalmadan daha hızlı bir çıktı elde edebiliriz.
-
-- Yaptığım hata için özür dilerim, daha verimli bir örnek sunmalıydım.
+> Yukarıdaki örnekte bitset sınıfı kullanılarak bits adında bir nesne oluşturuldu ve bu nesne 8 bit uzunluğunda bir bit kümesi olarak tanımlandı. Daha sonra to_string() fonksiyonu kullanılarak bit kümesi, string bir biçime dönüştürüldü ve bits_string adındaki string nesnesine atandı. Son olarak, dönüştürülmüş bit kümesi std::cout kullanılarak ekrana yazdırıldı.
 
 
 
+### to_ulong()
 
+- to_ulong() fonksiyonu std::bitset sınıfının bir üye fonksiyonudur. Bu fonksiyon bitset nesnesinde tutulan bitlerin bir unsigned long tamsayısına dönüştürülmesini sağlar. bitset nesnesindeki bit sayısı, unsigned long tamsayısının boyutunu aşarsa, sonuç tanımsızdır.
 
+- Aşağıdaki örnek, bitset nesnesinde tutulan bitleri unsigned long tamsayısına dönüştürerek yazdırır:
 
+```CPP
+#include <iostream>
+#include <bitset>
 
+int main() {
+    std::bitset<8> bits("10101010");
+    std::cout << bits.to_ulong() << std::endl; // prints 170
+    return 0;
+}
 
+```
 
+### to_ullong()
 
+- std::bitset sınıfı, sabit boyutlu bitlerin bir dizisini depolamak için kullanılan bir sınıftır. to_ulong() ve to_ullong() fonksiyonları, bitlerin tam sayı olarak yorumlanmasını ve unsigned long veya unsigned long long türlerindeki temsilcilerini döndürür.
+
+- to_ulong() fonksiyonu, std::bitset nesnesinin boyutu unsigned long'dan küçük veya eşit olduğunda kullanılır. Eğer bitset nesnesinin boyutu unsigned long türünün boyutundan daha büyükse, to_ulong() fonksiyonunun davranışı tanımsızdır.
+
+- to_ullong() fonksiyonu ise, std::bitset nesnesinin boyutu unsigned long long'dan küçük veya eşit olduğunda kullanılır. Eğer bitset nesnesinin boyutu unsigned long long türünün boyutundan daha büyükse, to_ullong() fonksiyonunun davranışı tanımsızdır.
+
+- Özetle, to_ulong() ve to_ullong() fonksiyonları, std::bitset nesnesinin tuttuğu bitleri unsigned long veya unsigned long long türünde temsil eden değerler döndürür. Ancak boyut sınırlandırmaları nedeniyle, bu fonksiyonların kullanımı dikkatli yapılmalıdır.
 
 
 
