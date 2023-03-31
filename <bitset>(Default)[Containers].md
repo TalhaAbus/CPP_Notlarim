@@ -13,6 +13,7 @@
 - **flip()**
 > belirtilen pozisyondaki bitin değerini tersine çevirir ve bitset'i döndürür.
 - **count()**
+> belirtilen bit setindeki 1 bitlerinin sayısını hesaplar ve döndürür. Fonksiyon, std::size_t türünde bir değer döndürür.
 - **test()**
 - **any()**
 - **none()**
@@ -100,6 +101,36 @@ After flip: 00101011
 > Burada, mybits bit kümesi önce 00001111 olarak tanımlanır ve sonra 2. ve 5. bitler tersine çevrilir. flip() fonksiyonu, her bir belirtilen pozisyondaki bitin değerini tersine çevirir. Sonuç olarak, çıktıda 2. ve 5. bitlerin değeri 1, diğer bitlerin ise 0 olduğu görülür.
 
 
+### count()
+
+- std::bitset sınıfının count üye fonksiyonu, belirtilen bit setindeki 1 bitlerinin sayısını hesaplar ve döndürür. Fonksiyon, std::size_t türünde bir değer döndürür.
+
+- Örneğin, aşağıdaki kod std::bitset sınıfının count üye fonksiyonunu kullanarak bir bit kümesindeki 1 bitlerinin sayısını hesaplar:
+
+```CPP
+#include <bitset>
+#include <iostream>
+
+int main() {
+  std::bitset<8> bits(0b10101010);
+  std::cout << "Number of set bits: " << bits.count() << std::endl;
+  return 0;
+}
+
+```
+
+- Bu program şu çıktıyı üretir:
+
+```CPP
+Number of set bits: 4
+
+```
+
+
+
+
+
+
 
 
 
@@ -175,3 +206,32 @@ std::cout << std::endl;
 - Bunun nedeni, to_string() yönteminin, bit dizisini bir std::string nesnesine dönüştürmek için gereksiz bir bellek kullanmasıdır. Özellikle büyük bit dizileri için, bu bellek kullanımı önemli hale gelebilir. Ayrıca, std::cout gibi bir çıktı akışına doğrudan yazdırarak, bir std::string nesnesinin oluşturulmasına gerek kalmadan daha hızlı bir çıktı elde edebiliriz.
 
 - Yaptığım hata için özür dilerim, daha verimli bir örnek sunmalıydım.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
