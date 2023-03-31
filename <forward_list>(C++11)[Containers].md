@@ -4,13 +4,64 @@
 
 - std::forward_list, std::list'in tek yönlü bir sürümüdür. Tek yönlü bağlı liste, her elemanın sadece bir sonraki elemanını bilen bir liste türüdür. Bu özellik, bir öğenin listeye eklendiğinde, sadece bir sonraki öğenin adresi ayarlanır ve önceki öğenin adresi saklanmaz. Bu nedenle, std::forward_list daha hafif ve daha az yer kaplayan bir liste türüdür ve belirli bir senaryoda tercih edilebilir.
 
-- std::forward_list sınıfının bazı sık kullanılan fonksiyonları şunlardır:
+# Member Functions
 
-- **push_front():** Listenin başına eleman ekler.
-- **pop_front():** Listenin başındaki elemanı çıkarır.
-- **insert_after():** Belirtilen konumdan sonra bir veya daha fazla eleman ekler.
-- **erase_after():** Belirtilen konumdan sonra bir veya daha fazla elemanı siler.
-- **remove():** Liste içinde belirtilen değere sahip tüm elemanları siler.
+- **before_begin()**
+- **begin()**
+- **end()**
+- **cbefore_begin()**
+- **cbegin()**
+- **cend()**
+- **empty()**
+- **max_size()**
+- **front()**
+- **assign()**
+- **emplace_front()**
+- **push_front()**
+- **pop_front()**
+- **emplace_after()**
+- **insert_after()**
+- **erase_after()**
+- **swap()**
+- **resize()**
+- **clear()**
+- **splice_after()**
+- **remove()**
+- **remove_if()**
+- **unique()**
+- **merge()**
+- **sort()**
+- **reverse()**
+- **get_allocator()**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Diğer Örnekler
 
 - Örnek olarak, std::forward_list kullanarak bir sayı listesi oluşturabiliriz ve listenin elemanlarını yazdırabiliriz:
 
