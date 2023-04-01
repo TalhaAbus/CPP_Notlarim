@@ -11,34 +11,104 @@
 - Aşağıdaki örnek, std::from_chars ve std::to_chars işlevlerinin kullanımını göstermektedir:
 
 ```CPP
-#include <iostream>
+#include <cassert>
 #include <charconv>
-
+#include <iomanip>
+#include <iostream>
+#include <optional>
+#include <string_view>
+#include <system_error>
+ 
 int main()
 {
-    char str[] = "1234";
-    int n;
-
-    // Convert string to integer
-    auto result = std::from_chars(str, str + sizeof(str), n);
-
-    if (result.ec == std::errc()) {
-        std::cout << "Converted number: " << n << '\n';
+    for (std::string_view const str : {"1234", "15 foo", "bar", " 42", "5000000000"})
+    {
+        std::cout << "String: " << std::quoted(str) << ". ";
+        int result{};
+        auto [ptr, ec] { std::from_chars(str.data(), str.data() + str.size(), result) };
+ 
+        if (ec == std::errc())
+            std::cout << "Result: " << result << ", ptr -> " << std::quoted(ptr) << '\n';
+        else if (ec == std::errc::invalid_argument)
+            std::cout << "That isn't a number.\n";
+        else if (ec == std::errc::result_out_of_range)
+            std::cout << "This number is larger than an int.\n";
     }
-
-    // Convert integer to string
-    char buf[10];
-    auto ptr = std::to_chars(buf, buf + sizeof(buf), n);
-
-    *ptr = '\0';
-    std::cout << "Converted string: " << buf << '\n';
-
-    return 0;
+ 
+    // C++23's constexpr from_char demo:
+    auto to_int = [](std::string_view s) -> std::optional<int>
+    {
+        if (int value; std::from_chars(s.begin(), s.end(), value).ec == std::errc{})
+            return value;
+        else
+            return std::nullopt;
+    };
+ 
+    assert(to_int("42") == 42);
+    assert(to_int("foo") == std::nullopt);
+    #if __cpp_lib_constexpr_charconv and __cpp_lib_optional >= 202106
+    static_assert(to_int("42") == 42);
+    static_assert(to_int("foo") == std::nullopt);
+    #endif
 }
-
 ```
-> Bu örnekte, "1234" karakter dizisi önce std::from_chars işlevi kullanılarak bir tamsayıya dönüştürülür ve sonrasında std::to_chars işlevi kullanılarak tekrar karakter dizisine dönüştürülür.
+- Cikti:
 
+String: "1234". Result: 1234, ptr -> ""
+String: "15 foo". Result: 15, ptr -> " foo"
+String: "bar". That isn't a number.
+String: " 42". That isn't a number.
+String: "5000000000". This number is larger than an int.
+    
+    
+**Ornek:**
+    
+```CPP
+#include <array>
+#include <charconv>
+#include <iostream>
+#include <string_view>
+#include <system_error>
+ 
+void show_to_chars(auto... format_args)
+{
+    std::array<char, 10> str;
+ 
+    if (auto [ptr, ec]
+            = std::to_chars(str.data(), str.data() + str.size(), format_args...);
+        ec == std::errc())
+        std::cout << std::string_view(str.data(), ptr) << '\n';
+    else
+        std::cout << std::make_error_code(ec).message() << '\n';
+}
+ 
+int main()
+{
+    show_to_chars(42);
+    show_to_chars(+3.14159F);
+    show_to_chars(-3.14159, std::chars_format::fixed);
+    show_to_chars(-3.14159, std::chars_format::scientific, 3);
+    show_to_chars(3.1415926535, std::chars_format::fixed, 10);
+} 
+```
+    
+- Cikti:
+
+```CPP
+42
+3.14159
+-3.14159
+-3.142e+00
+Value too large for defined data type
+```
+    
+    
+    
+    
+    
+    
+    
+    
 # Bu baslik dosyasi hangi fonksiyon ve siniflari iceriyor
 
 - <charconv> başlık dosyası, C++17 ile birlikte eklenen, karakter dizileriyle sayısal değerler arasında dönüşümler yapmak için kullanılan bir dizi işlevi içerir. Bu işlevler, sayısal değerleri karakter dizilerine dönüştürmek veya karakter dizilerini sayısal değerlere dönüştürmek için kullanılır. <charconv> başlık dosyası ayrıca, sayısal değerleri değiştirmeden, sayısal bir veriyi farklı bir veri türüne dönüştürmek için kullanılan std::from_chars ve std::to_chars işlevlerini de içerir.
