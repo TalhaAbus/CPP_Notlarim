@@ -53,13 +53,13 @@ int main()
 }
 ```
 - Cikti:
-
+```
 String: "1234". Result: 1234, ptr -> ""
 String: "15 foo". Result: 15, ptr -> " foo"
 String: "bar". That isn't a number.
 String: " 42". That isn't a number.
 String: "5000000000". This number is larger than an int.
-    
+```
     
 **Ornek:**
     
