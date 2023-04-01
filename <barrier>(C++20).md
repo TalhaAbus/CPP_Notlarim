@@ -1,10 +1,116 @@
-- C++20 standartları ile birlikte eklenen <barrier> başlık dosyası, senkronizasyon için bir bariyer mekanizması sağlar. Bir bariyer, bir grup thread'in bir noktada toplanması ve burada senkronize bir şekilde çalışmasını sağlar.
+- C++20 standartları ile birlikte eklenen barrier başlık dosyası, senkronizasyon için bir bariyer mekanizması sağlar. Bir bariyer, bir grup thread'in bir noktada toplanması ve burada senkronize bir şekilde çalışmasını sağlar.
 
 - Bir bariyer, bir veya daha fazla thread'in bir noktada toplanması ve devam etmek için diğer thread'lerin tamamlanmasını beklemesi gerektiği senaryolarda kullanışlıdır. Örneğin, birden fazla thread ile çalışan bir işlemcinin tüm işlemlerinin tamamlanmasını beklemek için kullanılabilir.
 
 - Bariyer, bir sayaç ve bir mutex kullanarak çalışır. Bir thread sayaç değerini arttırır ve diğer thread'ler bu sayacı kontrol ederek işlemlerinin tamamlanıp tamamlanmadığını kontrol ederler. Mutex, sayacın eş zamanlı olarak değiştirilmesine karşı koruma sağlar.
 
 - Bariyer, constructorda belirtilen sayıda thread tarafından birleştirilinceye kadar bekler. Tüm thread'ler bariyere ulaştığında devam etmek için bekleyebilir veya bir sonraki bariyer noktasına kadar bekleyebilirler.
+
+**Ornek:**
+```CPP
+#include <barrier>
+#include <iostream>
+#include <string>
+#include <thread>
+#include <vector>
+ 
+int main()
+{
+    const auto workers = { "Anil", "Busara", "Carl" };
+ 
+    auto on_completion = []() noexcept
+    {
+        // locking not needed here
+        static auto phase = "... done\n" "Cleaning up...\n";
+        std::cout << phase;
+        phase = "... done\n";
+    };
+ 
+    std::barrier sync_point(std::ssize(workers), on_completion);
+ 
+    auto work = [&](std::string name)
+    {
+        std::string product = "  " + name + " worked\n";
+        std::cout << product;  // ok, op<< call is atomic
+        sync_point.arrive_and_wait();
+ 
+        product = "  " + name + " cleaned\n";
+        std::cout << product;
+        sync_point.arrive_and_wait();
+    };
+ 
+    std::cout << "Starting...\n";
+    std::vector<std::jthread> threads;
+    threads.reserve(std::size(workers));
+    for (auto const& worker : workers)
+        threads.emplace_back(work, worker);
+}
+```
+
+> Bu kod, std::barrier kullanarak senkronize edilmiş bir çalışma grubunu temsil ediyor. Kodda önce bir std::barrier nesnesi oluşturuluyor ve çalışan sayısı olarak workers listesinin boyutu ayarlanıyor. sync_point.arrive_and_wait() çağrıları, her bir çalışanın ilk önce işlerini yapmasını beklemesi için kullanılır. Bu işlem tamamlandıktan sonra, sync_point.arrive_and_wait() çağrıları tekrar çağrılır ve bu sefer temizlik yapmalarını bekler. on_completion() lambda ifadesi, temizliği tamamladıktan sonra çalışanlardan herhangi biri tarafından çağrılır ve "Cleaning up ..." mesajını yazdırır. Son olarak, her bir çalışanın işini yaptığı bir std::jthread oluşturulur ve çalıştırılır. Her bir çalışanın adı ve ne yaptığı, çalışanın oluşturulduğu std::jthread içinde belirtilir.
+
+
+
+
+### arrive()
+
+- barrier::arrive() fonksiyonu, bekleyen tüm iş parçalarının tamamlandığını işaret eder. Bu fonksiyon, sınıftaki öğeleri günceller ve öğelerdeki sayacı azaltır. Sayacın sıfıra düşmesiyle birlikte, barrier nesnesindeki tüm iş parçaları tamamlandı ve devam edebilirler. Bu nedenle, bir dizi iş parçasını senkronize etmek için kullanışlı bir araçtır.
+
+```CPP
+#include <iostream>
+#include <thread>
+#include <barrier>
+
+const int num_threads = 3;
+const int num_iterations = 3;
+
+void worker(int id, std::barrier<>& b) {
+    for (int i = 0; i < num_iterations; ++i) {
+        std::cout << "Thread " << id << " is waiting" << std::endl;
+        b.arrive_and_wait(); // Barrier
+        std::cout << "Thread " << id << " resumed" << std::endl;
+    }
+}
+
+int main() {
+    std::barrier<> b(num_threads);
+    std::thread t[num_threads];
+
+    for (int i = 0; i < num_threads; ++i) {
+        t[i] = std::thread(worker, i, std::ref(b));
+    }
+
+    for (int i = 0; i < num_threads; ++i) {
+        t[i].join();
+    }
+
+    return 0;
+}
+
+```
+> Yukarıdaki kod, 3 iş parçacığı oluşturur ve her biri 3 kez bir bariyerde bekler ve devam eder. İş parçacıkları, std::barrier sınıfı kullanılarak senkronize edilir. Bariyer, arrive_and_wait() yöntemiyle geçilir. Tüm iş parçacıkları geçince, arrive_and_wait() işlemi tamamlanır ve iş parçacıkları devam eder.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - Aşağıda bir örnek verilmiştir:
 
