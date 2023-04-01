@@ -6,6 +6,24 @@
 - **Bit rotation (döndürme işlemleri)**
 -  bit  başlık dosyası, C dilindeki bit işlemleri için tanımlanan işaretli ve işaretsiz tamsayı veri türlerine karşılık gelen C++ tamsayı veri türlerinin yanı sıra, bit işlemleri için kullanılacak fonksiyonlar ve sabitler de tanımlar.
 
+# Member Functions
+
+- **bit_cast()**
+- **byteswap()**
+- **has_single_bit()**
+- **bit_ceil()**
+- **bit_floor()**
+- **bit_width()**
+- **rotl()**
+- **rotr()**
+- **countl_zero()**
+- **countl_one()**
+- **countr_zero()**
+- **countr_one()**
+- **popcount()**
+
+
+
 ### bit_cast()
 
 - std::bit_cast C++20 standardında tanıtılan bir işlev şablonudur. Bu işlev, bir nesneyi farklı bir tipe dönüştürmek için kullanılır. std::bit_cast'in en önemli özelliği, bu işlemi tür bitleri düzeyinde yapmasıdır.
