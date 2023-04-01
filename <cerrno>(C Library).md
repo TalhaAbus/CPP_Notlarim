@@ -58,10 +58,30 @@ int main() {
 
 > Bu örnekte, fopen fonksiyonu nonexistent_file.txt dosyasını açamazsa, nullptr değeri döndürür ve errno değeri set edilir. Ardından, errno değeri kontrol edilir ve uygun mesaj yazdırılır. Dosya başarılı bir şekilde açılırsa, fclose fonksiyonu kullanılarak dosya kapatılır.
 
+- Aşağıdaki örnek C++'ta cerrno başlık dosyasının kullanımını gösterir:
 
+```CPP
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cerrno>
+ 
+int main()
+{
+    FILE* f = fopen("non_existent_file", "r");
+    if (!f)
+    {
+        std::cout << "fopen failed, errno = " << errno << std::endl;
+        std::cout << "Error description: " << strerror(errno) << std::endl;
+    }
+ 
+    return 0;
+}
+ 
+```
+> Bu örnekte fopen() fonksiyonu çağrılırken verilen dosya adı mevcut olmadığı için dosya açma işlemi başarısız olacaktır. İşlem başarısız olduğu için fopen() fonksiyonu NULL değeri döndürecektir. !f ifadesi dosya açma işleminin başarısız olup olmadığını kontrol eder. Dosya açma işlemi başarısız olursa errno değişkeni belirli bir hata kodu ile ayarlanacaktır. Bu hata kodu cerrno başlık dosyasında tanımlı olan makrolar kullanılarak alınabilir. strerror() fonksiyonu, hata kodunu kullanarak bir hata açıklaması döndürür.
 
-
-
+- Yukarıdaki örnekte strerror() fonksiyonu kullanılarak errno hata kodunun bir açıklaması gösterilmiştir.
 
 
 
