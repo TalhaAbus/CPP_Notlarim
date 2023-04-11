@@ -2192,15 +2192,17 @@ private:
 > mutable verdigimiz nesneler dogrudan nesnenin observable state i ile ilgili degil. const nesneler icin de const uye fonsiyonlari icin de bu degiskenlerin degerinin degismesi semantik acindan bir hata degil. Boylece derleyici bu kontrolu yapmayip bunu legal kontrol edecek.
 
 **mutable:**
+- mutable, bir sınıfın const işlevi içinde yer alan bir verinin değerinin değiştirilebilmesini sağlar.
 - Derleyici const uye fonksiyonlari icinde sinifin bu elemaninin degerinin degismesini legal kabul et. 
 - const nesneler icin bu veri elemanin degerinin degismesini legal kabul et.
+- **Örneğin** bir sınıfın verilerini önbelleğe almak isteyebiliriz. Bu sınıfın verilerini takip etmek için işlev içinde bir sayaç kullanırsak bu sayacın değerini değiştirdiğmizde sentaks hatası alırız. Fakat sayaç değişkenini mutable ile bildirdiğimizde derleyiciye bunu göz ardı etmesi gerektiğinin mesajnı veriyoruz.
 
 ## Constructor - Destructor
 - Bir sinif nesnesinin hayata gelmesi, kullanilablir bir varlik haline donusmesi, sinifin bir uye fonksiyonu tarafindan gerceklestiliyor. Bu tur fonksoyonlara constructor deniliyor.
 - Her nesneyi hayata bir constructor fonksiyona yapilan cagri getiriyor.
 - Bir sinif nesnesinin hayatinin bitmesi onun destructor fonksiyonunun cagrisi ile gerceklesir.
 - Constructor ismi sinif ismi ile ayni olmak zorunda
-
+- Constructor, bir sınıf oluşturulduğu sırada otomatik çağırılan fonksiyondur. Bu fonksiyon, sınıfın veri üyelerine başlangıç değerlerini atamak veya sınıfın diğer özelliklerini tanımlamak için kullanılır.
 ```CPP
 class Myclass{
 public:
@@ -2211,6 +2213,7 @@ public:
 > void olmasi ile geri donus degeri olmamasi durumu farklidir. Constructer lar geri donus degeri kavrani yok.
 
 ## Destructor
+- Destructor, sınıf yok edildiği sırada çağırılan özel bir fonksiyondur. Bu fonksiyon sınıfın özel kaynaklarını serbest bırakmak ve sınıfın diğer finalizasyon işlemlerini yapmak için çağırılır.
 - non-static uye fonksiyonu olmak zorunda.
 - ismi sinif ismi ile ayni olacak ama basinda ~ karakteri olacak. ~Myclass
 - overload edilemiyor, parametre degiskeni olmamak zorunda.
@@ -2271,6 +2274,12 @@ int main()
 **Dikkat!**
 - Farkli kaynak dosyalarda tanimlanmis global sinif nesnelerinin hayata gelme sirasi belirli degil.
 - Static initialization Fiasco: Farkli kaynak dosyalardaki global degiskenlerin hayata gelme sirasi dil tarafindan belli degil.
+
+## Static Initialization Fiasco
+
+- Statik ömürlü nesnelerin doğru bir şekilde başlatılmamasından kaynaklanan bir sorundur. Bu sorun, statik ömürlü nesnelere ilk erişimde gerçekleşir.
+- Yani statik ömürlü bir nesne, başka bir statik ömürlü nesne tarafından kullanılan bir başka statik nesneye erişşim gerektirdiğinde başlatılıyorsa başlatma sırasında yaşanan bir sorun needeniyle istenmeyen sonuçlar oluşabilir.
+- Bu sorunu önlemek için: statik nesnelerin başlatılması için önceden belirlenmiş bir sıraya uygun olarak kodlama yapılması gerekir.
 
 ## static yerel sinif nesneleri
 
