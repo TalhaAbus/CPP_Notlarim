@@ -13,7 +13,7 @@
 ### Internal Linkage
 - Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması
 
-Örnek: 
+**Örnek:**
 > static int x; internal linkage
 
 ### Scope Leakage: Kapsam Sızıntısı
@@ -551,7 +551,7 @@ int main
     
 }
 ```
-### Ders 5 Örnek Kodlara Bak
+### Ders 5 Örnek Kodlar
 
 ```CPP
 int main()
@@ -936,6 +936,8 @@ int main()
 }
 ```
 
+
+
 # Ders 7
 
 ## Function Overloading
@@ -990,8 +992,6 @@ int func(int, int);
 
 ### User- defined conversion :
 - Normalde olmayan bir dönüşüm, bir fonksiyonun bildirilmesiyle ve derleyicinin bu fonksiyonu kullanarak dönüşümü gerçekleştirmesi olayı.
-
-# Ders 7 Alıştırmalar
 
 # Ders 7 Alıştırmalar
 
@@ -1631,6 +1631,22 @@ inline int x = 10;
 - Birden fazla kaynak dosyada bulunması odr ihlal etmiyor. Global bir değişkenin tanımını başlık dosyasına koyduğumuzda normalde odr ihlal ediliyordu.
 
 ## constexpr anahtar sözcüğü:
+
+- constexpr, derleme zamanında değer hesaplanması gereken yerlerde kullanılır. Derleyici consteexpr fonksiyonlar sayesinde değeri derleme compile time'da hesaplanabilecek olan fonksiyonları runtime'a bırakmaz. Bu daha hızlı ve verimli kod üretmeyi sağlar. 
+
+```CPP
+func(x+y)
+```
+> Derleyici bu ifadenin değerinin compile time'da hesaplanabileceğini görürse, bunu yapar. Yani runtime'da fonksiyona girdi - çıktı işlemleri olmadan sonuç elde edilir.
+
+- constexpr keyword'ün varlık nedeni verim. Yani bazı değerler compile time'da hesaplanabiliyorsa bu runtime'a bırakılmasın.
+
+**Not**:
+- Başlık dosyasına bir fonksiyon koyulacaksa bu inline olmalıdır. Çünkü farklı kaynak dosyalar tarafından include edildiğinde ODR ihlali yapmamalıdır. (constexpr fonksiyonlar implicitly inline kabul ediliyorlar.)
+- 
+
+
+
 
 ```CPP
 const int x = 10;   // değiğşkenin kendisinin oluşturduğu ifade bir constant expression
