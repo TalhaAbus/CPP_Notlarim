@@ -2324,7 +2324,11 @@ int main()
 - constructor o nesnenin olusturyldugu noktada cagirilacak ve o nesnenin scope unun sonunda destructor cagirilacak.
 
 ## Dinamik omurlu nesneler:
-- C++ dilinde dinamik omurlu nesneler operatorler ile hayata getiriliyor.
+**Dinmamik Ömürlü Nesneler Nasıl Hayata Gelir?**
+- C++ dilinde dinamik omurlu nesneler operatorler ile hayata getiriliyor. Dinamik ömmürlü nesneler programın çalışma zamanında hayata gelen nesnelerdir. Bellekte heap bölgesinde yer alırlar ve heap alanına erişim için de özel bellek yönetimi işlevleri kullnaılır.
+- Dinamik ömürlü nesneler oluştururken, programcı bellekten alan tahsis etmek için **new** anahtar kelimesini kullanır.
+- Nesne, oluşturulan tüm dinamik ömürlü nesneler için bir işaretçi döndürür. Bu pointer, oluşturulan nesneye erişim için kullanılır.
+> Dinamik nesneler hayata geldikten sonra serbest bırakılana kadar programın bellek kullnaımında kalıcı olarak yer alırlar.
 
 ```CPP
 new operators
@@ -2336,7 +2340,8 @@ delete operators
 - new ve delete malloc ve free nin karsiligi degil.
 - new dinamik omurlu nesne olusturmanin, delete ifadesi bir nesnenin hayatini sonlandiran ifade.
 
-**Açıklama: new Fighter yazıldığında neler olacak?**
+**Açıklama: new Fighter yazıldığında neler olacak?** - **New kullnaıldığında neler oluyor?**
+- İşlemci otomatik nesneleri stack belleğinde yönetirken, dinamik nesneler heap belleğinde oluşturulur. Dinamik bellek yönetimi, statikten farklıdır. Statik bellek, programın başlaması ile birlikte oluşturulur ve program sonlandığında yok olur. Dinamik bellek yönetimi, bellek analını runtime'da yönettiği için daha esnek bir yapı sunar.
 > sizeof fighter kadar bir bellek alaninin elde edimesi gerekiyor. Bunun icin bi alocation fonksiyonunnun cagirilmasi gerekiyor. C dilinde olsaydik burada malloc cagirilacakti. C++ dilinde default olara cagirilan fonksiyon:
 
 > operator new fonksiyonu.
@@ -2417,6 +2422,11 @@ void free(void *vp)
 > Constructor kaynagi ediniyor, destructor kaynagi geri veriyor.
 
 > delete unutulursa destructor cagirilmayacak. Eger destructor kaynak iade ediyorsa o kaynaklari geri veremiyecek. Buna resource leak deniliyor. Memory bir resource ama resource memory degil. 
+
+## RAII idiom Özet:
+- RAII, kaynak edinme işlemleri ve nesne yaşam döngüsünün ilişkilendirilmesini öneren bir programlama prensibidir. Bu prensip sayesinde kaynak edinme işlemi (bellek, dosya, soket..) bir nesne oluştuğunda gerçekleşir ve kaynağın kullanımı, nesnenin yaşamı boyunca kontrol edilir. Nesnenin ömrü sonlandığında kaynak serbest bırakılır. 
+- Yani RAII prensibi, kaynakların doğru kullanımı ve serbest bırakılmasını garantilemek için kullanılabilir.
+- 
 
 **Nasıl bir sentaks ile değişken tanımladığımda sınıfın default constructor unun çağırılması söz konusu?**
 
@@ -2531,6 +2541,8 @@ int main()
 ```
 
 ## Constructor initializer list:
+
+- Constructor Initializer List, bir sınıfın constructor'ında kullnaılan bir özelliktir. Bu özellik sayesinde sınıfın veri üyeleri hayata constructor body çalışmadan önce başlar. Yani constructor ana bloğuna girmeden veri elemanlarımız hayatta demektir.
 
 > Cosntructor bir sınıfın nesnelerini hayata getiriyor. Hayata getirmek demek, nesnenin non-static veri elemanlarını initialize etmesi demek.
 
