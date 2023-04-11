@@ -5750,7 +5750,18 @@ int main()
 - Öyle bir veri yapısı ki ögeler bellekte ardışık oalrak tutuluyor ve sondan ekleme ve silme işlemlerinin karmaşıklığı O-1. Constant type.
 - String'in dinamik diziyi kullanma amacı yazının karakterlerini tutmak.
 
+**Dinamik diziler:**
+- Sabit diziler gibi, dinamik diziler de ardışık ve parçalı olmayan bir bellek alanında tutulur.
+- **size**: Kaç adet öge var
+- **Capacity:** Ayrılan bellek bloğunun kaç öge tutabileceği
 
+**Reallocation'da 3 ihhtimal:**
+1. Aynı bellek bloğu genişletilebilir.
+2. Yeni bellek alanı alocate edilip ögeler kopyalanır, eski bellek alanı serbest bırakılır.
+3. Yetersiz bellek alanı sebebiyle başarısız olur.
+
+**Dinamik String Veri Yapıları:**
+- String nesnelerinin içinde dinamik bellek yönetimi için kullanılan pointer ve değişkenlerin yanında, sabit boyutta char dizi bulunmaktadır. Kısa stringler dinamik bellek yönetimine ihtiyaç duymadan burada tutulur ve maliyet küçük stringler için optimize edilmiş olur.
 
 
 
@@ -6012,6 +6023,8 @@ int main()
 > Burada ise yine A karakterleri heap'te tutuluyor str nesnesinin kendisi de heap'te tutuluyor. Yani heap'teki string nesnesi ile yazının tutulduğu bellek alanı birbiri ile karıştırılmamalı.
 
 ### Copy on write tekniği
+
+- Copy on Write, bir veri yapısının kopyasının oluşturulmasını engelleme yöntemidir. Bir kaynak çoğaltılmış ancak herhangi bir düzenlewme ve değişikliğe uğramamışsa, yeni bir kaynak oluşturmaya gewrek yoktur. Nesne değişirse, 2. nesne yaratılır.
 
 - Date x1;
 
@@ -6445,6 +6458,8 @@ int main()
 ### if with initializer
 
 - C++ 17 ile dile eklenen yeni if deyimi.
+- If bloğu içinde değişken tanımlamamızıve onu başlatmamızı sağlar. Kodun okunaklı hale gelmesini sağlar ve değişken kullanım alanlarını sınırlandırıp hata ihtimalini azaltır.
+
 
 ```CPP
 using namespace std;
@@ -6474,6 +6489,7 @@ int main()
 ### Reserve Fonksiyonu
 
 - Sınıfın reserve fonksiyonu kapasiteyi reserve eder. Reallocation minimize etmek veya bu ihtiyacı ortadan kaldırmak için kullanılabilecek bir fonksiyon. 
+- Reverse fonksiyonu, bir vector, string ya da deque nesnesinin kapasitesini ayarlamak için kullanılır. Bellek tahsisi için ihtiyaç duyulan işlemleri azaltır. Nesnenin boyutunu değiştirmez. Yalnızca belirtilen kapasiteye kadar bellekte yer ayırır ve nesneye elemanlar eklenirken bu bellek alanı kullanılır.
 
 - Bir yazının runtime'da büyüyeceğini düşünelim:
 
@@ -6499,7 +6515,9 @@ int main()
 {
 	string s;
 
-	s.reserve(10000);
+	s.reserve(10000); 
+	//runtime'da reallocation yapmayı önlemek için
+	//büyüyecek olan yazıyı önceden reverse ettim.
 	for (int i = 0; i < 10000; ++i)
 	{
 		s += 'a';
@@ -6549,7 +6567,12 @@ int main()
 	cout << "capacity =" << s.capacity() << '\n';
 
 	s.erase(1);
-	
+	// önce erase ettik ve verileri sildik
+	//sonra string_to_fit ettik ve kapasite
+	//en düşük değere indi.
+	//Erase etmeden shrink_to_fit etseydik
+	//yine en küçük kapasite değerine
+	//küçülecekti yani 300.015 değeri.
 	cout << "lenght =" << s.length() << '\n';
 	cout << "capacity =" << s.capacity() << '\n';
 
@@ -6576,6 +6599,12 @@ auto iter = s.begin();
 ```
 
 > Container begin fonksiyonu çağırıldığında bu fonksiyon container boş değilse container'daki ilk ögenin konumunu veriyor. Yukarıda begin fonksiyonu string'deki ilk ögenin konumunu döndürdü.
+**Iterator neydi?**
+- Iteratör, bir veri yapısının ögeleri üzerinde gezinmek için kullanılan bir araçtır. İşaretçi benzeri bir araç sağlarlar ancak işaretçilerden farklı olarak bir veri yapısının tüm ögelerini gezmek için kullanılırlar. 
+
+```
+std::vector<int>::iterator
+```
 
 ```CPP
 using namespace std;
