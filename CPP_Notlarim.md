@@ -7278,6 +7278,13 @@ class Der : protected Base {
 };
 ```
 
+### Upcasting
+- Türemiş bir sının nesnesinin temel sınıfa dönüştürülmesi işlemidir. Genellikle optomatik gerçekleşir ve gücenlidir. Temel sınıfın işlev ve özelliklerine erişmek için kullanılabilir.
+
+### Downcasting
+- Temel sınıf nesnesinin türemiş sınıfa dönüştürülmesidir. Otomatik gerçekleşmez. Genellikle temel sınıf işaretçi ve referanslarını alt sınıf türüne dönüştürmek için kullanılır. Tür güvenliği için dynamic_cast önerilir.
+
+
 **Not:** Bir anahtar sözcük kullanmadığımız zaman default olarak private inherritance. 
 
 - Eğer kalıtımda oluşturğumuz sınıf class anahtar sözcüğü ile değil de struct ile oluşturulsaydı, kalıtım biçimi public olacaktı.
@@ -7298,6 +7305,9 @@ struct Der : Base { // public inheritance
 ![image](https://user-images.githubusercontent.com/75746171/212338569-6f77588c-f5ed-418a-9056-2d8d9476b8e3.png)
 
 - A'nın içinde bir B nesnesi var. Ya A'nın B türünden bir elemanı vardır ya da A, B sınıfından kalıtım yoluyla elde edilmiştir.
+- Public kalıtımı ile, taban sınıfın public arayüzünü devralan yeni bir sınıf oluşturuyoruz. (Is a relationship). Her bir x aynı zamanda y'dir. Y gereken her yerde x kullanılabilir.
+- Bir nesnenin diğer bir nesneyi sahibi olarak kullanmasına "composition" deniyor. Sınıflar arası composition söz konusuysa bu duruma "has a" ilişkisi denir.
+
 
 **Eğer A'nın B türünden bir elemanı varsa:**
 
@@ -7831,6 +7841,14 @@ int main()
 
 ### Runtime Polymorphism (Çalışma zamanı çok biçimliliği)
 
+**Kısa bir özet tanım:**
+- Runtime polimorfizm, işlemlerin çalışma zamanında hangi metodu çağıracağını belirlediği bir yöntemdir. Bir nesnenin tek bir arayüze sahip dayanmasına ve aynı işlev ismine sahip olmasına rağmen farklı şekilde davranabilmesini ifade eder.
+**C++ açısından Polimorphism**
+- Bir sınıfın üye fonksiyonunu çağırdığımızda, ilgili nesnenin tipine göre farklı fonksiyonların çağırılabilmesi durumu.
+- Virtual fonksiyonlar türetilmniş sınıflar tarafından geçersiz kılınabilir. Bu sayerde temel sınıf pointer veya referansı ile, doğru türetilmiş sınıf metodunun çağırılması sağlanır.
+
+
+
 - Taban sınıfın üye fonksiyonlarını nesneye yönelik programlamasında belirli kategorilere ayırıyoruz.
 - İlk sınıf taban sınıfın öyle bir metotu ki türemiş sınıflara hem bir arayüz hem de kod veriyor. Yani eğer taban sınfın öyle birmetotundan bahsediyorsak bu metot kalıtımla elde edilmiş  sınıflara metodun kodlarını veriyor. Yani o fonksiyon çağırıldığında aslında onun kodları çalışacak. He mbir interface hem de bir implementasynon veriyor. 
 - Diğer bir sınıf türemiş sınıflara hem bir arayüz hem de default implementasyon veriyor. Yani default bir kod veriyor, isterse o kodu kullanır, isterse kendi bir kod oluşturur.
@@ -7924,6 +7942,23 @@ class Boeing : public Airplane {
 - Abstract olmayan sınıflar : Concrete Sınıflar (Somut)
 
 > Abstract sınıflar türünden nesne oluşturmak sentaks hatası.
+
+## Abstract Class
+- Abstract class, diğer sınıfların türetileceği ve kendisinden nesne oluşturulmayan sınıftır.
+- En az 1 tane sanal fonksiyonun "pure virtual function" olması gerekir. Pure virtual functions, sınıfın içinde uygulanmaz. Türetilmiş sınıflar tarafından uygulanması zorunludur. =0 ile belirtilir.
+
+```CPP
+virtual void ses_cikar() = 0;
+```
+> Virtual function, türemiş sınıflar bunu uygulamak zorunda.
+
+```CPP
+void ses_cikar()override
+```
+> OVerride ettik.
+
+- Pure virtual function, temel sınıftaki işlemin türemişlerde uygulanmasını zorunlu kılmak için kullanılır. Eğer türemiş sınıf override etmezse, kendisi de abstract class kabul edilir ve nesne oluşturamaz.
+
 
 ```CPP
 class Airplane {
@@ -8397,6 +8432,24 @@ int main()
 ```
 > Taban sınıfın sanal olmayan fonksiyonlarını türemiş sınıf nesneleri ile çağırıyoruz.  Ama o fonksiyon taban sınıfın taban fonksiyonunu çağırıyor.
 
+## Virtual Dispatch
+- Temel sınıftaki sanal fonksiyonu türemiş sınıflarda geçersiz kılarak, çalışma zamanında doğru fonksiyonun çağırılmasını sağlar. Bu mekanizma ile, temel sınıf işaretçi veya referansları kullanılarak türetilmiş sınıfların fonksiyonlarını çağırabiliriz.
+- üVirtualş dispath genelde V-Table adı verilen bir yapı ile gerçekleştirilir. V-Table, derleyici tarafından oluşturulur ve sınıftaki sanal fonksiyonlaraişaretçiler içerir. Her nesne, sınıfın V-Table'ına işaret eden bir pointer içerir. Bu sayede runtime'da doğru fonksiyon çağırılır.
+
+### Virtual Dispatch Nasıl İşler?
+1. Derleyici snal fonksiyon içeren her sınıf için V-Table oluşturur. Sınıfın sanal fonksiyonlarına işaretçiler saklar
+2. Derleyici her sınıf nesnesine, o sınıfın V-Table'ına işaret eden bir işaretçi ekler. Bu, Çalışma zamanında yönlendirme için önemlidir.
+3. **Bir sana fonksiyon çağırıldığında:**
+> 1. nesnenin v-pointer'ı kullanılarak sınıfın v-table'ına erişilir.
+
+> 2. V-Table içinde çağırılan fonksiyona karşılık gelen pointer bulunur.
+
+> 3. Pointer takip edilerekj uygun fonksiyon işlemi bulunup çaığırılır.
+
+
+
+
+
 ### Override olmasaydı yapılabilecek hatalar
 
 ```CPP
@@ -8691,6 +8744,10 @@ int main()
 
 ### Clone idiomu 
 
+- Bir nesnsnin kopyasını oluşturmak için kullanılan tasarım yönmtemidir. Temel-türemiş sınıflar arasında kopyalama işlemi gerçekleştirir.
+- Temel sınıfta "clone" sanal fonksiyonu tanımlayarak ve türemiş sınıflarda bu fonksiyonu geçersiz kılma yöntemiyle gerçekleşir.
+- Temel sınıftaki clone fonksiyonu, türemiş sınıfların nesnelerinin kopylarını oluşturmak için kullanılır. 
+
 - Bir fonksiyonun sanal olması için non static ye fonksiyonu olması gerekiyor. Ama sınfıların constructorları sanal olamaz. Ama bazı programlama dillerinde constructor virtual olabiliyor. 
 
 - Taban sınınfa bir fonksiyon yazıyorum.
@@ -8907,6 +8964,8 @@ int main()
 ```
 > Sentaks hatası ollmayacak. Çünkü derptr'nin türü der*. Der'in destrcutor'ı public ama der'in destructor'ının base destructor ını çağırması bir sentaks hatası değil çünkü protected. Çünkü türemiş sınıflar taban sınıfın protected ögelerini kullanabiliyorlar.  
 
+**Polimorfik sınıf:** temel sınıfın ve ondan türetilmiş sınıfların nesnelerinin farklı biçimlerde kullanılmasını sağlar. Genelde bir veya daha fazla sanal fonksiyon içerirler.
+
 **Özet:** Polimorfik sınıfların destructor'ı ya virtual ve public olacak ya da non-virtual ve protected olacak.
 
 - Global bir fonksiyon doğrudan virtual olamıyor. Taban sınıf parametreli bir global fonmksiyon yazıp, bu global fonksiyonun taban sınıf türünden pointer veya referans parametreye sahip olmasını sağlayıp, fonksiyonun içinde de bu nesne için bu sanal fonksiyona çağrı yaparsak bu durumda virtual dispatch global fonk. için devreye girmeyecek ama çağırılan sanal fonksiyon içn devreye girecek.
@@ -8966,8 +9025,10 @@ int main()
 ```CPP
 class Base {
 	int x{};
-	int y{};
-	virtual void func();
+	int y{};// buraya kadar 8 byte
+	virtual void func(); // bu 4 byte
+// burada gizli pointer var 4 byte
+// toplam 16 byte
 };
 
 class Der : public Base {
@@ -9061,6 +9122,17 @@ for (auto p : cvec) {
 ```
 > Benim vector ile işim bittiğinde bu kod ççok kötü durumda. Çünkü bu dinamik ömürlü nesnelerin hiçbiri delete edilmeyecek, resource leak oluşacak.
 
+### Smart pointer ve Raw pointer
+
+- Smart pointer ve raw pointer arasındaki temel fark bellek yönetimi ve kaynakların otomatik serbest bırakılmasıdır.
+- **Bellek yönetimi:** Raw pointerlar bellek yönetimi için manuel olarak düzenlenmelidir. (Belleği manuel olarak tahsis etmek ve serbest bırakmak). Smart pointerlarda ise kaynaklar otomatik serbest bırakılır. Bu bellek sızıntısını ve çifte silme hatalarını engeller.
+- Smart pointerlar memory kütüphanesinde bulunur.
+- Smart pointer nesnesi, kapsamından çıktığında veya yeni bir değere atanarak önceki kaynağı kaybettiğinde smart pointer otomatik olarak kaynağı serbest bırakır.
+
+**Smart pointers:**
+1. unique_ptr : Bir kaynağa yalnızca bir unique_ptr işaret edebilir. Kopyalanamaz.
+2. shared_ptr : Birden fazla shared_ptr işaretçisi aynı kaynağı işaret edebilir. Bir kaynağı işaret eden shared_ptr, bir referans sayacı ile takip edilir. Sayaç sıfıra düştüğünde kaynak otonatik serberst bırakılır.
+
 ## Memory leak ve resource leak kavramları:
 
 - **Memory leak:** bir allocator'ın bellek alanı elde etmesi fakat o bellek alanı kullanımına ihtiyaç kalmamasına karşın o alanın geri verilmemesi. Geri veremediği sürece o bellek artık başka kodlar tarafından kullanılma potansiyelinde olmayacak. Biz orayı bloke etmiş olacağız.
@@ -9118,6 +9190,16 @@ public:
 ```
 > cannot override 'final' function
 - Final'ın bir başka faydası da,  Derliyci bazı durumlarda sana virtual dispatch uygulaması gereken yerde hangi fonksiyonun çağrıldığını koda bakarak anlayabiliyorsa virtual dispatch kodu üretmek yerine doğrudan o fonksiyonu çağıracak kod üretiyor.
+
+### Constextual Keywords
+- Contextual keywords, dilde belirli bağlamlarda özel bir anlam taşıyan ve bu bağlamlar dışında tanımlayıcı(identifier) olarak kullnılabilen bir anahtar sözcüktür.
+- **override** ve **final** contextual keywordlerdir.
+```CPP
+void foo() override{}
+int override = 2;
+```
+> İkisi de geçerli.
+
 
 ## Private - Protected Inheritance
 
@@ -9408,6 +9490,10 @@ int main()
 
 ### Diamond formation (DDD) (Dreadful Diamond of Derivation)
 
+- DDD, çoklu türetmede karşılaşılan bir problemdir. İki veya daha fazla sınıfın aynı temelkden türediği ve bu türemiş sınıfların temel olarak kullanıldığı senaryolardır.
+- Temel sınıfın özelliklerini birden çok kez miras alması sebebiyle oluşturabilecek sorunlar vardır. Bunun çözümü virtual inheritance kullanmaktır. Bu durumda türemiş sınıf temel sınıfın özelliklerini yalnız 1 kez miras alır.
+
+
 - Şöyle bir durum olduğunu düşünün:  Taban sınıftan public kalıtımıyla elde edilen iki tane ayrı sınıf var.
 
 ![image](https://user-images.githubusercontent.com/75746171/212632709-7f04ce81-564a-4c0c-91e1-7ea496de3b8b.png)
@@ -9484,9 +9570,14 @@ int main()
 
 - C' de statik assertion önemli ama C++'ta olduğu kadar değil. Çünkü bizim önümüzdeki günlerde tanışacağımız generic programlama paradigması var.
 
-**Dynamic assertion:**  Program çalışma zamanında yapılan doğrulamalar. 
+**Dynamic assertion:**  Çalışma zamanında, hataları veya yanlış yapılandırmaları tespit etmeye yönelik bir tekniktir. Program çalışırken belli koşullar kontrol edilir ve doğru değilse uygun hata mesajı verebilir veya exception throw edebiliriz. C++ assert makrosu dinamik doğrulama için kullanılır.
+**Static Assertion:** Derleme sırasında hataları tespit etmeye yönelik bir teknik. C++11 ile gelen statik-assert anahtar kelimesi bu tür doğrulamaları gerçekleştirmemizi sağlar. Derleyici belirli koşulları kontrol eder ve koşul doğru değilse derleme hatası verir.
+> Assert genellikle programın geliştirilme sürecinde kullanılır. Derleme sürecinde NDEBUG tanımlıysa, asset ifadeleri etkisiz hale gelir ve çalışma zamanında bir maliyeti olmaz.
 
 **Exception Handling:**  Dilin içine gömülü, programın çalışma zamanına yönelik hatalarla başa çıkmaya yönelik dilin sağladığı araç seti. Bir fonksiyonun işini programın çalışma zamanında oluşan koşullar nedeniyle gerçekleştirememesi.
+
+- exception handling, programlamada istenmeyen durumlar ile baş etme tekniğidir. Programın normal akışı dışındaki hataları tespit edip ele almaya yarar.
+- 
 
 - **C gibi bir dilde programın çalışma zamanına yönelik hataları yönetme, kontrol etme:** fonksiyonlar kendisini çağıran koda işlerini yapamadıkları zaman bir şekilde işlerini yapamadıklarını belli eden bir bilgi iletiyorlar. Bu geleneksel hata işleme yöntemleri. Exception handling araçlarının avantajlarını anlayabilmek için önce geleneksel hata işleme yöntemlerinin dezavantajlarını konuşmamız gerekiyor. Geleneksel hata işleme yöntemleri derken ne kastediriyor?
 
@@ -9503,9 +9594,9 @@ int main()
 
 - Edxception handling ile ilgili 3 tane anahtar sözcüğümüz var:
 
-1. thwrow: throw statement oluşturulmasına kullanılıyor
-2. try
-3. catch
+1. thwrow: exception meydana geldiğinde throw keyword ile istisna fırlatılır. Bu, istisnayı yakalayan catch bloğuna bilgi sağlar.
+2. try: Hata oluşturabilecek kodları içerir. Eğer bu blokta hata meydana gelirse, program akışı durur ve uygun catch  bloğuna geçer.
+3. catch: Fırlatılan istisnayı yakalar ve uygun şekilde ele alır. İstisna türüne göre farklı catch blokları tanımlanabilir ve istisnayı işlemek için kullanılabilir.
 
 - Beni hangi fonksiyonlar çağırmışsa, (beni çağıran, beni çağıranı çağıran) ben işimi yapamıyorum. İşimi yapamadığıma ilişkin bir bilgiyi oluşturdum size gönderiyorum. Kim ki bu hataya müdahale etmek isterse bunu yakalasın ve o hataya müdahale etsin.
 
@@ -9570,6 +9661,14 @@ DivideByZero
 
 > O zaman diyeceğiz ki her divide by zero error aynı zamanda bir MathError dur. Ama her MathError de aynı zamanda bir
 set exception türüdür. 
+
+### Uncaught Exception
+- Bir programda fırlatılan  ancak uygun catch bloğu tarafından yakalanmayan exception'dur. Bu durumda program durur ve belirli bir hata vesajı verilir.
+- Eğer bir exception, catch bloğu tarafından yakalanmazsa std::terminate fonksiyonu çağırılır ve program sonlanır. Bu işlem varsayılan olarak std::abort fonksiyonunu çağırarak gerçekleşir ve böylece program çökmüş gibi görünür.
+- std::terminate fonksiyonunun davranışı, std::set_terminate fonksiyonu kullanılarak özelleştirilebilir. 
+- Program yakalanmamış exception ile terminate fonksiyonunu çağırarak sonlanır.
+- set_terminate fonksiyonu, terminate_handler türünden bir ppinter alır. terminate_handler bir pointer türüdür. Bu pointerın belirlediği fonksiyon, terminate çağırıldığında çalışacak olan fonksiyondur.
+
 
 **throw statement yürütüldüğünde ne oluyor?**
 
@@ -9782,6 +9881,16 @@ int main()
 > Exception'ı yakalarım ve bir takım işlemleri yapabilirim. Exception'ı tekrar yukarı gönderebilirim. (Aynı exception nesnesi) İşte bu işleme  retroll statement deniyor. 
 
 > Exception'ı yakalayıp bir takım işlemler yaparak ya da yapmadan başka bir türden exception göndermek. Buna da popüler olarak exception'ı translate etmek deniyor.
+
+**Stack Unwinding (Kısa özet):
+- Stack unwinding, programın çalışma zamanındaki istisna işleme mekanizmasıdır. Programın çalışması sırasında bir istisna durumunda o anda işlem görmekte olan fonksiyon ve çağrı yığınının (call stack) geri alınması sürecidir.
+
+1. **Fonksiyon çağrı yığını**: Fonksiyonlar birbirini çağırır ve her çağrı, çağrı yığınında bir giriş oluşturur. Yığın, programın hangi fonksiyonları çapğırdığını ve sırasını saklar. Program akışının takibini ve geri alınmasını sağlar.
+2. **Exception throw**: İstisnalar hata durumunu temsil ettiğnide throw fırlatır. Program akışı durur. İstisna işleme sistemi devreye girer.
+3. **İstisna Arama:** İstisna işleme sistemi uygun catch bulunana kadar çağrı yığınındaki fonksiyonları geri alır. Her fonksiyon geri alındığında o fonksiyonun yerel değişkenleri ve otomatik nesnelerin destructorları otomatik çağırılır.
+4. **Destructorların Çağırılması:** Stack unwinding sürecinde yerelk değişkenler ve otomatik nesnelerin destructorları otomatik çağırılır ve kaynakların düzgün bir şekilde temizlenmesi ve serbest bırakılması sağlanır.
+5. **İstisna işleme:** Uygun catch bulunduğunda istisna işlenir ve program akışıo bu bloğa yönlendirilir.
+6. **İstisna sonrası program:** İstisna işlendikten sonra program akışı "catch" bloğu sonrasına yönlenir fve devam eder.
 
 
 ## Stack Unwinding (Yığının geri sarımı)
