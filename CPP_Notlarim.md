@@ -10390,6 +10390,16 @@ void func()
 
 > Eğer bu yapı birkaç yerde tekrar ediyor olsaydı ben o yerlerin hepsinde catch blocklarını tek tek oluşturmam gerekecekti. Ama şimdi bu ortak kodu bir yerde toplayıp bu şekilde handle exception fonksiyonunu çağırarak birden fazla kaynak kod noktasında aynı şekilde bu hataları yakalamaya çalışabilirim.
 
+### Zombie Object
+- Bir zombie object, destcutor ile çağırılmış ve hafızadan silinmiş ancak hala işaretçi ya da referans ile erişilmeye çalışılan bir nesnedir.
+- Ana sebebi işareetçi veya referansların füzgün bir şekilde temizlenmemiş olmasıdır. Bir nesnenin destructor'ı çağırıldığında ve nesne hafızadan silindiğinde, işaretçi veya referans hala o nesneyi gösterir. Bu tanımsız davranışa yol açabilir.
+**Zombie nesneleri önlemek için:**
+1. Destructor çağırıldııktan sonra işaretçileri nullptr ile güncelle
+2. Nesne ömür ve kapsamını dikkkatlice yönet. Otomatik ömürlü nesneler (stack üzerinde oluşan nesneler) için ömür ve kapsamlar fonksiyonların çağrı yığını ile yönetilir. Dinamik ömürlü nesneler (Heap üzerinde oluşan nesneler) için işaretçi ve referans kullnaımına dikkat er ve nesnelerin destructor çağırılmadan önce işaretçi ve referanslarını temizleyin.
+
+
+
+
 ### Constructor'dan Exception gönderilmesi
  
 - Constructor Exception gönderme ihtimali en yüksek olan fonksiyonlardan biri. Peki ya Constructor kendi koduyla nesneyi hayata getiremeyeceğini anlasa (Runtime'da oluşan istisnaî durumlardan ötürü) bu durumda geleneksel hata işleme yolları da devra dışı kalıyor Çünkü Constructor'ın geri dönüş değeri de yok. Peki Constructor binesneyi hayata getiremeyeceğini anladığında ne yapsın?
@@ -10552,6 +10562,7 @@ Nec constr²uctor
 Member destructor
 exception caught: hata......
 ```
+> Birt sınıf nesnesi oluşturulduğunda ilk önce sınıfın veri elemanları hayata gelir ve ardından sınıfın constructor fonksiyonu çağırılır. Sınıfın veri elemanları constructor çağırılmadan önmce belleğe yerleştirilir ve bu yüzden constructor fonksiyonu bu veri elemanlarıunı başlatmak ve yapılandırmak için kullanılır.
 
 > Programın akışı, konstraktörün ana bloğuna girmişse, sınıfın veri elemanları hayata gelmiş demektir. Member hayatta. Dolayısıyla stack unwinding sürecinde memberin destraktörü çağrılacak bu durumda.
 
@@ -10698,6 +10709,9 @@ void func()noexcept(noexcept(foo()));
 
 **noexcept unevaluated context**
 
+
+
+
 **Bir fonksiyonun no exit garantisi vermesi neden önemli?**
 - Bir bilgi iletiyor. Yani her ne yazmak istiyorsan, bu fonksiyonun bir exception göndermeyeceğine güvenebilirsin. Fakat bir de resmin doğrudan görünmeyen bir tarafı var: Derleyicinin Kod seçmesine yardımcı oluyor.
 
@@ -10827,6 +10841,10 @@ int main()
 Ben içinde int tutan bir bağlı listeyi nasıl implemente ederim demek yerine, ben bir bağlı listeyi naasıl implemente ederim diye sorguluyoruz. Daha yüksek düzeyde bir soyutlama.
 
 **Buradaki c++ gücü:** Nesni yönelimli programlamaya Destek veriyor, Procedüel programlamaya da destek veriyor, Funksiyonel programlamaya Büyük ölçüde destek veriyor. Ama en güçlü olduğu alan, Hepsiyle birlikte Cenerik programlama paradigmasını desteklemesi.
+
+**Tanım: Procedural programming:**
+- Programlarınızı, fonmksiyonlar ve işlemler şeklinde düşünmenize dayanan bir programlama yöntemi. Temelde programı daha küçük parçalara ayırarak, her bir parçanın belirli bir iş yapmasını sağlarsınız.
+- Procedural programlamada fonksiyonlar ve prosedürler bir programın yapı taşlarıdır. Bu fonksiyonlar programın ana mantığını ve işlemlerini gerçekleştirir.
 
 ## Template
 
@@ -10979,8 +10997,23 @@ int main()
 	auto&& r3 = 2340;	// Universal Ref
 ```
 **Universal Reference:** Her şey ile ilk değer verebiliriz.
+- Universal reference, bir şablon kodunda hem L value hem R value referansına bağlanabilen bir referans türüdür. C++ 11'de tanıtılan perfect forwarding ile ilgilidir ve tipik olarak şablon fonksiyonlarında && şeklindedir.
 
+```CPP
+template <typename T>
+void myFunction(T&& arg)
+```
+> Bu örnekte şablon fonksiyonun arg parametresi hem L value hem R value referansa bağlanabilir. Yani bu bize farklı tür ve değer kategorisindeki argümanlara bağlanmayı sağlar.
+
+> Universal referans kullanarak, perfect forwarding tekniği ile bir fonksiyonun aldığı argümanları başka bir fonksiyona aynen iletmek mümkündür.
 Bu durumda auto yerine gelecek olan tür ifadenin value kategorisine bağlıydı.
+
+**Perfect Forwarding C++**
+- Bir fonksiyonun aldığı argümanları başka bir fonksiyona iletmek istediğinizde argümanların tür ve değer kategorisini (R value - L value) koruyarak iletmeyi sağlayan bir tekniktir.
+
+
+
+
 
 ```CPP
 	auto x = { 3,6,8,7 };
@@ -11040,6 +11073,26 @@ int main()
 }
 ```
 > Geçerli kod.
+
+### CTAD (Class Template Argument Deduction)
+- Derleyicinin, sınıf ve şablonları için şablon argümanlarını otomatik çıkarmasını sağlar.
+- Önceden sınıf şablonlarında argümanları açıkça belirtmek gerekiyordu. CTAD sayesinde derleyici şablon argümanlarını otomatik olarak çıkararak belirli durumlarda bu gerekliliği ortadan kaldırır.
+
+```CPP
+Mycontainer<int> con(4);
+Mycontainer con(4);
+```
+> Şablon argümanlarını belirtmeden de Mycontainer sınıfını kullanabiliriz.
+
+
+**RTTI (Runtime Type Information) Kısa Özet
+
+- RTTI (Runtime Type Information), çalışma zamanında bir nesnenin türü ile ilgili bilgi edinmeyi sağlayan bir özelliktir. Genellikle temel sınıf referanslarına erişmek amacıyla kullanılır.
+
+1. **dynamic_cast** (Base türünden türemişe dönüşüm): Temel sınıf referans veya pointerları ile türetilmiş sınıflara güvenli tür dönüşümü sağlar. Başarısızlıkta nullptr döndürür veya bad_cast exception forlatır.
+2. **typeid**: Nesnenin türü hakkında bilgi veren type_info sınıfına bir referans sağlar. Nesnenin türü hakkında bilgi almak için kullanılır. Tür adı veya tür karşılaştırması yapılır.
+
+
 
 ## RTTI (Runtime Type Information)
 
