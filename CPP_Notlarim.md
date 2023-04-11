@@ -3938,6 +3938,11 @@ int main()
 ## Siniflarin static veri elemanlari:
 
 ### static nedir?
+
+- Sınıfların statik veri elemanları, sınıfın tüm nesneleri için ortak ve aynıu bellek alanını paylaşan veri elemanlarıdır. Sınıf nesnesi olmadan da kullanılabilir.
+- Statik veri elemanları genellikle sabitler ya da sayaç tutuan değişkenler gibi tüm nesneler için ortak olan bilgileri tutarlar.
+- Statik fonksiyonlar da olabilir ve sınıf nesnesi olmadan çağırılabilirler.
+
 - Simdiye kadar gordugumuz veri elemanlari object iliskili. Yani:
 
 ```CPP
@@ -4023,6 +4028,12 @@ inline int x =5;
 ```
 > Kac tane kod dosyasi necati.h include ederse etsin ODR ihlal edilmis olmayacak.
 
+**Neden sınıfın statik üye fonksiyonlarının this poniterı yok?**
+- Sınıfın statik üye fonksiyonları, sınıfın örneği üzerinde çalışmak yerine, sınıfın kendisi üzerinde çalışır. Bu nedenle sınıf örneği için olan this pointerına ihtiyaç duymazlar. Statik üye fonksiyonları nesne örneklerinden bağımsızdır ve sadece sınıfın kendisine özgü durumları ele alırlar.
+- **Özetle:** Sınıfın geneli ile ilgili iş yapan, nesne özelinde iş yapmayan fonksiyonlardır.
+
+
+
 ### Static member functions:
 
 non-static member functions
@@ -4088,7 +4099,7 @@ friend lik verebiliyor.
 > A, B ye  friendlik vermisse ve B, C ye friendlik vermisse; A, C ye friendlik vermis degil.
 
 ## OPERATOR OVERLADING: OPERATOR YUKLEMESI
-
+- Operator overloading, sınıf türünden nesnelerin aritmetik işlemler, karşılaştırma işlemleri gibi operatörler ile birlikte kullnaılabilmesini sağlar. Böylece programcılar sınıfları aritmetik işlemlere tabii tutabilir ve programın okunabilirliği ve kullanılabilirliği artar.
 - Bir sınıf nesnesi normalde sadece sizeof operatörünün operandı olabilir. Fakat bir sınıf nesnesi bir operatörün operandı olduğunda, öyle bir mekanizma var ki; operatörün operandı olmuş sınıf nesnesi ifadesini bir fonksiyon çağrısına dönüştürüyor. Bu mekanizmaya operatör overloading deniyor.
 - Örneğin bir sınıf nesnesi toplama operatörünün operandı olmuşsa ve eğer toplama operatörü bu sınıf için overload edilmişse bu fonksiyon çağırılacak. Bu fonksiyon çağırmanın bir başka biçimi.
 - Neden böyle bir araç var? Böyle bir aracın çalışma zamanına ek bir maliyeti var mı? Doğrudan fonksiyon ouşturup fonksiyonu ismi ile çağırsaydık daha az maliyet mi olacaktı?
@@ -4263,7 +4274,7 @@ int main()
 > p->foo yazmakla operator ok fonksiyonunu çağırıp oradan elde edilen geri dönüş değerini yine gerçek ok operatorunun soluna koymak aynı anlama geliyor.
 
 ## Fonksiyon çağrı operatörlerinin overload edilmesi
-
+- Fonksiyon çağrı operatörlerinin overload edilmesi, bir sınıf nesnesine fonksiyon çağırısı gibi davranarak çalışmasına izin verir. Böylece sınıf nesneni bir fonksiyon gibi çağırılabilir.
 - Fonksiyon çağrı operatörü de bir operatör ve bu operatör de dilin kurallarına göre overload edilebiliyor. En sık overload edilen operatördür.
 
 - Fonksiyon çağrı operatörünün overload edilmesi daha çok generic programlama araçları ile birlikte kullanılıyor. C++ dilinin en önemli araçlarından birisidir.
@@ -4392,7 +4403,7 @@ int myrand(int low, int high) // hangi aralıkta rastgele sayı alacağı bilgis
 > Öyle bir yapı oluşturmak istiyorum ki, fonksiyona argüman göndermiyorum ama fonksiyon hangi aralıkta rastgele sayıo üreteceği bilgisini kendi durumuyla (state) tutacak. Bunu bir function object hanline getirerek yapabilirim. 
 
 ## Tür Dönüştürme Operatör Fonksiyonları
-
+- **NOT:** Explicit keyword, belli parametreli bir constructor'ın sadece o parametre ile çağırılmasını zorunlu kılar. Yani beklenmedik otomatik dönüştürme hatalarını önlemek için önemli bir araçtır.
 - Bir sınıf türünden nesneyi bir başka türe dönüştürmek için kullanacağımız fonksiyonlardır. Yani derleyici durumdan vazife çıkartıp bu fonksionlara çağrı yaparak sınıf türünden nesneyi başka bir türe dönüştürme olanağına sahip olacak. 
 **Bir notu hatırlayalım:**
 > Normale mümkün olmayan bir dönüşüm eğer bir fonksiyon bildirimiyle, derleyicinin o fonksiyona çağrı yapması halinde gerçekleştiriliyorsa böyle dönüşümlere user-defined conversion deniliyordu. Şimdiye kadar biz user defined conversion un conversion constructorlar ile yapılcabileceğini gördük. Yani derleyici sınıfın conversion constructor ına çağrı yaparak sınıf türünden olmayan bir değeri sınıf türüne dönüştürebiliyordu. 
@@ -4783,7 +4794,8 @@ namespace nec {
 - Bunların üçü de ayrı araçlardır. 
 
 ### 1. using Bildirimi
-
+- Using decleration, bir namespace içindeki belirli bir ismi, başka bir namespace veya yerel kapsamda kullanmak üzere taşımamızı sağlayan özelliktir.
+- Using decleration kullanarak, belli bir ismi kullanmak istediğimiz yerde namespace adını yazmak zorunda kalmadan o isme erişebiliriz.
 - C++ dilinin en fazla overload edilen anahtar sözcüklerinden biri using. Sınıf içinde, tür eş ismi bildiriminde, enum bildirimlerinde ... kullanılıyor.
 
 ```CPP
@@ -5085,7 +5097,7 @@ int main()
 ### 3. ADL (Argument Dependant Lookup)
 
 - C++ dilinin en sık kullanılan akronimlerinden birisi. Argümana bağlı isim arama.
-
+- Bir fonksiyonun argümanlarının tipi, adı ve kullanıldığı yer, fanksiyonun hangi namespace veya scope'da aranacağını belirler. Yani bir fonksiyonun argümanı herhangi bir isim alanına ilişkin ise, otomatik olarak o isim alanı içinde aranır.(normalde arandığı yerler dışında).
 **Örnek üzerinden gidelim:**
 
 ```CPP
@@ -5302,6 +5314,10 @@ int main()
 
 > Eğer bazı ögerlerin sadece klendi kaynak dosyamızda kullanımasını istiyorsak ve diğer kaynak dosyalarda bu isimlerin başka varlıkların isimleri olmasına izin vermek istiyorsak. (normalde bunu C'de yapmanın yolu static anahtar sözcüğü) 
 
+**Unnamed namespace ve Internal Linkage**
+- **Internal linkage**, bir değişken veya fonksiyonun sadece tanımlandığı çevreye (translation unit) özgü olması anlamına gelir. Bu değişken veya fonksiyon farklı bir dosyada aynı isim ile tanımlanmış olsa bile bir bağlantısı olmayacak.
+- **Unnamed Namespace** ise bir dosya içinde tanımlanan ve sadece o dosya içinde kullanılabilen isimsiz bir namespace'dir. Yani isimler sadece o dosya içinde geçerlidir.
+
 **Unnamed namespace içindeki isimleri nasıl kullanıyorum?**
 
 ```CPP
@@ -5384,6 +5400,10 @@ int main()
 > Bu şekilde nested namespace bildirmek C++17 ile dile eklenen bir araç.
 
 ### inline namespace için eklenen özellikler:
+
+- Inline namespace, bir namespace'in diğer bir namespace ile değiştirilmesini veya genişletilmesini sağlar. Bu sayede bir namespace içinde tanımlanmış olna bir sınıf veya işlev namespace içinde yapılan değişikliklerden etkilenmez. Kullanıcı kodu değiştirilmeden güncellenebilir.
+
+- **Örneğin** bir kütüphanede bir sınıf tanımlanmış olsun. Bu sınıf kodunu değiştirmeden (eski versiyonunu silmeden) yeni versiyonunu yazabiliriz ve önişlemci komutları ile versiyonu seçebiliriz.
 
 - Inline nerelerde kullanılıyordu?
 > Inline fonksiyonlarda, inline variable ve inline namespace çıktı son olarak.
@@ -5660,6 +5680,7 @@ private:
 **Association - Aggregation - Composition**
 
 ### Association
+- Bir nesne başka bir nesneye bağlı ancak birbirlerine bağlı değil. Bir kitap bir yazar ile ilişkili olabilir ama kitap yazazrın mülkiyetinde değildir. İlişki, nesneler arasında bir bağlantı kurar ancak bağlantıların ömrü birbirinden bağımsızdır.
 - 2 sınıf birlikte çalışarak bir işi gerçekleştiriyorlar. Association ın bir biçimi de aggregation. Her aggrehation bir association ama her association bir aggregation değil.
 - Bir association bir aggregation ise nesnelerden biri diğerin sahibi konumunda. Bir nesne diğerini sahipleniyor ve onu kullanarak işini görüyor. 
 - Aggregation ın özel bir biçimine de composition deniliyor.
@@ -5669,6 +5690,15 @@ private:
 - Composition nedir?
 
 >  Compsition bir aggregation dır.  Aggregation da bir association dur. Eğer iki nesneden biri diğerinin sahibiyse, bu nesne işlerini sahibi olduğu nesneyi kullanarak görüyorsa ve bunlar arasında ömürsel bir birliktelik varsa bunlar composition ilişksii içinde.
+
+### Aggregation
+- Aggregation, bir nesnenin diğer nesneleri bir araya getirdiği ve toplu olarak bütün oluşturduğu bir ilişki türüdür.
+- Bir üniversitenin birkaç fakültesi vardır ve bölümlerden oluşur. Fakülte ve bölümler arasında bir topluluk ilişkisi vardır ancak fakülte bölümlerin mülkiyetinde değildir.
+
+### Composition
+- Composition, bir nesnenin diğer nesneleri içerdiği ve parçaların ömrününsahibi olduğu ilişki türüdür. 
+- Her evin birkaç odası vardır ve her oda evi bir parçasıdır. Bu ilişkide ev, odaların sahibidir. Bu ilişki, bir nesnenin başka nesneleri içermesi ve onların ömrünü kontrol etmesinedeniyle diğerlerinden farklıdır.
+
 
 ## Initilizaton
 
