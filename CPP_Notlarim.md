@@ -5751,6 +5751,9 @@ int main()
 - String'in dinamik diziyi kullanma amacı yazının karakterlerini tutmak.
 
 
+
+
+
 - Aslında dinamik diziyi temsil eden sınıf nesnesi içnde 3 tane pointer tutuyor.
 
 ![image](https://user-images.githubusercontent.com/75746171/211778245-91025802-72bf-47e7-8914-3d0ba4263cde.png)
