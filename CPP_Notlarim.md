@@ -2941,6 +2941,8 @@ other in adresi = necy nin adresi
 **Hatirlatma:** Atama operatorunun urettigi deger nesneye atanan degerdir.
 
 ### Move Semantics:
+- C++ 11 ile ile eklenmiştir. Bellek yönetimi ve performans üzerinde büyük etkisi vardır.
+- Nesnenin kopyalanması yerine kaynağının çalınmasını mümkün kılarve bellek kullanımı ve performansı optimize eder.
 - Oyle yerler var ki biz bir nesneyi hayata getirirken, degerini bir baska nesneden alarak hayata gelemsini istiyoruz.
 ```CPP
 T x = other;
@@ -3526,6 +3528,7 @@ Bir sınıfın non-static üye fonskiyonları
 2) Değer kategorisi R value olan sınıf nesneleri ifadeleri ile çağırılabilir
 
 ## Conversion Constructors:
+- Bir sınıfta bir türden diğerine dönüşüm yaparak nesne oluşturmayı sağlayan özel bir constructor'dır.
 - Bir special member funstion değil. Constructor ı niteleyen bir terim.
 - Asıl varlık nedenininn yanında örtülü yada örtülü olmayan şekilde tür dönüşümü için kullanılabilecek constructorlar. Sınıf türünden olmayan bir ifafde sınıfın conversion cosntructorlarının kullanılmasıyla sınıf  türlerine dönüştürülebilirler.
 
@@ -3838,7 +3841,10 @@ int main()
 ```
 
 ## Copy Elision
-
+- Copy elision, derleyicilerin bir optimizasyon tekniğidir.
+- Derleyicinin, programın belli kısımlarında oluşturulan geçici nesnelerin kopyalanması veya taşınması yerine doğrudan hedef nesneye atanması sağlanır.
+- Copy elision, sınıf türleri için geçerlidir. Bu teknik programın çalışma zamanında nesne kopyalama ve taşıma işlemlerini elimine eder ve performans artışı sağlar.
+- C++ 17 ile artık bu teknik dil standartlarına dahil olmuştur. Yani bazı durumlarda derleyici optimizasyon yapmak için değil, standartlarda olduğu için copy elision yapıtyor. Fakat bazaı durummlarda da bu özellik devre dışı bırakılabiliyor.
 - kopyalamanin yapilmamasi, kopyalamadan kacinma
 - Oyle durumlar var ki aslinda sentaks geregi orada bir kopyalama soz konusu. Ama derleyici kodu optimize ederek kopaylamayi elimine ediyor. 
 - Yani kagit ustunde kopyalama var ama derleyicinin urettigi kodda, derleyici daha etkin kod uretmesi sebebiyle kopyalamadan kaciliyor.
@@ -3890,7 +3896,8 @@ int main()
 # Ders 14
 
 ## Return value optimization:
-
+- Return Value Optimization, bir fonksiyondan bir nesne döndürüldüğünde geri dönen nesnenin kopyalanmasını önlemek ve minimize etmek için yapılır. 
+- Normalde bir fonksiyondan bir nesne döndüğünde bu nesnenin bir kopysaı oluşturulur ve bu kopya döner.Anca RVO sayesinde derleyici kopyalama yapmadan, bu nesneyi direkt hedef değişkeninin bellek yerine koyar.
 - Oyle durumlar var ki derleyicinin kopyalama kodu olusturasi gerekiyor. ve burada bir sinif turu soz konusu ise kopyalamayi yapmak icin duruma gore sinifin copy consturcot veya move constructor inin cagirilmasi gerekiyor. Fakat derleyici copy constructor ya da move constructor cagirmak yerine kopyalamayi tamamen ortadan kaldiriyor. 
 
 > Return value optimization bir bicimi dahavar ve mandatory degil.
