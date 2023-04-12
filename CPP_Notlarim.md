@@ -13075,9 +13075,18 @@ int main()
 }
 ```
 > x < y doğru.
+**Lexicographical Compare Nasıl Çalışır?**
+1. Dizi veya kolleksiyonun ilk ögelerini karşılaştırın.
+2. İlk ögeler eşit ise ikinci ögeleri karşılaştırın. Bu işlem eşit ise ögeler üzerinde devam edin.
+3. İlk farklı öge bulunduğunda hangisinini daha küçük veya büyük olduğuna karar verilir.
+4. Bir dizi diğerinin alt kümesi ise daha kısa olan dizi daha küçük kabul edilir.
+
+
 
 ## Sıralamaya ilişkin Algoritmalar
 ## sstandart Function Object
+- Ya da fonksiyon nesnesi. Fonksiyon benzeri davranışa sahip oaln nesnedir. Genellikle operator() overload ederler. Bu sayede fonksiyonun kullanılabileceği yerlerde standart fonksiyon nesneleri kullnaılabilir. 
+- Fucntional başlık dosyasında tanımlanmıştır.
 
 **Function object:** Bir sınıfa verilemn isim. Fonksiyon çağrı operatörünü overlaod eden sınıflar. Böyle sınıflar türünden ensneler fonksiyon çağrı operatörünün operanmdı olabiliyorlar.
 
@@ -13171,9 +13180,22 @@ reverse_copy: range'in reverse edilmiş halini başka bir range'e kopyalıyor.
 
 - Bri vektörü heap haline getirmek "heapify" deniyor. make heap. Bunun nasıl bir faydası var. 
 
-### Silme Algoritmaları
+### Heapify
+- Bir dizi veya veri yapısının, heap veri yapısına dönüştürülme işlemidir. Heap genellikle ikili ağaç (binary tree) şeklinde temsil edilen özel bir veri yapısıdır.
+- Heap'ler, ögelerin sıralanması gerekmeyen durumlarda ögelerin max ve min değerlerine hızlı erişim sağlamak amacıyla kullanılabilir.
 
-**Remove - erase idiom**, mülakatlarda kesin sorulan soru
+
+### Silme Algoritmaları
+#### Remove - erase idiom**, mülakatlarda kesin sorulan soru
+- Remove - erase idiomu, bir container içerisinden belirli koşullara uyan ögeleri temizlemek için kullanılan yöntemdir. Genellikle 2 adımda gerçekleşir.
+
+1. **Remove:** Algorithm kütüphanesindeki remove ya da remove_if algoritmalarından biri kullanılarak, silinecek ögeleri belirlemek ve silinmeyecek olan ögeleri başa doğru kaydırmak için kullanılır. Bu işlem silinmeyecek ögelerin sırasını korur ve silinecek ögelerin yerini değiştirir. Algoritma, son silinmeyecek olan veriyi işaret eden bir iteratör döndürür.
+2. **Erase:** Dönen iteratör kullanılarak, container'ın erase() üye fonksiyonu çağırılır ve belirtilen aralıktaki ögeleri siler. (Silinmeycek ögelerin sonund, coontainer'ın sonuna kadar).
+
+**Not:** Remove algoritması, container'daki ögeleri ortadan kaldırmaz. Kaldırılmayan ögeleri container'ın başına taşır. Bu idiom ögeleri silme sürecini optimize ederek gereksiz bellek taşıma işlemlerini azaltır. Standart C++ algoritmaları kullanıldığı için güvenli bir işlemdir ve farklı tipteki containerlar için uygundur.
+
+
+
 
 ## Deque Container
 
@@ -13239,8 +13261,13 @@ int main()
 
 ### Bağlı liste containerları
 
-std::list
-std::forward_list
+- std::list
+- std::forward_list
+
+**std::list**
+- Çift yönlü bağlı liste. Her elemanın bir önceki ve sonraki elemanlara işaret eden iki bağlantısı vardır. Başa ve sona veri eklemek, silmek ve taşımak için uygundur ancak random-access sağlamaz ve tüm elemanlar sırayla gezilir.
+- **Forward_list** ise daha az bellek kullanır ancak daha az esnektir.
+
 
 ![image](https://user-images.githubusercontent.com/75746171/224509037-d8c6ad55-dbca-4c61-87ba-7f842eb393de.png)
 
@@ -13357,6 +13384,15 @@ unordered_multimap
 
 ## Container Adapters
 
+- Container adapters, temel container sınıfları üzerinde çalışan ve daha özelleştirilmiş veri yapıları sağlayan sınıflardır. Temel containerlardan miras alarak veya onları kullanarak çalışır ve belirli veri yapıları için arayüz sağlar. **3 Ana container Adapters:**
+
+1. **Stack:** LIFO veri yapısıdır. Yeni ögeler yığının üstüne eklenir ve yığının üstünden çıkarılır. Genellikle deque ve list üstünde çalışır.
+2. **Queue:** FIFO mantığında çalışır. Genellikle deque ve list üzerinde çalışır.
+3. **Priority Queue:** Her ögenin bir önceliği olduğu ve en yüksek önceliğe sahip ögenin kuyruktan ilk çıktığı veri yapısıdır. Gnelde vector üzerinde çalışır. make_heap, push_heap, pop_heap algoitmalarıyla ögeleri düzenler.
+
+
+
+
 **std::stack** last in first out
 **std::queue** first in first out
 **std::priority_queue** önceliği olanın ilk çıktığı
@@ -13387,6 +13423,9 @@ array<int, 10> a;
 - Bu bir sınıf şablon olduğu için bütün kodlar inline. Yani diziyi doğrudan kullanmakla std::array arasında, oluşturulan assembly kodu açısından bir farklılık yok.  
 - Contaierlarda c dizisi tutamazsınız ama std::array tutabilirsiniz.
 
+**Tuple:**
+- Tuple, heterojen veri kolleksiyonlarını saklamak için kullnaılan bir veri yapısıdır. Farklı türdeki verileri bir arada tutabilir. Tuple ile, veri ögeleri bir araya getirilebilir ve bu ögeler get() fonsiyonu ile ayrıştırılarak işlenebilir.
+
 # Ders 40
 
 - std:array bir wrapper. C dizileriin kullanmanın bir alternatifi. Kullanılırsa bazı avantajlar elde ediliyor. İlave maliyeti yok.
@@ -13406,6 +13445,8 @@ array<int, 10> a;
 
 ### Reference Wrapper
 
+- Refrence wrapper, functional altında bulunan bir sınıftır. Referansları değer gibikullanmamıza izin verir. Referansları STL containerlarına koymamız gerektiğinde bu sınıf kullanışlıdır.
+- Referanslar doğrudan container'da saklanmaz. Reference_wrapper sınıfı, bir sreferansı temsil eden ve kopyalama, atama işlemlerine izin veren bir nesne oluşturarak bu sorunu çözer.
 - Bir varlık bir sınıfın elemanı yazpıyoruz. O varlığın diğer kodlar tarafıdan doğrudan kullanılması yerine o varlığı kontrollü şekilde bizim istediğimiz gibi kullanılmasını sağlayan bir interface oluşturuyoruz.
 - uniqueptr de bir wrapper sınıfı. Bir pointer sarmalıyor. 
 
