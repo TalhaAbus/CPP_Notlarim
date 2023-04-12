@@ -11360,6 +11360,10 @@ int main()
 **substitution:** template parametresinin ne olduğu belli. Böylece fonksiyonun parametrik yapısında ve geri dönüş değeri türünde template argümanını yerine koyarak
 bir parametrik yapı elde etmek.
 
+**Partial Orderin Rules**
+- Şablonlarda, özellikle fonksiyon şablonlarında, birbiriyle ilişkili iki şablonun öncelik sırasını belirlemeye yönelik kurallardır. Derleyici bu kuralları kullanarak birden fazla şablonun aynı işlevi sağladığı durumlarda hangi şablonun kullanılacağını belirler.
+- Kısaca: Hangi template'ten specialization yapılcağına yönelik kural seti.
+
 **Partial Ordering Rules Örneği:**
 
 ```CPP
@@ -11486,6 +11490,9 @@ int main()
 
 **Kısaca CTAD:**  Derleyici bir sınıf şablonundan oluşturulacak sınıf türünden nesnenin
 oluşturulduğu bildirime yaparken constructor'a gönderilen argümanların hangi türden olduğuna ya da olduklarına bakarak template argümanlarının ne olduğunun çıkarımını yapıyor.
+
+**Explicit Keyword:**
+- Constructor ve dönüşüm operatörlerinde kullanılır. İçinde bulunduğu sınıfın belirli durumlarda otomatik dönüşümün önüne geçerek, dönüşümün sadece açıokça istendiğinde gerçekleşmesini zorunlu kılar. Constructorlar için explicit kullanıldığında otomatik dönüşüme izin verilmez.
 
 ```CPP
 using namespace std;
@@ -11823,6 +11830,7 @@ int main()
 
 ## Default Template Arguments
 
+- Şablonlara vaarsayılan değerler sağlamak için default template arguments kullanılabilir. Şablonları kullanırken belirli argümanları belirtmezseniz, derleyici varsayılan değerleri kullanır.
 -  Dedik ki templatelerin parametreleri var. Ve bu template parametreleri karşılığı template argumentleri var.  Derleyici bir templateten bir specialization oluşturabilmesi için şüphesiz template argumentlarının ne olduğunu bilmesi gerekiyor. Template argumentlerinden ne olduğunun bilinmesi kaç yolda mümkündü?
 
 1. Deduction yoluyla
@@ -11849,7 +11857,14 @@ Vector<int, allocator<int>> vec;
 
 **Allocator ne demek?**
 - Allocator aslında bir kavram. Yani dinamik bellek ihtiyacının karşılanması ve kullanılması işlemlerini gerçekleştiren tür anlamında.
+- Allocatgor, bellek yönetimi için kullnaılan bir sınıfı türüdür. Deallocate, construct, destroy gibi işlemlerin fonksiyonlarını sağlar. Farklıc containerlar bellek yönetimini özelleştirebilir ve farklı bellek stratejilerine uyum sağlar.
 - Container'lar (STL'deki ya da 3. parti kütüphanelerdeki) coğunlukla dinamik bellek yönetimi kullanıyorlar.
+**Allocator Sınıfının Sağladığı Fonksiyonlar:**
+- **allocate(size_t n)**: n adet T türü nesne için bellek ayırır ve ilk eleman adresini döndürür.
+- **deallocate(T* p, size_t n)**: Allocate edilmiş belleği serbest bırakır.
+- **construct(T* p, const T& val)**: Belirtilen adreste yeni bir T türü nesne oluşturur ve val değerini yapılandırır.
+- **destroy(T* p)**: Belirtilen adresteki T türü nesneyi yok eder ve kaynakları serbest bırakır.
+- 
 **Yani dinamik bir dizi elemanlari nerede tutuyor?**
 - Basitce heap te tutuyor diyebiliriz. Aslinda programın çalışma zamanında elde edilen bir bellek alanında tutuyor.
 - Peki ya bir gömülü sistem için vektör sınıfını kullanmak istesek? Böyle olduğunda gömülü sistemde heap diye bir alan yok. Programın çalışma zamanında heap ten bir bellek alanı elde edemiyorum. Ama siz şimdi ilgili gömulü sistemde programın çalışma zamanında birbellek alanini kullanır kılan kendiniz bir kod yazabiliriz.
@@ -11922,7 +11937,9 @@ basic_ostream<char, char_traits<char>>
 > basic_ostream bizim sinif sablonumuzun turu. Iki template parametresi var. Birincisi akimdaki karakterlerin turu. Digeri karakterler uzerinde islemlerin nasil yapildigini belirleyen tur.
 - Yani ostream sinifin ismi degil. Bir sinif sablonunun belirli tur argumanlariyla olusturulmus specialization'u olan bir sinifin tur es ismi. Sinif sablonunun ismi basic_ostream.
 
-## Perfect Fowarding
+## Perfect Forwarding
+- C++ 11 ile tanıtıldı. Bir fonksiyondan diğer fonksiyona gönderilen fonksiyon parametrelerinin orijinal tipleriyle ve değer kategorisiyle iletmeyi sağlayan bir tekniktir. Parametrelerin tür ve değer kategorisini koruyarak, gereksiz kopylamna işlemlerini ve performans kayıpolarını önlemeye yardımcı olur.
+- Perfect forwarding, şablonlar, decltype ve universal reference(&&) operatörü kullanılarak sağlanır. Universal referans, hem sağ hem sol taraf referansları olarak kullanılabilir.
 - Perfekt forwarding aracın kendisi değil. Perfekt forwarding yapma olanağa sağlayan araçlar C++ 11 standartlarıyla dile eklendi.
 - Bir fonksiyon olsun. Siz bu fonksiyonu aslında pekala kendiniz de çağırabilirsiniz. Fakat  öyle yerler var ki kutuphaneyi hazırlayan, bu fonksiyonu doğrudan çağırmanız yerine sizin bu fonksiyonu çağıran bir fonksiyonu çağırmanızı istiyor.
 
@@ -12082,6 +12099,9 @@ int main()
 > Asagidaki cagriya gore bize derleyici ortadaki fonksiyonu yazdi.
 
 ### Pack Expansion
+
+- Bir parameter pack'in elemanlarını açar ve bir fonmksiyon, sınıf veya ifade içinde kullanılabilir hale getirir. 
+- Variadic template'lerde kullanılan parameter pack'lerin fonksiyon veya ifade içinde kullanılabilmesi için pack expansion işlemine  tabi tutulması gerekir. Bu işlem parameter pack'in elemanlarını açarak tek tek işlemeye olanak tanır. Yani template içinde virgüller ile ayrılan bir liste oluşturuyor.
 
 - Parametre paketindeki parametrelerin bir kalıba uygun olarak bir kalıba uygun olarak virgülerle ayrılan listeye dönüştürülmesi.
 - Yani biz bir parametre paketini ya da fonksiyon parametre paketini ya da templet parametre paketini expand ettiğimizde ya da genişlettiğimizde Virgülerle ayrılan bir liste oluşturuyoruz templetin içinde.
