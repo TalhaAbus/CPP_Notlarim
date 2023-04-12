@@ -12771,11 +12771,8 @@ int result = ([](int a, int b){return a+b;})(3,4);
 ### cache hit ve cache miss
 - Önbellek, veri ve talimatların hızlı erişim sağlayan ve daha küçük, hızlı bir bellek alanında saklandığı bir sistemdir. Önbellek, bilgisayarın ana belleğinden daha hızlıdır ve CPU'nun işlem süresini azaltır.
 
-**cache hit**: Önbellekte talep edilen verilerin mevcut olduğu durumdur. Cache hit olduğunda,
-
-
-
-
+**cache hit**: Önbellekte talep edilen verilerin mevcut olduğu durumdur. Cache hit olduğunda, CPU hızlı bir şekilde önbellekteki verilere veya talimatlara erişebilir ve CPU'nun işlem süresi azalır. Yüksek cache hit oranı, önbelleğin etkili bir şekilde kullanıldığı anlamına gelir.
+**cache miss**: Talep edilen veri veya talimat önbellekte değil. Cache miss olduğunda, CPU daha yavaş olan ana belleğe erişmek zorunda kalır ve işlem süresi uzar. Sistem performansını olumsuz etkiler.
 
 ## STL Containers
 - Verileri bir arada tutulup işlenmesini sağlayan düzenekler. Bu iş için oluşturulan sınıflara container sınıfları deniyor.
@@ -12881,6 +12878,10 @@ int main()
 - Bu initializer list ile o range'e erişebiliyorum. 
 - Yani bir initiazlier list kopyalanarak başka bir initilazier list oluşturulursa, dize diziyle herhangi bir alakalsı yok.
 
+**std::initializer_list nesnesi** temel olarak 2 pointer içerir. Bu nedenle sizeof değeri kullanılan platformda iki pointer değerine eşdeğer olacaktır. Yani initializer_lsit nesnesi elemanların kendisini değil, elemanlara pointerları içerir.
+
+
+
 ```CPP
 int main()
 {
@@ -12922,6 +12923,14 @@ int main()
 	print(svec);
 }
 ```
+
+## Deep copy ve Swap fonksiyonu
+
+- Deep copy bir nesnenin tüm veri üyelerinin ve bu üyelerin işaret ettiği dinamik bellek alanının da kopyalanması işlemidir. Yani kopyalanan nesne, porijinal nesneden bağımsızdır ve paylaştıoğı herhangi bir veri yoktur. Bir pointer üyesi varsa, sadece pointeriın değerini kopyalamak yeterli değildir. Çünkü bu durumda her iki nesne de aynı dinamik bellek alanını paylaşır. Deep copy, işaret edilen bellek alanını da kopyalar ve her iki nesne  de bağımsız olur.
+- Yani nesnenin tüm veri üyelerini ve bunların işaret ettiği bellek alanlarını kopyalar. 
+- Fakat swap fonksiyonunda nesnelerin pointerları takas edilir ve bellek alanına dokunulmaz.
+
+
 
 # Ders 35
 
@@ -12965,6 +12974,10 @@ int main()
 ### Iterator Invalidation
 
 - Bir iterator geçerliyken belirli işlemlerin yapılması o iteratörü geçersiz hale getirebiliyor. Bunun en tipik örneği reallocation.
+
+
+**Emplace Kısa Özet**:
+- Emplace fonksiyonları, container'a yeni eleman eklerken in-place construction yaparak verimli çalışır. Yani nesnenin doğrudan hedef bellek konumunda oluşturulması anlamına gelir. Ekstra kopyalama ve taşımayı önler. Elemanın constructor'a iletilen argümanlarını alır ve bu argümanlar ile nesneyi doğrudan hedef bellekte oluşturur.
 
 ### Emplace Fonksiyonları
 
@@ -13013,6 +13026,10 @@ public:
 
 ### Spaceship operatörü (Three-way comparison)
 
+- Spaceship üç yönlü karşılaştırma yapmak için kullanılır. İki nesnenin karşılaştırılması sonucunda bu nesnelerin büyük, küçük veya eşit olduğu bilgisini bir değer ile döndürür.
+- Önceden sınıflar için tüm karşılaştırma operatörlerini el ile tanımlamak gerekiyordu ancak spaceship sayesinde tek bir operatör ile tüm karşılaştırmaları gerçekleştirebiliriz.
+
+
 ```CPP
 45 == x;
 x == 45;
@@ -13024,6 +13041,9 @@ x == 45;
 - Yeni karşılaştırma operatoru eklendi. Three-way comparison.(spaceship operator)
 
 **Lexicographical Compare:**
+
+- İki dizi veya kolleksiyonun ögelerini karşılaşitırarak hangi dizinin diğerine göre küçük veya büyük olduğunu belirlemeye yarayan bir algoritmadır. Sözlük sıralaması mantığı ile çalışır ve iki dizi arasında karşılaştırma ögelerin değerlerine göre yapılır.
+
 
 ```CPP
 int main()
