@@ -13564,6 +13564,57 @@ std::ratio
 
 chrono kutuphanesi
 
+# EK DERSLER
+
+- Lambda ifadelerinden elde edilne fonksiyonlar constexpr fonksiyon olabliyor. C++ 17 ile gelen özellik ile artık lambda ifadeleri default olarak constexpr. Eğer constexpr olmasını engelleyen bir duruma sahipse o zaman constexpr değil kabul ediliyor.(Örneğin içinde static bir yerel değişken tanımlamak)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
