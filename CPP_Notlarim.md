@@ -13568,16 +13568,31 @@ chrono kutuphanesi
 
 - Lambda ifadelerinden elde edilne fonksiyonlar constexpr fonksiyon olabliyor. C++ 17 ile gelen özellik ile artık lambda ifadeleri default olarak constexpr. Eğer constexpr olmasını engelleyen bir duruma sahipse o zaman constexpr değil kabul ediliyor.(Örneğin içinde static bir yerel değişken tanımlamak)
 
+- Eğer constexpr ile tanımlarsam, constexpr olmasına engel bir durum varsa o zaman sentaks hatası verecek.
 
+```CPP
+int main()
+{
+		auto fx = [](int x) { return x * x; };
 
+		constexpr auto bx = noexcept(fx(1));
+}
+```
+> Noexcept operatörü bir compile time operatörüydü. Aldığı nesne exception throw etmeme arantisi veriyorsa true değer döndirecek. **Ve önemli bir bilgi:** Operand olan ifade için işlem kodu üretilmeyecek. Unevaluated context.
 
+```CPP
+int main()
+{
+		auto fx = [](int x) { return x * x; };
 
+		constexpr auto bx = noexcept(fx(1));
 
+		static_assert(noexcept(fx(12)), "noexcept false");
+}
+```
+> static assert operandı false değer döndürdüğü için static_assert sentaks hatasına sebep oldu. Compile time'da doğrulama yapıyor ve tamamen derleme zamanına ilişkin.
 
-
-
-
-
+22
 
 
 
