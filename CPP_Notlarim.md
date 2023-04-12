@@ -12222,6 +12222,9 @@ void func(Ts ...args)
 **STL standart container siniflari:**
 ![image](https://user-images.githubusercontent.com/75746171/223107072-a3afd7f2-0f34-4c79-8880-ff00a38edbcb.png)
 
+**Sarmalamak (wrapping)**: Bir nesne ya da yapıdaki bir ögenin başka bir nesne ya da yapı içinde kapsanması ve yönetilmesi. Bu durum genellikle daha yüksek soyutlama sağlamak, kullanımı kolaylaştırmak, ve güvenliğ iarttırmak için yapılır.
+
+
 **Vector:** Dinamik dizi sinifi, veri yapilari ihtiyacinin cogunu karsiliyor.
 
 **Deque:** Dinamik dizilerin dizisi.
@@ -12248,6 +12251,12 @@ void func(Ts ...args)
 
 # Ders 31
 
+## Associative Containers
+- Verileri sıralı bir şekilde saklayan ve yöneten bir grup container. Bu tür containerlar verilere anahtar üzerinden erişim sağlarlar. Genellikle ağaç veya karma tabanlı veri yapıları kullanarak gerçekleştirilir. Hızlı anahtar bazlı arama ve veri ekleme-çıkarma işlemleri için optimize edilmiştir. Anahtarlar her bir veri ögesi için benzersiz veya çoklu olabilir.
+- Bağlı listeler doğrusal bir veri yapısı türüdür. Elemanları bellekte ardışık olmayan, rastgele yerleştirilmiş düğümlerde saklarlar. Her düğüm, bir veri ögesi ve bir veya daha fazla next düğüme işaret eden pointerlardan oluşur. Bu pointerlar sayesinde liste boyunca ilerlemek ve elemanlara erişmek mümkündür.
+
+> Eleman ekleme ve çıkarma, ilgili düğümün pointerlarını günmcelleme ile mümkünüdür.
+
 - Bütün STL iteratörleri ya da üçüncü parti kütüphanelerdeki iteratörler, ortak bir interface'e sahip ama tamamen aynı da değil. Iteratörlerin kategori dediğimiz bir özelliği var. Bir iteratörün hangi operasyona destek verdiği, hangi operasyonu sağladığı
 ve tabii ki hangi operasyonu sağlamadığı o iteratörün kategorisine bağlı.
 
@@ -12257,7 +12266,7 @@ ve tabii ki hangi operasyonu sağlamadığı o iteratörün kategorisine bağlı
 3. forward iterator
 4. bidirectional iterator
 5. random access iterator
-
+- İteratör kategorileri, C++ standartında belirtilen beş temel iteratör sınıfından birine karşılık gelen sınıfların (nested type) bir türüdür. Bu sınıfların her biri, belirli bir iteratör kateforisini temsil eden boş bir sınıftır. Boş sınıflar belirli kategoriye ait iteratörlerin özelliklerini belirtmek için kullanılır.
 - Aşağı doğru indikçe yetenek artıyor. (3. sıradaki, 1 ve 2 yi kapsıyor). Yani forward iterator kategorisindeki bir iterator ile hem input iterator interface'indeki operasyonları hem de output iterator kategorisindeki operasyonları gerçekleştirebilirim. Bir iterator bu kategorilerden birine ilişkin olmak zorunda. 
 
 ![image](https://user-images.githubusercontent.com/75746171/223234748-7f57a3ba-ccf8-42d5-bb01-630c212c2b99.png)
@@ -12354,6 +12363,10 @@ int main()
 > Çıktıda türünü derleme zamanında görmüş olduk.
 
 **İterator kategorisi neden önemli?**
+
+**Container kopyalama**:
+- Farklı containerlar arasından kopyalama yapmak mümkündür. std::copy veya ranged based for döngüsü gibi algoritma ve döngüler ile yapılır. Her iki container eleman türlerinin uyumlu olması gerekir. Bu, veri yapıları arasında veri aktarımına imkan verir. Bir container, avantajlarından faydalanarak kullanılabilir ve ardından veriler farklı container sınıfına aktarılarak farklı bir veri yapısının avantajı kullanılabilir.
+
 
 ### std::copy
 - Bir range'deki ögeleri başka bir range'e kopyalıyor. 
@@ -12746,6 +12759,22 @@ int main()
 - iife idiom
 - overload reloltion
 - generalized lambda expression
+
+### IIFE Idiom
+- Immediately Invoked Function Express
+- Genellikle bir fonksiyon ifadesinin tanımlandığı anda çağırılması durumunu ifade eder. Yani lambda ifadesi tanımlanıp hemen ardından çağırılabilir.
+
+```CPP
+int result = ([](int a, int b){return a+b;})(3,4);
+```
+
+### cache hit ve cache miss
+- Önbellek, veri ve talimatların hızlı erişim sağlayan ve daha küçük, hızlı bir bellek alanında saklandığı bir sistemdir. Önbellek, bilgisayarın ana belleğinden daha hızlıdır ve CPU'nun işlem süresini azaltır.
+
+**cache hit**: Önbellekte talep edilen verilerin mevcut olduğu durumdur. Cache hit olduğunda,
+
+
+
 
 
 ## STL Containers
