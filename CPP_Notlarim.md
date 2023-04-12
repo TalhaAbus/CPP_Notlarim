@@ -13674,6 +13674,22 @@ std::ratio
 
 chrono kutuphanesi
 
+## Most Vexing Parse
+- Bir ifadenin nesne mi yoksa fonnksiyon bildirimi mi olduğuna karar verilmesi durumudur. Genellikle bir nesne oluştururken ve bunun yanında bir parametre sağlamak istediğinizde ortaya çıkar. 
+
+```CPP
+Myclass obj1(value);
+Myclass obj2(Myclass(value));
+```
+> obj1 için nesne oluşturma istedndiği gibi çağırılır. Ancak obj2 için MVP sorunu ortaya çıkar. Bu ifade dilin ayrışıtırma kuralları gereği bir fonksiyon bildirimi olarak algılanır.
+
+> Bu durumu çözmek için C++ 11 ile dile eklenen uniform init kullanılabilir:
+
+```CPP
+Myclass obj2 {Myclass(value)};
+```
+
+
 # EK DERSLER
 
 - Lambda ifadelerinden elde edilne fonksiyonlar constexpr fonksiyon olabliyor. C++ 17 ile gelen özellik ile artık lambda ifadeleri default olarak constexpr. Eğer constexpr olmasını engelleyen bir duruma sahipse o zaman constexpr değil kabul ediliyor.(Örneğin içinde static bir yerel değişken tanımlamak)
