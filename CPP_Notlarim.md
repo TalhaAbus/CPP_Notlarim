@@ -202,7 +202,22 @@ int a3[4]{};
 > Hepsi zero initialize edilmiş oluyor. C dilinde boşluğun içi dolu olmak zorunda ama burdada boş bırakılabilir.
 
 ## Type Deduction - Tür çıkarımı:
+- Derleyicinin otomatik olarak değişken veya ifadenin türünü belirlemesi olayıdır. C++11 sonrası  özellikle **auto** ve **decltype** keywordleri ile yapılır.
+
+1. **auto type deduction:** Derleme zamanına yönelik bir mekanizmadır. Değişkenin türünü derleyici atanan değerden otomatik çıkartır.
+2. **decltype type deduction:** Değişken veya ifadenin türünü belirler ve başka değişkenler için kullalnılabilir. Bir ifadeyi temsil ediyor. 
+
+```CPP
+decltype(expr);
+```
+Burada hangi türün elde edileceği expr ifadesinin değer kategorisine (primary value category) bağlı.
+
 - Tür çıkarımı derleme zamanına yönelik bir mekanizma, yani static bir mekanizma. Bazı durumlarda biz türü açıkça yazmasak ta dilin kuralları derleyicinin orada koda bakarak türü ne olduğunu anlamasını sağlıyor. Buna type deduction denir. Biz türü yazmıyoruz. Yazmış kabul ediliyorum, hangi tür olduğunu derleyici koda bakarak anlıyor.
+
+```CPP
+int a = 10;
+decltype(a) b = 20; // b, a'nın türünde (int) olacaktır.
+```
 
 **Static mekanizma ne demek?**
 - Bir özellik veya bir araç seti compile time ile ilişkili ise, derleyici koda bakarak bir takım kodları üretiyorsa bu tür araçlara static araçlar denir. Söz konusu araç programın çalışma zamanına ilişkin ise dinamik sözcüğü kullanılıyor.
@@ -899,14 +914,7 @@ Ama sonuçta p1, p2, p3 int** türünen değişkenler. Çıkarım değişken iç
 - C++ dilinin kurallarında referecen to reference yok. Ama bazı bağlanlar ile oluşturuluyor.
 - Referecne to referecne olması gereken türn yerine L value veya R value reference kullanılıyor.
 
-## Decltype:
 
-- Bir ifadeyi temsil ediyor. Decltype(x);
-
-```CPP
-decltype(expr);
-```
-Burada hangi türün elde edileceği expr ifadesinin değer kategorisine (primary value category) bağlı.
 
 ## Varsayılan Argüman:
 
