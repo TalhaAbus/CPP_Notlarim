@@ -4,18 +4,17 @@
 ### Undefined Behaviour
 - Tanımsız davranış, Dilin kurallarına göre doğru olabilir fakat derleniip çalıştırıldığında nasıl bir durum olacağı konusunda bir granti yok.
 ### Unspecified Behaviour
-- Derleyici herhangi bir şekilde kod üretebilir.
+- Standartlarda belirtlimemiş, yada belirtilse de birden fazla sonuç ile sonuçlanabilen bir davranıştır. Derleyici herhangi bir şekilde kod üretebilir.
 ### Implementation Defined
-- Bu da unspecified behaviour fakat derleyici bunu belgelemek zorunda. Derleyici kararlı bir şekilde belirli bir seçeneği tercih ederek kod üretmek zorunda.
+- Bu da unspecified behaviour fakat derleyici bunu belgelemek zorunda. Bir davranış tanımlı, ancak bu tanım derleyiciye bırakılmış. Derleyici bunu dökümante etmek zorunda. Derleyici kararlı bir şekilde belirli bir seçeneği tercih ederek kod üretmek zorunda.
 ### User-Defined type
-- Kullanıcının bildirim ile tür oluşturması. (struct, enum, union sözcükleri ile oluşturulan türler)
-- Farklı kaynaklarda kulanılan aynı isimlerin aynı varlığa ait olması
+- Kullanıcının kendisinin tanımlayabileceği veri tipleridir. Kullanıcı bildirim ile tür oluşturur. Temel veri tiplerinin yanı sıra, struct, union ve class ile tanımlanabilir.
 ### Internal Linkage
-- Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması
-
+- Bir ögenin (değişken, fonksiyon, sınıf) sadece belirli bir kaynak dosyası içinde görülebilir durumda olmasıdır. Yani bu öge, yalnızca aynı kaynak dosyadaki ögeler tarafından erişilebilir. 
+- **Kısaca:** Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması.
+- Static keyword, değişkeni internal linkage yapar.
 **Örnek:**
 > static int x; internal linkage
-
 ### Scope Leakage: Kapsam Sızıntısı
 - Eğer değişken tanımladığınız alan dışında görünür durumdaysa scope leakage vardır.
 
