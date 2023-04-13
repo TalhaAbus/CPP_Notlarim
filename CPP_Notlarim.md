@@ -14,7 +14,9 @@
 - **Kısaca:** Farklı kaynaklarda kullanılan aynı isimlerin farklı varlığa ait olması.
 - Static keyword, değişkeni internal linkage yapar.
 **Örnek:**
-> static int x; internal linkage
+```CPP
+static int x; //internal linkage
+```
 ### Scope Leakage: Kapsam Sızıntısı
 - Eğer değişken tanımladığınız alan dışında görünür durumdaysa scope leakage vardır.
 
