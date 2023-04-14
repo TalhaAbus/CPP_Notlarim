@@ -413,6 +413,176 @@ int main() {
 ```
 > Bu örnekte, "A" sınıfı ileri bildirimi yapılarak eksik bir tür olarak tanımlanmıştır. "B" sınıfında "doSomething" fonksiyonunda, "A" sınıfı işaretçi olarak kullanılır. Ancak, "A" sınıfının tam tanımı, fonksiyonun tanımının altında yer almaktadır. Bu nedenle, "A" sınıfının eksik tür olarak tanımlanması, "B" sınıfının derlenmesine izin verir.
 
+# Constexpr Keyword
+
+- constexpr anahtar kelimesi, C++ dilinde sabit ifadeler ve sabit ifade fonksiyonları tanımlamak için kullanılır. constexpr kullanarak, derleme süresinde değerlendirilebilecek sabit ifadeler ve fonksiyonlar oluşturarak, programın hızını ve performansını artırabilirsiniz.
+
+1. **Constexpr değişkenler:** constexpr anahtar kelimesi, bir değişkenin değerinin derleme süresinde sabit olduğunu belirtir. Bu, derleyici tarafından derleme süresinde değerlendirilir ve böylece derleyici kodu daha iyi optimize edebilir.
+
+```CPP
+constexpr int x = 42; // x, derleme süresinde sabit bir değere sahiptir.
+
+```
+2. **Constexpr fonksiyonlar:** constexpr anahtar kelimesi, fonksiyonların derleme süresinde değerlendirilebileceğini belirtmek için kullanılabilir. Bu fonksiyonlar, sadece sabit ifadelerle çalışır ve sadece tek bir dönüş ifadesi içerir. Constexpr fonksiyonların avantajı, derleme süresinde değerlendirildiğinden, fonksiyon çağrısı maliyetinin ortadan kalkması ve kodun hızının artmasıdır.
+
+```CPP
+constexpr int pow2(int n) {
+    return (n <= 0) ? 1 : 2 * pow2(n - 1);
+}
+
+int main() {
+    constexpr int result = pow2(5); // Derleme süresinde değerlendirilir ve result = 32 olur.
+}
+```
+
+- C++14'ten itibaren, constexpr fonksiyonlar daha karmaşık hale gelmiştir ve birden çok ifade ve döngü içerebilir. Bu, constexpr fonksiyonların daha geniş bir yelpazede kullanılabilmesini sağlar.
+
+- Constexpr anahtar kelimesinin avantajları şunlardır:
+
+1. **Performans artışı:** Derleme süresinde değerlendirilerek, fonksiyon çağrısı maliyeti azaltılır ve programın hızı artar.
+2. **Kod optimizasyonu:** Derleyici, constexpr değişkenleri ve fonksiyonları daha etkili bir şekilde optimize edebilir.
+3. **Daha güvenli ve hızlı sabitler:** Constexpr, daha güvenli ve hızlı sabit değerler oluşturmak için kullanılabilir.
+
+- Constexpr fonksiyonlar ve değişkenler kullanırken dikkate alınması gereken bazı hususlar şunlardır:
+
+1. **Derleme süresinin artması:** Constexpr fonksiyonlar, derleme süresinde değerlendirildiğinden, geniş kullanımlarda derleme süresini uzatabilir.
+2. **Sınırlı kullanım:** Constexpr fonksiyonlar, sadece sabit ifadelerle çalışabileceğinden, tüm durumlar için uygun olmayabilir.
+
+# Member Functions
+
+- C++ dilinde, bir sınıfın üye fonksiyonları (member functions), sınıfın verileri üzerinde işlem yapmak için kullanılan özel fonksiyonlardır. Bir sınıfın üye fonksiyonları, sınıfın public, private ve protected bölümlerinde tanımlanabilir.
+- Üye fonksiyonlar, sınıfın içinde tanımlanır ve sınıfın nesneleri tarafından çağrılabilir. Üye fonksiyonlar, sınıfın verilerine doğrudan erişebilirler ve sınıfın özelliklerini kullanarak veriler üzerinde işlem yapabilirler. Ayrıca, üye fonksiyonlar, sınıfın diğer fonksiyonlarına ve verilerine erişebilirler.
+- Üye fonksiyonlar, genellikle sınıfın davranışlarını ve özelliklerini belirlemek için kullanılırlar. Örneğin, bir sınıfın "Rectangle" adlı üye fonksiyonu, dikdörtgenin alanını ve çevresini hesaplayabilir. Bir başka örnek olarak, bir sınıfın "BankAccount" adlı üye fonksiyonu, hesap bakiyesini artırabilir ya da azaltabilir.
+- Üye fonksiyonlar, sınıfın yapısına göre farklılık gösterebilirler. Örneğin, bir sınıfın yapısı, yapıcısı (constructor) ve yıkıcısı (destructor) gibi özel üye fonksiyonları içerebilir. Ayrıca, bir sınıfın üye fonksiyonları, sabit bir fonksiyon olarak (const member function) tanımlanabilir. Sabit bir üye fonksiyon, sınıfın verilerini değiştirmediği ve sadece okuma işlemleri gerçekleştirdiği için, sınıfın nesneleri tarafından sabit bir fonksiyon olarak çağrılabilir.
+
+# Redecleration
+
+- Redeclaration, C++ dilinde aynı isimli bir değişkenin, fonksiyonun ya da sınıfın birden fazla kez bildirilmesidir. Yani, bir öğe bir kez bildirildikten sonra tekrar aynı isimle bildirilirse, bu bir redeclaration olarak kabul edilir.
+- Redeclaration, bir değişkenin, fonksiyonun ya da sınıfın birden fazla dosyada kullanılması gerektiği durumlarda sıklıkla kullanılır. Örneğin, bir sınıfın üye fonksiyonlarının tanımları, sınıfın tanımından ayrı dosyalarda bulunabilir. Bu durumda, her bir dosyada üye fonksiyonlarının tekrar bildirilmesi gereklidir.
+
+- Redeclaration, aynı isimli öğelerin aynı dosyada birden fazla kez tanımlanması durumunda hata verebilir. Örneğin, aşağıdaki kodda, "x" değişkeni, aynı dosyada birden fazla kez tanımlanmıştır ve hata verecektir:
+
+```CPP
+int x;
+int x; // Redeclaration hatası
+
+```
+
+- Ancak, aynı isimli öğelerin farklı dosyalarda bildirilmesi durumunda, redeclaration hatası vermezler. Örneğin, aşağıdaki örnekte, "Rectangle" sınıfının üye fonksiyonları farklı dosyalarda tekrar bildirilmiştir:
+```CPP
+// Rectangle.h
+class Rectangle {
+public:
+    void setWidth(int width);
+    void setHeight(int height);
+    int getArea();
+private:
+    int width_;
+    int height_;
+};
+
+// Rectangle.cpp
+#include "Rectangle.h"
+
+void Rectangle::setWidth(int width) {
+    width_ = width;
+}
+
+void Rectangle::setHeight(int height) {
+    height_ = height;
+}
+
+int Rectangle::getArea() {
+    return width_ * height_;
+}
+
+```
+
+> Burada, "Rectangle" sınıfının üye fonksiyonları, "Rectangle.h" başlık dosyasında bildirilmiş ve "Rectangle.cpp" kaynak dosyasında yeniden bildirilmiştir. Bu durumda, bir redeclaration hatası verilmez.
+
+# This Keyword
+- C++ dilinde, this anahtar kelimesi, bir sınıfın üye fonksiyonları içinde kullanılarak, fonksiyonun çağrıldığı nesnenin adresini temsil eden bir işaretçidir. this işaretçisi, üye fonksiyonlar içerisinde, nesnenin üye değişkenlerine ve fonksiyonlarına erişmek için kullanılabilir. Bu, sınıfın özelliklerini ve davranışlarını doğru bir şekilde yönetmek için önemlidir.
+
+- this anahtar kelimesinin kullanımı ve avantajları şunlardır:
+
+1. **Üye değişkenlerin ve fonksiyonların belirginleştirilmesi:** this anahtar kelimesi, üye fonksiyonlar içinde, üye değişkenlerin ve fonksiyonların yerel değişkenlerden ayırt edilmesine yardımcı olur.
+
+```CPP
+class MyClass {
+    int x;
+
+public:
+    void setX(int x) {
+        this->x = x; // Üye değişkeni "x", fonksiyon parametresi olan "x" ile aynı ada sahip olduğu için, "this->x" şeklinde belirginleştirilir.
+    }
+};
+
+```
+> Fonksiyonun parametresi olan "x", aynı ada sahip olan sınıfın üye değişkeni ile çakışabilir. Bu durumda, üye değişkeni belirginleştirilmelidir. Bu nedenle, "this->" operatörü, üye değişkeninin fonksiyon parametresi olan "x" ile ayrımını sağlamak için kullanılır.
+
+> Bu kodda, "this->x" ifadesi, fonksiyonun parametresi olan "x" ile sınıfın üye değişkeni olan "x" arasındaki farkı açıkça belirtir. Yani, "setX" fonksiyonunun parametresi olan "x", fonksiyonun çalışması sırasında "this->x" ifadesiyle belirtilen sınıfın üye değişkenine atanır.
+
+2. **Zincirleme (chaining) işlemleri:** this işaretçisi, fonksiyonun çağrıldığı nesneyi döndürmek için kullanılabilir. Bu, fonksiyonların zincirleme (chaining) şeklinde çağrılmasını sağlar ve kodun daha sade ve anlaşılır olmasına yardımcı olur.
+
+```CPP
+class MyClass {
+    int x;
+
+public:
+    MyClass& setX(int x) {
+        this->x = x;
+        return *this; // Nesneyi döndürür.
+    }
+};
+
+int main() {
+    MyClass obj;
+    obj.setX(5).setX(10); // Zincirleme fonksiyon çağrısı.
+}
+
+```
+
+3. **İç içe (nested) sınıf kullanımı:** this işaretçisi, iç içe (nested) sınıfların dış sınıfın özelliklerine ve fonksiyonlarına erişmesine olanak tanır.
+
+```CPP
+class Outer {
+    int x;
+
+public:
+    class Inner {
+    public:
+        void setX(Outer& outer, int x) {
+            outer.x = x; // Dış sınıfın "x" üye değişkenine erişim.
+        }
+    };
+};
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
