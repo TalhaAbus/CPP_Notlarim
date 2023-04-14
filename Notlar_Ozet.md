@@ -559,28 +559,78 @@ public:
 
 ```
 
+# Special Member Functions
 
+- C++ dilinde, özel üye fonksiyonlar (special member functions) olarak adlandırılan beş temel üye fonksiyon vardır. Bu fonksiyonlar, sınıfların temel davranışlarını kontrol eder ve derleyici tarafından otomatik olarak oluşturulabilir. Özel üye fonksiyonlar şunlardır:
 
+1. **Constructor (Yapıcı):** Bir nesne oluşturulduğunda çağrılan fonksiyondur. Yapıcı, nesnenin başlangıç durumunu ayarlamak ve kaynakları başlatmak için kullanılır. Yapıcılar, sınıf adıyla aynı ada sahip olup, herhangi bir dönüş türüne sahip değildir.
 
+```CPP
+class MyClass {
+public:
+    MyClass() {
+        // Yapıcı fonksiyon
+    }
+};
 
+```
 
+2. **Destructor (Yıkıcı):** Bir nesne ömrünü tamamladığında ve bellekten kaldırılmadan önce çağrılan fonksiyondur. Yıkıcı, nesne tarafından kullanılan kaynakları serbest bırakmak ve nesnenin son durumunu temizlemek için kullanılır. Yıkıcılar, sınıf adının önüne bir tilde (~) işareti eklenerek tanımlanır ve herhangi bir dönüş türüne sahip değildir.
 
+```CPP
+class MyClass {
+public:
+    ~MyClass() {
+        // Yıkıcı fonksiyon
+    }
+};
 
+```
+3. **Copy Constructor (Kopyalama Yapıcısı):** Bir nesnenin başka bir nesneyi kopyalayarak oluşturulması durumunda çağrılır. Kopyalama yapıcısı, derin kopyalama işlemini yönetmek ve kaynak nesneden yeni nesneye doğru bir şekilde veri aktarmak için kullanılır.
 
+```CPP
+class MyClass {
+public:
+    MyClass(const MyClass& other) {
+        // Kopyalama yapıcısı
+    }
+};
 
+```
 
+4. **Copy Assignment Operator (Kopyalama Atama Operatörü):** Bir nesneye başka bir nesnenin değerini atamak için kullanılır. Kopyalama atama operatörü, derin kopyalama işlemini yönetir ve kaynak nesneden hedef nesneye doğru bir şekilde veri aktarmak için kullanılır.
 
+```CPP
+class MyClass {
+public:
+    MyClass& operator=(const MyClass& other) {
+        // Kopyalama atama operatörü
+        return *this;
+    }
+};
 
+```
 
+5. **Move Constructor (Taşıma Yapıcısı) ve Move Assignment Operator (Taşıma Atama Operatörü):** C++11'den itibaren, taşıma semantiği eklenmiştir. Taşıma yapıcısı ve taşıma atama operatörü, nesneler arasında kaynakları etkin bir şekilde taşımak için kullanılır. Bu, büyük veri yapılarını kopyalamak yerine, kaynakları doğrudan bir nesneden diğerine aktararak performansı artırır.
 
+```CPP
+class MyClass {
+public:
+    // Taşıma yapıcısı
+    MyClass(MyClass&& other) noexcept {
+        // Taşıma yapıcısı içinde kaynakları etkin bir şekilde taşıma işlemini gerçekleştirin
+    }
 
+    // Taşıma atama operatörü
+    MyClass& operator=(MyClass&& other) noexcept {
+        // Taşıma atama operatörü içinde kaynakları etkin bir şekilde taşıma işlemini gerçekleştirin
+        return *this;
+    }
+};
 
+```
 
-
-
-
-
-
+> Özel üye fonksiyonlar, C++ dilinde sınıfların temel davranışlarını yönetir. Yapıcı ve yıkıcı fonksiyonlar, nesne ömrü boyunca kaynakları başlatma ve temizleme işlemleri için kullanılırken, kopyalama ve taşıma yapıcıları ve atama operatörleri, nesneler arasında veri ve kaynakları doğru bir şekilde aktarmak için kullanılır. Bu fonksiyonlar, nesne yönelimli programlamada temel performans ve kaynak yönetimi özelliklerini sağlar.
 
 
 
