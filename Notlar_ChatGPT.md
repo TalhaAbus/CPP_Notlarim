@@ -3005,15 +3005,47 @@ int main() {
 
 - Özetle, "template instantiation", bir template'in gerçek veri türüne dönüştürülmesi işlemidir. Bu işlem, bir programcının bir template'i kullanırken gerçekleşir. Template instantiation, açık veya örtük olabilir ve C++ programlama dilinde "lazy" (tembel) bir şekilde gerçekleştirilir.
 
+# Universal Reference
 
+- "Universal reference", C++ programlama dilinde, "&&" işaretinin bir lvalue referansı mı yoksa rvalue referansı mı temsil ettiğinin belirsiz olduğu bir referans türüdür. "Universal reference" terimi, Scott Meyers tarafından "Effective Modern C++" kitabında kullanılmıştır.
 
+- "Universal reference" terimi, C++11 ile birlikte "rvalue reference" özelliğinin tanıtılmasıyla ortaya çıkmıştır. Bir "rvalue reference" normalde sadece bir geçici nesneyle kullanılırken, "universal reference" hem bir geçici nesne hem de bir lvalue ile kullanılabilir.
 
+- "Universal reference", bir template işlevinde kullanılırken, C++ dilindeki "type deduction" (tür çıkarımı) özelliğinden yararlanır. Özellikle, "universal reference" ile fonksiyon parametreleri "perfect forwarding" (mükemmel ileri aktarım) olarak adlandırılan bir teknik için kullanılır. Bu teknik, bir fonksiyonun aldığı argümanı, aynı şekilde bir başka fonksiyona iletirken, argümanın orijinal türünü korur.
 
+- "Universal reference" kullanımı şu şekilde gösterilebilir:
 
+```CPP
+template <typename T>
+void func(T&& arg) {
+    // ...
+}
 
+```
+> Burada, "T&&" bir "universal reference"dir ve "arg" fonksiyon parametresi olarak kullanılır. "T&&" türü, bir lvalue veya bir rvalue ile kullanılabilir. "func()" fonksiyonuna gönderilen argüman, bir lvalue ise "T" türü "lvalue referansı", bir rvalue ise "T" türü "rvalue referansı" olarak çıkarılır.
 
+- "Universal reference", C++ dilinde özel bir referans türüdür ve tür çıkarımı özelliği ile birlikte "perfect forwarding" gibi tekniklerde kullanılır.
 
+# Perfect Forwarding 
 
+- "Perfect forwarding", C++ programlama dilinde, bir fonksiyonun aldığı argümanı aynı şekilde başka bir fonksiyona iletmek için kullanılan bir tekniktir. Bu teknik, argümanın türünü korur ve performansı artırır.
+
+- "Perfect forwarding" kullanımı, C++11 ile birlikte "rvalue reference" ve "universal reference" özelliklerinin tanıtılmasıyla yaygınlaşmıştır. Bu teknik, bir "universal reference" parametresiyle bir fonksiyon çağrıldığında, argümanın türünün korunmasını sağlar ve argümanın orijinal türünü diğer fonksiyona iletir.
+
+- "Perfect forwarding" teknikleri, genellikle şablon fonksiyonlarında kullanılır. Örneğin, aşağıdaki şablon fonksiyonu, bir argümanın türünü koruyarak aynı şekilde bir başka fonksiyona iletmek için "perfect forwarding" kullanır:
+
+```CPP
+template <typename T>
+void forwarder(T&& arg) {
+    some_other_func(std::forward<T>(arg));
+}
+
+```
+> Burada, "arg" fonksiyon parametresi bir "universal reference" olarak tanımlanmıştır. "std::forward<T>(arg)" ifadesi, argümanın orijinal türünü koruyarak "some_other_func()" fonksiyonuna iletilmesini sağlar. Eğer argüman bir lvalue ise "std::forward" işlevi, lvalue referansı olarak, bir rvalue ise rvalue referansı olarak iletilir.
+
+- "Perfect forwarding" teknikleri, performans açısından da faydalıdır. Bu teknikler, bir argümanın gereksiz yere kopyalanmasını veya taşınmasını önler ve işlemlerin daha hızlı çalışmasını sağlar.
+
+- Özetle, "perfect forwarding", bir fonksiyonun aldığı argümanı aynı şekilde bir başka fonksiyona iletmek için kullanılan bir tekniktir. Bu teknik, argümanın türünün korunmasını sağlar ve "rvalue reference" ve "universal reference" özellikleriyle birlikte kullanılır. "Perfect forwarding" teknikleri, şablon fonksiyonlarında yaygın olarak kullanılır ve performans açısından faydalıdır.
 
 
 
