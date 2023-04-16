@@ -681,3 +681,147 @@ B& getInstanceB() {
 2. **Başlatma sırasını kontrol etme:** Başlatma sırası belirsizliğinden kaçınmak için, programın başlangıcında tüm statik ve global nesnelerin başlatılmasını kontrol eden bir başlatma fonksiyonu kullanılabilir. Bu yöntem, daha büyük projelerde uygulanması zor olabilir ve genellikle uygulanması daha karmaşıktır.
 
 - Static initialization fiasco, global ve statik nesnelerin başlatma sırası belirsizliğinden kaynaklanan bir sorundur. Bu sorunun üstesinden gelmek için, nesnelerin başlatılmasını ilk kullanım sırasında yaparak veya başlatma sırasını kontrol eden bir başlatma fonksiyonu kullanarak başlatma sırası belirsizliğinden kaçınabilirsiniz.
+
+# Dinamik Ömürlü Nesne
+
+- Dinamik ömürlü nesneler, C++ programlarında çalışma zamanında (runtime) oluşturulan ve yönetilen nesnelerdir. Dinamik ömürlü nesneler, programcının ihtiyaçlarına göre oluşturulabilir ve yok edilebilir. Bellekteki yeri (heap alanında) ve yaşam süresi, programın akışına bağlı olarak değişir. Dinamik ömürlü nesneler, new ve delete anahtar kelimeleri (C++11'den itibaren new ve delete yerine akıllı işaretçiler (smart pointers) kullanılması önerilir) kullanılarak oluşturulur ve yönetilir.
+
+- Dinamik ömürlü nesnelerin avantajları şunlardır:
+
+1. **Esneklik:** Dinamik ömürlü nesneler, çalışma zamanında programın ihtiyaçlarına göre oluşturulabilir ve yok edilebilir. Bu, bellek kullanımını optimize etmeye ve programın performansını artırmaya yardımcı olur.
+
+2 **Bellek yönetimi:** Dinamik ömürlü nesneler, bellek alanında (heap) yer kaplar ve bu alan, programın çalışması sırasında yönetilir. Bu, programcının bellek kullanımını daha etkili bir şekilde kontrol etmesine olanak tanır.
+
+3 **Büyük nesneler ve veri yapıları:** Dinamik ömürlü nesneler, büyük nesnelerin ve veri yapılarının oluşturulmasını ve yönetilmesini sağlar. Bu nesneler, statik veya otomatik ömürlü nesnelere göre daha esnek ve etkili bir şekilde kullanılabilir.
+
+- Dinamik ömürlü nesnelerin oluşturulması ve yönetilmesi şu şekildedir:
+
+```CPP
+// Nesne oluşturma
+MyClass* obj = new MyClass();
+
+// Nesne kullanımı
+obj->myMethod();
+
+// Nesne yok etme
+delete obj;
+
+```
+
+- C++11'den itibaren, akıllı işaretçiler (smart pointers) kullanılarak dinamik ömürlü nesnelerin yönetimi daha güvenli ve kolay hale getirilmiştir. Örneğin, std::unique_ptr ve std::shared_ptr gibi akıllı işaretçiler, otomatik olarak nesnenin yaşam süresini yönetir ve bellek sızıntılarını önlemeye yardımcı olur.
+
+```CPP
+// Nesne oluşturma ve yönetme (unique_ptr kullanarak)
+std::unique_ptr<MyClass> obj = std::make_unique<MyClass>();
+
+// Nesne kullanımı
+obj->myMethod();
+
+// Nesne yok etme (unique_ptr otomatik olarak nesneyi yok eder)
+
+```
+
+> Sonuç olarak, dinamik ömürlü nesneler, C++ programlarında çalışma zamanında oluşturulan ve yönetilen nesnelerdir.
+
+# New ve Delete
+
+- C++ dilinde, new ve delete anahtar kelimeleri, dinamik ömürlü nesnelerin oluşturulması ve yönetilmesi için kullanılır. new ve delete, bellekteki heap alanında nesnelerin yaşam süresini kontrol etmeye yardımcı olur. Dinamik ömürlü nesnelerin kullanımı, çalışma zamanında bellek ayırma ve kullanma esnekliği sağlar.
+
+- **new operatörü:**
+
+1. **Bellek ayırma:** new operatörü, heap üzerinde istenen boyutta bellek ayırır. Bellek ayırma başarılı olduğunda, ayrılan bellek bloğunun başlangıç adresini döndürür. Bellek ayırma başarısız olursa, std::bad_alloc exception'ı fırlatır.
+2. **Nesne başlatma:** new operatörü ayrıca, ayrılan bellekte oluşturulan nesnenin başlatılması için uygun yapılandırıcıyı (constructor) çağırır.
+
+- new operatörünün kullanımı şu şekildedir:
+
+```CPP
+MyClass* obj = new MyClass(); // Nesne oluşturma ve başlatma
+
+```
+- **delete operatörü:**
+
+**Nesne sonlandırma:** delete operatörü, önceden new ile oluşturulan nesnenin sonlandırılması için uygun yıkıcıyı (destructor) çağırır.
+**Bellek serbest bırakma:** delete operatörü, nesnenin heap üzerinde kapladığı belleği serbest bırakır.
+
+- delete operatörünün kullanımı şu şekildedir:
+```CPP
+delete obj; // Nesne sonlandırma ve bellek serbest bırakma
+
+```
+- C++11'den itibaren, dinamik ömürlü nesnelerin yönetimi için akıllı işaretçiler (smart pointers) kullanılması önerilir. Akıllı işaretçiler, otomatik olarak nesnenin yaşam süresini yönetir ve bellek sızıntılarını önlemeye yardımcı olur. std::unique_ptr, std::shared_ptr ve std::weak_ptr gibi akıllı işaretçiler kullanarak, new ve delete operatörlerinin doğrudan kullanımı yerine daha güvenli ve otomatik yaşam süresi yönetimi sağlanabilir.
+
+- Özetle, new ve delete operatörleri, C++ programlarında dinamik ömürlü nesnelerin oluşturulması, başlatılması, sonlandırılması ve bellek serbest bırakılması için kullanılır. Bu operatörler, çalışma zamanında bellek ayırma ve kullanma esnekliği sağlar. C++11'den itibaren, akıllı işaretçilerin kullanılmasıyla dinamik ömürlü nesnelerin yönetimi daha güvenli ve kolay hale getirilmiştir.
+
+# Constructor ve Destructor
+
+- Constructor ve destructor, C++ sınıflarında nesnelerin yaşam sürecini yöneten özel üye fonksiyonlardır. Constructor'lar, nesne oluşturulduğunda çağrılır ve nesnenin başlatılmasını sağlar. Destructor'lar ise, nesne ömrünün sonunda çağrılır ve nesnenin kaynaklarını temizlemek için kullanılır.
+
+**Constructor (Yapılandırıcı):**
+
+1. **Başlatma:** Constructor, bir sınıfın nesnesi oluşturulduğunda otomatik olarak çağrılır. Nesnenin veri üyeleri ve bazı durumlarda temel sınıfın veri üyeleri başlatılır.
+2. **Overloading:** Constructor'lar birden fazla parametreli ve parametresiz versiyona sahip olabilir. Bu sayede farklı başlatma senaryoları için farklı constructor'lar kullanılabilir.
+3. **İsimlendirme:** Constructor'ın adı, sınıfın adıyla aynı olmalıdır. Constructor'lar herhangi bir geri dönüş tipine sahip değildir.
+4. **Delegating constructor:** C++11'den itibaren, bir constructor diğer bir constructor'ı çağırarak nesne başlatma işlemini başka bir constructor'a devredebilir.
+
+- Constructor örneği:
+
+```CPP
+class MyClass {
+public:
+    // Parametresiz constructor
+    MyClass() {
+        // Nesne başlatma işlemleri
+    }
+
+    // Parametreli constructor
+    MyClass(int value) {
+        // Nesne başlatma işlemleri
+    }
+};
+
+```
+
+**Destructor (Yıkıcı):**
+
+1. **Temizleme:** Destructor, bir sınıfın nesnesi yaşam süresinin sonunda otomatik olarak çağrılır. Nesnenin kaynaklarını serbest bırakma ve temizleme işlemleri için kullanılır.
+2. **İsimlendirme:** Destructor'ın adı, sınıfın adıyla aynı olmalıdır, ancak başında bir tilde (~) bulunur. Destructor'lar herhangi bir geri dönüş tipine ve parametreye sahip değildir.
+3. **Tekil:** Bir sınıfın yalnızca tek bir destructor'u olabilir.
+Destructor örneği:
+
+```CPP
+class MyClass {
+public:
+    // Constructor
+    MyClass() {
+        // Nesne başlatma işlemleri
+    }
+
+    // Destructor
+    ~MyClass() {
+        // Nesne kaynaklarını temizleme ve serbest bırakma işlemleri
+    }
+};
+
+```
+- Özetle, constructor ve destructor, C++ sınıflarında nesnelerin yaşam sürecini yöneten özel üye fonksiyonlardır. Constructor'lar, nesnenin başlatılması ve veri üyelerinin değer ataması için kullanılırken, destructor'lar nesnenin ömrünün sonunda çağrılır ve kaynakların temizlenmesi ve serbest bırakılması için kullanılır. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
