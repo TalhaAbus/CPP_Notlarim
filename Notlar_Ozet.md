@@ -2737,23 +2737,214 @@ int main() {
 
 ```
 
+# Noexcept Keyword
 
+- C++ dilinde noexcept anahtar kelimesi, bir fonksiyonun istisna fırlatmayacağını belirtmek için kullanılır. noexcept, fonksiyonun istisna güvenliği ve optimize edilmiş çalışma süresi performansı açısından önemlidir.
 
+- İstisna fırlatmayacağını belirtmek istediğiniz bir fonksiyonun bildirimine noexcept ekleyerek bunu belirtebilirsiniz. Bu durum, derleyici ve programcı için önemli bilgiler sağlar ve bazı durumlarda daha optimize edilmiş kod oluşturulmasına olanak tanır. noexcept belirtilen bir fonksiyon, istisna fırlatırsa, program std::terminate fonksiyonunu çağırarak hemen sona erer.
+**Örnek:**
+```CPP
+void do_something() noexcept {
+    // ... implementation ...
+}
 
+```
+- noexcept, taşıma (move) konstruktörleri ve taşıma (move) atama operatörleri için özellikle önemlidir. Çünkü bunların istisna fırlatmaması, optimize edilmiş taşıma işlemlerinin gerçekleştirilmesine olanak tanır. Eğer taşıma işlemi noexcept ile belirtilirse, bazı standart kütüphane sınıflarının içindeki algoritmalar daha optimize şekilde çalışır (örneğin, std::vector sınıfının yeniden boyutlandırılması).
+```CPP
+class MyClass {
+public:
+    // Move constructor marked noexcept
+    MyClass(MyClass&& other) noexcept {
+        // ... implementation ...
+    }
 
+    // Move assignment operator marked noexcept
+    MyClass& operator=(MyClass&& other) noexcept {
+        // ... implementation ...
+        return *this;
+    }
+};
 
+```
+- noexcept anahtar kelimesinin yanında, fonksiyonların istisna fırlatma garantilerini belirtmek için noexcept operatörü de kullanılabilir. noexcept operatörü, bir ifadenin istisna fırlatıp fırlatmayacağını belirlemek için kullanılır. Örneğin, bir fonksiyonun istisna fırlatma garantisi, başka bir fonksiyona bağlıysa, noexcept operatörü kullanılabilir.
+```CPP
+void dependent_function() noexcept(noexcept(do_something())) {
+    do_something();
+}
 
+```
+- Özetle, noexcept anahtar kelimesi, bir fonksiyonun istisna fırlatmayacağını belirtmek için kullanılır. Bu, fonksiyonların istisna güvenliği ve optimize edilmiş performans açısından önemlidir. Taşıma konstruktörleri ve taşıma atama operatörleri gibi özel durumlar için noexcept, daha optimize edilmiş kodun oluşturulmasına olanak tanır.
 
+# Procedural Programming
 
+- Procedural programming, bilgisayar programlamasında kullanılan bir programlama paradigmasıdır. Bu yaklaşım, büyük ve karmaşık problemleri daha küçük ve yönetilebilir parçalara (prosedürlere veya fonksiyonlara) bölmeye dayanır. Prosedürel programlama, genellikle düşük seviyeli programlama dilleri ve orta seviyeli dillerde uygulanır, ancak bazı yüksek seviyeli dillerde de kullanılabilir.
 
+**Prosedürel programlama, aşağıdaki özelliklere sahiptir:**
 
+1. Fonksiyonlar ve prosedürler: Program, bağımsız fonksiyonlar veya prosedürler olarak adlandırılan alt rutinlere bölünür. Her fonksiyon, belirli bir işlevi yerine getirir ve programın diğer bölümleriyle veri alışverişi yapar.
+2. Değişkenler ve veri yapıları: Prosedürel programlama, verileri saklamak ve manipüle etmek için değişkenler ve veri yapıları kullanır. Veri yapıları, programın farklı bölümlerinde kullanılabilir ve fonksiyonlar arasında geçebilir.
+3. Kontrol yapıları: Prosedürel programlama, akış kontrolü için yapıları kullanır. Bu yapılar, döngüler (for, while), koşullu ifadeler (if, else) ve diğer kontrol yapılarını içerir.
+4. Düzenli ve yapılandırılmış kod: Prosedürel programlama, kodun düzenli ve yapılandırılmış olmasını teşvik eder. Bu, programın daha kolay anlaşılmasını ve bakımını sağlar.
+5. Genellikle durumla bağımsız: Prosedürel programlama, durumsuz fonksiyonlara odaklanır. Bu, fonksiyonların veri alışverişi yaparken dış durumdan bağımsız olması gerektiği anlamına gelir.
 
+- Prosedürel programlama, nesne yönelimli programlama (OOP) ve fonksiyonel programlama gibi diğer programlama paradigması türleriyle karşılaştırılabilir. Nesne yönelimli programlama, programı nesnelere ve onların etkileşimlerine odaklanarak bölümlere ayırırken, fonksiyonel programlama, saf fonksiyonlar ve veri dönüşümleri üzerinde durur.
 
+- C ve Pascal gibi diller, prosedürel programlama paradigması için örnek olarak gösterilebilir. Bu diller, fonksiyonlar ve prosedürler kullanarak kodu organize etmeye ve programın karmaşıklığını yönetmeye odaklanır.
 
+# Template 
 
+- C++ dilinde şablonlar (template), belirli türler veya değerler için derleme sürecinde oluşturulan kodları parametrize etmeye yarayan bir özelliktir. Şablonlar, temel olarak aynı işlemleri gerçekleştiren ancak farklı veri türleri veya parametrelerle çalışan fonksiyonlar veya sınıflar için kod tekrarını azaltır ve daha genel ve esnek kod yazmanızı sağlar.
 
+- Şablonlar, iki ana kategoriye ayrılır: fonksiyon şablonları ve sınıf şablonları.
 
+1. **Fonksiyon şablonları:** Aynı işlemleri gerçekleştiren ancak farklı türlerle çalışan fonksiyonlar için kullanılır. Şablon, derleyiciye bir veya birden fazla parametre türü üzerinden işlem yapabilecek bir fonksiyon oluşturması için talimat verir.
 
+```CPP
+Fonksiyon şablonları: Aynı işlemleri gerçekleştiren ancak farklı türlerle çalışan fonksiyonlar için kullanılır. Şablon, derleyiciye bir veya birden fazla parametre türü üzerinden işlem yapabilecek bir fonksiyon oluşturması için talimat verir.
+```
+- Bu şablona göre, int, float veya double gibi farklı türler için add fonksiyonunu kullanabilirsiniz:
+
+```CPP
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum_int = add(a, b); // int türünde ekleme
+
+    double c = 3.5;
+    double d = 2.7;
+    double sum_double = add(c, d); // double türünde ekleme
+
+    return 0;
+}
+
+```
+
+2. **Sınıf şablonları:** Farklı türlerle çalışan sınıflar için kullanılır. Örneğin, farklı türlerde elemanlar içeren bir dizi sınıfı oluşturmak istediğinizi düşünün. Şablonlar, bu tür durumlar için mükemmel bir çözüm sunar.
+```CPP
+template <typename T>
+class Array {
+public:
+    Array(int size) : size_(size) {
+        data_ = new T[size_];
+    }
+
+    ~Array() {
+        delete[] data_;
+    }
+
+    T& operator[](int index) {
+        return data_[index];
+    }
+
+    int size() const {
+        return size_;
+    }
+
+private:
+    T* data_;
+    int size_;
+};
+
+```
+
+- Bu şablona göre, farklı türlerde dizi sınıfları oluşturabilirsiniz:
+
+```CPP
+int main() {
+    Array<int> int_array(5); // int türünde dizi
+    Array<double> double_array(5); // double türünde dizi
+
+    return 0;
+}
+
+```
+- Şablonlar, C++ programlamada yaygın olarak kullanılan güçlü bir özelliktir ve temiz, genel ve esnek kod yazmanıza yardımcı olur. C++ Standart Kütüphanesi (STL), şablonlar sayesinde kullanıcılara çok sayıda genel ve esnek veri yapıları ve algoritmalar sunar.
+
+# Template Argument Deduction
+
+- Template argument deduction (şablon argüman çıkarımı), C++ dilinde, şablon parametrelerini (türler veya değerler) belirtmeden şablonlu bir fonksiyon çağrısı yaparken derleyicinin bu parametreleri otomatik olarak çıkarabilmesi işlemidir. Bu özellik, kodu daha kısa ve okunabilir hale getirir ve tip güvenliği sağlar.
+
+- Şablon argüman çıkarımı, derleyicinin fonksiyon çağrısından şablon parametrelerini belirleyebilmesine olanak tanır. Derleyici, fonksiyon çağrısı sırasında kullanılan argüman türlerine bakarak şablon parametrelerini çıkarır ve uygun şekilde şablonlu fonksiyonun örneklemesini gerçekleştirir.
+- Örneğin, aşağıdaki şablonlu bir fonksiyonu düşünün:
+```CPP
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+```
+- Bu fonksiyon, iki sayıyı eklemek için kullanılabilir. Şablon argüman çıkarımı sayesinde, şu şekilde kullanılabilir:
+
+```CPP
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum_int = add(a, b); // int türünde ekleme
+    // Şablon parametresini belirtmeye gerek yok: add<int>(a, b);
+
+    double c = 3.5;
+    double d = 2.7;
+    double sum_double = add(c, d); // double türünde ekleme
+    // Şablon parametresini belirtmeye gerek yok: add<double>(c, d);
+
+    return 0;
+}
+
+```
+> Derleyici, add(a, b) ve add(c, d) çağrılarından, şablon parametresi T için int ve double türlerini çıkarır ve uygun şekilde şablonu örnekler. Bu, kodu daha kısa ve okunabilir hale getirir ve tip güvenliği sağlar.
+
+- Şablon argüman çıkarımı, bazı durumlarda eksik veya yanıltıcı olabilir ve derleyici uygun türleri çıkaramazsa hatalar verebilir. Bu durumda, şablon parametrelerini elle belirtmeniz gerekebilir.
+
+- Özetle, şablon argüman çıkarımı, şablonlu fonksiyon çağrıları sırasında şablon parametrelerini otomatik olarak çıkaran ve uygun şekilde şablonları örnekleyen bir C++ özelliğidir. Bu, kodun daha kısa ve okunabilir olmasına ve tip güvenliği sağlamasına yardımcı olur.
+
+# Template Explicit Arguments
+
+- Template explicit arguments (şablon açık argümanları), şablonlu fonksiyon veya sınıf kullanırken şablon parametrelerini (türler veya değerler) açıkça belirtmek için kullanılır. Bu, bazı durumlarda şablon argüman çıkarımının (template argument deduction) işe yaramadığı ya da istenilen şekilde çalışmadığı durumlarda kullanılabilir. Açık argümanlar, derleyiciye doğru şablon parametrelerini kullanarak şablonu örneklemesi için talimat verir.
+
+- Örneğin, aşağıdaki şablonlu bir fonksiyonu düşünün:
+
+```CPP
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+```
+
+- Bu fonksiyon, iki sayıyı eklemek için kullanılabilir. Şablon argüman çıkarımı sayesinde şu şekilde kullanılabilir:
+
+```CPP
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum_int = add(a, b); // Şablon argüman çıkarımı kullanarak
+
+    double c = 3.5;
+    double d = 2.7;
+    double sum_double = add(c, d); // Şablon argüman çıkarımı kullanarak
+
+    return 0;
+}
+
+```
+> Ancak, bazı durumlarda şablon argüman çıkarımının istenilen şekilde çalışmadığı durumlar olabilir. Bu durumda, şablon açık argümanlarını kullanarak şablon parametrelerini belirtmeniz gerekebilir:
+```CPP
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum_int = add<int>(a, b); // Şablon açık argümanları kullanarak
+
+    double c = 3.5;
+    double d = 2.7;
+    double sum_double = add<double>(c, d); // Şablon açık argümanları kullanarak
+
+    return 0;
+}
+
+```
+- Bu örnekte, <int> ve <double> şablon açık argümanlarıyla, derleyiciye doğru türlerle şablonu örneklemesi için talimat veriyoruz.
+
+- Özetle, şablon açık argümanları, şablonlu fonksiyon veya sınıflar kullanırken şablon parametrelerini açıkça belirtmek için kullanılır. Bu, şablon argüman çıkarımının işe yaramadığı veya istenilen şekilde çalışmadığı durumlarda kullanılabilir.
 
 
 
