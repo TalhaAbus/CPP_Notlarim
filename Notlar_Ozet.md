@@ -2496,6 +2496,279 @@ int main() {
 
 - Özetle, exception handling, programlarda beklenmedik durumların ve hataların yönetilmesi için kullanılan bir tekniktir. C++ dilinde, try, catch ve throw anahtar kelimeleri kullanılarak istisna yönetimi sağlanır. 
 
+# Dynamic Assertion
+
+- Dynamic assertion (dinamik doğrulama), programın çalışması sırasında önemli varsayımları ve koşulları kontrol etmek ve doğrulamak için kullanılan bir tekniktir. Bu teknik, çalışma zamanında (runtime) hataları ve istenmeyen durumları tespit etmeye ve hızlı bir şekilde geri bildirim sağlamaya yardımcı olur. C++ dilinde, assert makrosu, dynamic assertion için sıklıkla kullanılan bir araçtır ve cassert (C++98'den önce assert.h) kütüphanesinde bulunur.
+- assert makrosu, bir koşulun doğru olup olmadığını kontrol eder. Eğer koşul doğruysa (true), hiçbir şey yapmaz ve program normal şekilde devam eder. Eğer koşul yanlışsa (false), bir hata mesajı yazdırır ve programı durdurur. Bu sayede, programın çalışması sırasında beklenmedik durumları ve hataları tespit etmek daha kolay olur.
+
+- Basit bir dynamic assertion örneği:
+
+```CPP
+#include <iostream>
+#include <cassert>
+
+int main() {
+    int x;
+    std::cout << "Enter a number: ";
+    std::cin >> x;
+
+    assert(x >= 0 && "Negative number entered!");
+
+    std::cout << "Square root of " << x << " is " << std::sqrt(x) << std::endl;
+
+    return 0;
+}
+
+```
+> Bu örnekte, kullanıcıdan girilen sayının negatif olup olmadığı kontrol edilmektedir. Eğer sayı negatifse, assert makrosu bir hata mesajı yazdırarak ve programı durdurarak bize geri bildirim sağlar. Böylece, programın çalışması sırasında beklenmedik durumları ve hataları tespit etmek daha kolay olur.
+
+- Özetle, dynamic assertion, programın çalışması sırasında önemli varsayımları ve koşulları kontrol etmek ve doğrulamak için kullanılan bir tekniktir. C++ dilinde, assert makrosu, bu tür kontrolleri gerçekleştirmek için kullanılabilir ve çalışma zamanında hataları ve istenmeyen durumları tespit etmeye yardımcı olur.
+
+# Uncought Exception
+- Uncaught exception (yakalanmamış istisna), bir programda meydana gelen ve uygun bir şekilde işlenmemiş olan exception'lardır. C++ dilinde, bir istisna throw anahtar kelimesi ile fırlatılabilir ve try ve catch blokları kullanılarak bu istisnaların işlenmesi sağlanır.
+
+- Eğer bir istisna fırlatılır ve uygun bir catch bloğu ile yakalanmazsa, bu istisna yakalanmamış (uncaught) kabul edilir. Uncaught exception durumunda, C++ programının varsayılan davranışı, std::terminate() fonksiyonunu çağırmaktır. Bu fonksiyon, programın aniden sonlanmasına ve genellikle işletim sistemi tarafından "anormal sonlandırıldı" türünde bir hata mesajı verilmesine neden olur.
+
+- Uncaught exception'ların olumsuz etkilerinden kaçınmak için, programınızdaki tüm potansiyel istisnaları uygun try ve catch bloklarıyla işlemeye özen göstermelisiniz. Bu sayede, istisnaların neden olduğu hatalar ve beklenmedik durumlar daha güvenli ve düzenli bir şekilde ele alınabilir.
+
+**Örnek:**
+```CPP
+#include <iostream>
+
+double divide(int a, int b) {
+    if (b == 0) {
+        throw std::runtime_error("Division by zero error");
+    }
+    return static_cast<double>(a) / b;
+}
+
+int main() {
+    int x = 10;
+    int y = 0;
+
+    try {
+        double result = divide(x, y);
+        std::cout << "Result: " << result << std::endl;
+    }
+    // Bu catch bloğu olmazsa, yakalanmamış istisna durumu meydana gelir.
+    catch (const std::runtime_error& e) {
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+
+    return 0;
+}
+
+```
+> Bu örnekte, divide fonksiyonu bölme işlemi gerçekleştirir ve bölen (b) sıfır ise, bir istisna fırlatır. Eğer uygun bir catch bloğu ile bu istisna yakalanmazsa, uncaught exception durumu meydana gelir ve program anormal şekilde sonlanır.
+
+- Özetle, uncaught exception, bir programda meydana gelen ve uygun bir şekilde işlenmemiş olan istisnalardır. Bu tür istisnalar, programın anormal şekilde sonlanmasına ve istenmeyen sonuçlara yol açabilir. İstisnaları uygun try ve catch bloklarıyla işleyerek, uncaught exception durumlarının olumsuz etkilerinden kaçınabilirsiniz.
+
+# Exception Safety
+- Exception safety (istisna güvenliği), programınızdaki hataların ve istisnaların yönetilmesi ve bunların olumsuz etkilerinin en aza indirgenmesi ile ilgili bir programlama yaklaşımıdır. C++ dilinde, exception handling mekanizması, istisnaları temsil eden nesnelerle çalışarak ve istisnaları yakalayarak ve uygun şekilde işleyerek bu tür durumları yönetir.
+- Exception safety, programların beklenmedik durumlar ve hatalar karşısında nasıl davranması gerektiği ve programın kritik kaynaklarını (örneğin, bellek, dosya işlemleri vb.) nasıl koruyabileceğiyle ilgilidir. Exception safety seviyeleri genellikle şu şekilde sınıflandırılır:
+
+1. No-throw guarantee (Hiçbir istisna atılmaz garantisi): Bu seviyede, kodun hiçbir istisna fırlatmayacağı garanti edilir. Bu tür kodlar, genellikle istisna meydana getirmeyen işlemleri gerçekleştirir ve herhangi bir hata durumunda başarısız olamaz.
+
+2. Strong exception safety (Güçlü istisna güvenliği): Bu seviyede, bir işlem başarısız olursa ve istisna fırlatılırsa, programın durumu işlemden önceki durumuna geri döner. Bu, programın istisnaların olumsuz etkilerinden korunmasını ve hatalı durumların etkisini en aza indirmesini sağlar.
+
+3. Basic exception safety (Temel istisna güvenliği): Bu seviyede, bir istisna meydana geldiğinde, programın durumu belirsiz olabilir, ancak programın kritik kaynakları ve veri bütünlüğü korunur. Bu durum, programın daha düşük bir performansla çalışmasına neden olabilir, ancak veri kaybı veya bellek sızıntısı gibi daha büyük sorunlara yol açmaz.
+
+> Exception safety sağlamak için, programınızdaki tüm potansiyel istisnaları uygun try ve catch bloklarıyla işlemeye özen göstermelisiniz. Ayrıca, kritik kaynakların ve verilerin kullanımını kontrol etmek ve istisna durumlarında düzgün bir şekilde temizlemek için kaynak yönetimi tekniklerini kullanmalısınız. Bu sayede, programınızın istisna güvenliği artar ve istisnaların olumsuz etkileri en aza indirgenir.
+
+# Stack Unwinding
+
+- Stack unwinding, C++ dilinde exception handling (istisna işleme) mekanizmasının bir parçasıdır. İstisnaların işlenmesi sırasında, programın çağrı yığınındaki (call stack) fonksiyonların düzgün bir şekilde geri alınmasını (temizlenmesini) sağlar. Stack unwinding, fırlatılan istisnanın uygun bir catch bloğu ile yakalanana kadar, çağrı yığınındaki fonksiyonların yıkıcılarının (destructors) çağrılması ve fonksiyonların sonlandırılması işlemini gerçekleştirir.
+
+**Stack unwinding, aşağıdaki adımları izler:**
+1. İstisna, throw anahtar kelimesi ile fırlatılır.
+2. Program, çağrı yığınındaki fonksiyonlarda uygun bir catch bloğu bulmaya çalışır.
+3. Uygun bir catch bloğu bulunana kadar, çağrı yığınındaki fonksiyonlar sırayla geri alınır (unwound). Bu aşamada, fonksiyonlar içinde tanımlanan nesnelerin yıkıcıları (destructors) çağrılır ve kaynaklar serbest bırakılır.
+4. Uygun bir catch bloğu bulunduğunda, istisna bu blok tarafından yakalanır ve işlenir. Bu noktada, stack unwinding işlemi tamamlanır.
+
+**Örnek:**
+
+```CPP
+#include <iostream>
+#include <stdexcept>
+
+class MyClass {
+public:
+    MyClass() {
+        std::cout << "MyClass constructed" << std::endl;
+    }
+    ~MyClass() {
+        std::cout << "MyClass destructed" << std::endl;
+    }
+};
+
+void funcA() {
+    MyClass objA;
+    throw std::runtime_error("An error occurred in funcA");
+}
+
+void funcB() {
+    MyClass objB;
+    funcA();
+}
+
+int main() {
+    try {
+        funcB();
+    }
+    catch (const std::runtime_error& e) {
+        std::cerr << "Exception caught: " << e.what() << std::endl;
+    }
+    return 0;
+}
+
+```
+
+> Bu örnekte, funcA fonksiyonu içinde bir istisna fırlatılır. Stack unwinding sürecinde, funcA ve funcB fonksiyonlarındaki MyClass nesnelerinin yıkıcıları çağrılır ve kaynaklar serbest bırakılır. Daha sonra, main fonksiyonundaki catch bloğu istisnanın işlenmesini sağlar.
+
+- Özetle, stack unwinding, C++'da istisna işleme mekanizmasının önemli bir parçasıdır ve istisnaların uygun şekilde işlenmesi sırasında çağrı yığınındaki fonksiyonların düzgün bir şekilde geri alınmasını sağlar.
+
+# Object Slicing
+
+- Object slicing (nesne dilimleme), C++ dilinde, türetilmiş bir sınıftan temel bir sınıfa doğru dönüşüm gerçekleştirirken, türetilmiş sınıfa ait olan üye değişkenlerin ve özelliklerin kaybedilmesi durumudur. Nesne dilimleme genellikle, türetilmiş bir nesneyi temel sınıfın nesnesine atama yaparken veya temel sınıfın nesnesi olarak fonksiyona gönderirken oluşur.
+
+- Nesne dilimleme durumlarını önlemek için, nesnelerin referansları veya pointerları kullanılabilir. Bu şekilde, türetilmiş sınıfın tamamının temel sınıfa doğru dönüşümü sağlanır ve türetilmiş sınıfa ait özellikler ve üye değişkenler korunur.
+
+**Örnek:**
+```CPP
+#include <iostream>
+
+class Base {
+public:
+    virtual void print() const {
+        std::cout << "Base class" << std::endl;
+    }
+};
+
+class Derived : public Base {
+private:
+    int extra_data;
+
+public:
+    Derived(int data) : extra_data(data) {}
+
+    void print() const override {
+        std::cout << "Derived class with extra data: " << extra_data << std::endl;
+    }
+};
+
+void some_function(const Base& base_obj) {
+    base_obj.print();
+}
+
+int main() {
+    Derived derived_obj(42);
+
+    // Object slicing occurs here, extra_data is lost
+    Base base_obj = derived_obj;
+    base_obj.print(); // Outputs "Base class"
+
+    // Using reference or pointer prevents object slicing
+    some_function(derived_obj); // Outputs "Derived class with extra data: 42"
+
+    return 0;
+}
+
+```
+
+> Bu örnekte, Derived sınıfı, Base sınıfından türetilmiştir. Nesne dilimleme, derived_obj nesnesini base_obj nesnesine atama yaparken oluşur ve Derived sınıfına ait extra_data üye değişkeni kaybedilir. Bu durum, base_obj.print() çağrısı sırasında görülür.
+- some_function fonksiyonuna bir referans ile derived_obj nesnesini göndererek nesne dilimleme durumunu önleriz. Bu şekilde, fonksiyon içinde türetilmiş sınıfın tamamı kullanılabilir ve Derived sınıfına ait özellikler ve üye değişkenler korunur.
+- Özetle, object slicing, C++'da türetilmiş sınıfın özelliklerinin ve üye değişkenlerinin temel sınıfa doğru dönüşüm sırasında kaybedildiği bir durumdur. Bu durumu önlemek için, nesnelerin referansları veya pointerları kullanılmalıdır.
+
+# Zombie Object
+- Zombie object (zombi nesne), bellekte hala mevcut olan ancak artık geçerli bir şekilde kullanılamayan veya işaretlenmeyen bir nesnedir. Zombi nesneler, genellikle bellek yönetimi hatalarından kaynaklanır ve bellek sızıntılarına veya hatalı program davranışlarına neden olabilir.
+- Zombi nesneler, özellikle iki ana durumda ortaya çıkar:
+
+1. **Nesnenin yaşam süresi sona ermişken referanslarını kullanma:** Bir nesnenin yaşam süresi sona erdiğinde (örneğin, nesnenin yıkıcısı çağrıldığında), nesne artık geçerli değildir ve kullanılmamalıdır. Ancak, yaşam süresi sona eren nesneye işaret eden referanslar veya pointerlar varsa, bu nesneye erişmeye çalışmak hatalı davranışlara neden olabilir. Bu durumda, nesne "zombi" olarak kabul edilir.
+
+```CPP
+#include <iostream>
+
+class MyClass {
+public:
+    void print() const {
+        std::cout << "MyClass instance" << std::endl;
+    }
+};
+
+int main() {
+    MyClass* ptr;
+    {
+        MyClass obj;
+        ptr = &obj;
+    } // obj's lifetime ends here
+
+    // ptr is now a "zombie" pointer, pointing to a destroyed object
+    ptr->print(); // Undefined behavior
+    return 0;
+}
+
+```
+2. **Bellek sızıntıları:** Bir nesne dinamik olarak oluşturulduğunda ve bellek, işlem tamamlandığında serbest bırakılmadığında, bu nesne "zombi" olarak kabul edilir. Bu tür nesneler, bellek sızıntılarına neden olur ve programın performansını ve bellek kullanımını olumsuz etkileyebilir.
+
+```CPP
+#include <iostream>
+
+class MyClass {
+public:
+    MyClass() {
+        std::cout << "MyClass constructed" << std::endl;
+    }
+    ~MyClass() {
+        std::cout << "MyClass destructed" << std::endl;
+    }
+};
+
+void create_zombie() {
+    MyClass* ptr = new MyClass(); // Allocate memory for a MyClass instance
+    // ... do some work ...
+    // Forgot to delete ptr, causing a memory leak (zombie object)
+}
+
+int main() {
+    create_zombie();
+    // The MyClass instance is now a "zombie" object, occupying memory but inaccessible
+    return 0;
+}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
