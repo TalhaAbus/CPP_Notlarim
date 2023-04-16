@@ -2390,25 +2390,111 @@ public:
 ```
 > Bu durumda, sınıflar B ve C, sınıf A'dan türetilmiştir ve sınıf D, hem sınıf B hem de sınıf C'den türetilmiştir. Bu hiyerarşi nedeniyle, sınıf D'nin bir sınıf A nesnesine iki kez sahip olduğu ortaya çıkar. Bu, sınıf D içinde sınıf A üyelerine erişimle ilgili belirsizliklere neden olabilir.
 
+- C++ dilinde, diamond problemine çözüm olarak "sanal kalıtım" (virtual inheritance) kullanılır. Sanal kalıtım, çoklu kalıtımda ortak temel sınıfın yalnızca bir kez miras alınmasını sağlar. Böylece, türetilen sınıflarda ortak temel sınıf üyelerine erişimle ilgili belirsizlikler önlenir.
 
+- Sanal kalıtımı kullanarak diamond problemine bir çözüm uygulamak için, virtual anahtar kelimesi ile kalıtım gerçekleştirilir:
 
+```CPP
+class A {
+public:
+    void someFunction();
+};
 
+class B : virtual public A {
+    // ...
+};
 
+class C : virtual public A {
+    // ...
+};
 
+class D : public B, public C {
+    // ...
+};
 
+```
+- Bu durumda, hem sınıf B hem de sınıf C, sınıf A'dan sanal olarak türetilir ve sınıf D'nin yalnızca tek bir sınıf A nesnesine sahip olduğunu garanti eder. Böylece, sınıf D içinde sınıf A üyelerine erişimle ilgili belirsizlikler ortadan kalkar.
 
+- Özetle, diamond problemi, çoklu kalıtım özelliği bulunan nesne yönelimli programlama dillerinde ortaya çıkan bir sorundur ve aynı sınıfın birden fazla kez bir sınıf hiyerarşisinde ortaya çıkmasıyla ilgilidir. C++ dilinde, diamond problemine çözüm olarak sanal kalıtım kullanılır ve ortak temel sınıfın yalnızca bir kez miras alınmasını sağlar.
 
+# Virtual Inheritance
+- Virtual inheritance (sanal kalıtım), C++ dilinde çoklu kalıtım (multiple inheritance) kullanırken ortaya çıkan bazı sorunları çözmek için kullanılan bir tekniktir. Sanal kalıtım, özellikle diamond problemi olarak bilinen sınıf hiyerarşisindeki belirsizlikleri gidermeye yardımcı olur. Sanal kalıtım, bir sınıfın başka bir sınıftan türetilirken ortak temel sınıfın (base class) yalnızca bir kez miras alınmasını sağlar.
 
+- Sanal kalıtım kullanarak, diamond problemi gibi sorunları önleyebilirsiniz. Diamond problemi, aşağıdaki gibi bir sınıf hiyerarşisinde ortaya çıkar:
 
+```
+       A
+      / \
+     B   C
+      \ /
+       D
 
+```
+> Sınıf B ve sınıf C, sınıf A'dan türetilmiştir ve sınıf D ise hem sınıf B hem de sınıf C'den türetilmiştir. Bu hiyerarşi nedeniyle, sınıf D'nin bir sınıf A nesnesine iki kez sahip olduğu ortaya çıkar. Bu, sınıf D içinde sınıf A üyelerine erişimle ilgili belirsizliklere neden olabilir.
 
+- Sanal kalıtımı kullanarak diamond problemine bir çözüm uygulamak için, virtual anahtar kelimesi ile kalıtım gerçekleştirilir:
 
+```CPP
+class A {
+public:
+    void someFunction();
+};
 
+class B : virtual public A {
+    // ...
+};
 
+class C : virtual public A {
+    // ...
+};
 
+class D : public B, public C {
+    // ...
+};
 
+```
+- Bu durumda, hem sınıf B hem de sınıf C, sınıf A'dan sanal olarak türetilir ve sınıf D'nin yalnızca tek bir sınıf A nesnesine sahip olduğunu garanti eder. Böylece, sınıf D içinde sınıf A üyelerine erişimle ilgili belirsizlikler ortadan kalkar.
 
+- Özetle, virtual inheritance (sanal kalıtım), C++ dilinde çoklu kalıtım kullanırken ortaya çıkan belirsizlikleri ve sorunları çözmek için kullanılan bir tekniktir. Sanal kalıtım, ortak temel sınıfın yalnızca bir kez miras alınmasını sağlayarak, sınıf hiyerarşisindeki belirsizlikleri giderir ve kodun daha güvenli ve anlaşılır olmasına katkıda bulunur.
 
+# Exception Handling
+
+- Exception handling (istisna yönetimi), programlarınızdaki hataların ve beklenmedik durumların etkili bir şekilde ele alınmasını sağlamak için kullanılan bir programlama teknikidir. C++ dilinde, exception handling mekanizması, istisnaları temsil eden nesnelerle çalışarak ve istisnaları yakalayarak ve uygun şekilde işleyerek bu tür durumları yönetir.
+
+- C++ exception handling, temelde üç anahtar kelimeyle gerçekleştirilir: try, catch ve throw.
+
+1. try: try bloğu, istisna oluşturabilecek kod parçacıklarını içeren bloktur. Bu blok, hata oluşabilecek potansiyel kodları sarmalar ve eğer bir istisna fırlatılırsa (throw), bu istisnayı yakalayan (catch) uygun bloğa geçiş yapar.
+
+- catch: catch bloğu, try bloğundan fırlatılan (throw) istisnaları yakalayarak ve ele alarak çalışır. Birden fazla catch bloğu bulunabilir ve farklı istisna türlerini işleyebilir. İstisna yakalandığında, catch bloğu içindeki kod çalıştırılır ve istisna ile ilgili uygun eylemler gerçekleştirilir.
+
+- throw: throw anahtar kelimesi, bir istisna fırlatmak (oluşturmak) için kullanılır. İstisna nesneleri, temel veri türleri, sınıf nesneleri veya özel olarak tanımlanmış istisna sınıflarının nesneleri olabilir.
+
+- Basit bir exception handling örneği:
+
+```CPP
+#include <iostream>
+
+int main() {
+    try {
+        int a = 10;
+        int b = 0;
+        if (b == 0) {
+            throw "Division by zero error";
+        }
+        int result = a / b;
+        std::cout << "Result: " << result << std::endl;
+    }
+    catch (const char* error_msg) {
+        std::cerr << "Exception caught: " << error_msg << std::endl;
+    }
+
+    return 0;
+}
+
+```
+> Bu örnekte, try bloğu içinde bir bölme işlemi gerçekleştirilmektedir. Eğer bölen (b) sıfır ise, bir istisna fırlatılır (throw) ve bu durumda istisna nesnesi olarak bir C-string kullanılır. catch bloğu, bu türden bir istisna nesnesini yakalar ve hatayı ekrana yazdırır.
+
+- Özetle, exception handling, programlarda beklenmedik durumların ve hataların yönetilmesi için kullanılan bir tekniktir. C++ dilinde, try, catch ve throw anahtar kelimeleri kullanılarak istisna yönetimi sağlanır. 
 
 
 
