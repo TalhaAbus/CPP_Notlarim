@@ -1566,6 +1566,111 @@ Outer::Inner::someFunction();
 ```
 - Nested namespace'ler, daha büyük projelerde kod organizasyonunu iyileştirmeye ve modülerleştirmeye yardımcı olarak, kodun okunabilirliğini ve bakımını kolaylaştırır. Ayrıca, farklı ad alanlarındaki isim çakışmalarını önlemeye yardımcı olur.
 
+# Inline Namespace
+
+- C++11 standardı ile birlikte gelen "inline namespace" özelliği, namespace'leri iç içe kullanma ihtiyacını azaltmak için kullanılır. Bu özellik, kodun okunabilirliğini artırır ve derleyici optimizasyonlarındaki ve bağımlılıklardaki karmaşayı azaltır.
+
+- Normalde, namespace'ler kullanılarak, bir kapsam (scope) içinde birden fazla alt kapsam (sub-scope) oluşturulabilir. Örneğin:
+
+```CPP
+namespace A {
+    namespace B {
+        int x;
+    }
+}
+
+```
+
+- Bu kodda "A" namespace'i, "B" namespace'i içinde yer alır ve "B" namespace'inde "x" adında bir değişken tanımlanır. "x" değişkenine erişmek için "A::B::x" şeklinde kullanılabilir.
+
+- Inline namespace, bu sorunu çözmek için kullanılır. Bir namespace'in inline olarak tanımlanması, o namespace'in kendisiyle aynı isimde bir iç namespace oluşturduğunu ve bu iç namespace'in o namespace ile aynı kapsamda bulunduğunu ifade eder. Örneğin:
+
+```CPP
+namespace A {
+    inline namespace B {
+        int x;
+    }
+}
+
+```
+- Bu kodda, "A" namespace'i, "B" namespace'i içinde yer alır ve "x" adında bir değişken tanımlanır. Ancak, "B" namespace'i inline olarak tanımlandığından, "x" değişkenine erişmek için "A::x" şeklinde kullanılabilir.
+
+- Bir inline namespace, diğer namespace'ler gibi kullanılır. Örneğin, bir fonksiyonun inline bir namespace içinde tanımlanması, diğer namespace'lerde tanımlanmış olan fonksiyonların yerini alabilir. Böylece, kodun okunabilirliği artırılır ve alt kapsamların kullanımından kaynaklanan sorunlar azaltılır.
+
+- Özetle, inline namespace, namespace'leri iç içe kullanma ihtiyacını azaltmak için kullanılır. Bu özellik, kodun okunabilirliğini artırır ve derleyici optimizasyonlarındaki ve bağımlılıklardaki karmaşayı azaltır. Bir inline namespace, diğer namespace'ler gibi kullanılır ve içindeki unsurlar, dış namespace ile birleştirilerek kullanılır.
+
+# Nested Class 
+- C++ programlama dilinde "nested class" (iç içe sınıf) olarak da bilinen "inner class" (iç sınıf) olarak adlandırılan yapı, bir sınıfın başka bir sınıfın üyesi olarak tanımlanmasına izin verir.
+
+- Bir iç sınıf, diğer sınıflar gibi tüm C++ veri türü kurallarına sahiptir. İç sınıflar, dış sınıfın private, protected veya public üyelerine erişebilirler ve aynı zamanda kendi üyelerine de sahip olabilirler. İç sınıflar, ayrı bir bağımsız sınıf olarak tanımlanabilecekleri gibi, dış sınıfın üyesi olarak tanımlanabilirler.
+
+**Örneğin:**
+
+```CPP
+class OuterClass {
+public:
+    class InnerClass {
+    public:
+        void doSomething();
+    };
+private:
+    int x;
+};
+
+void OuterClass::InnerClass::doSomething() {
+    // ...
+}
+
+```
+
+> Bu kodda "InnerClass", "OuterClass" sınıfının bir üyesi olarak tanımlanmıştır. "InnerClass", "doSomething" adında bir fonksiyona sahip olan ayrı bir sınıf olarak tanımlanabilir. Bu durumda, "doSomething" fonksiyonunun tanımı, sınıfın dışındaki bir yerde tanımlanmalıdır.
+
+- Inner class, dış sınıfın private veya protected üyelerine erişebilir ve ayrıca kendi üyelerine de sahip olabilir. Örneğin, "InnerClass" aşağıdaki gibi tanımlanabilir:
+
+```CPP
+class OuterClass {
+public:
+    class InnerClass {
+    public:
+        void doSomething() {
+            x = 5; // OuterClass'ın private üyesine erişim
+        }
+    private:
+        int y;
+    };
+private:
+    int x;
+};
+
+```
+> Bu kodda, "InnerClass" sınıfı, "OuterClass" sınıfının private üyesine ("x") erişebilir ve kendi private üyesine ("y") sahiptir.
+
+- Inner class, dış sınıfın bir parçası olduğu için, dış sınıfın private veya protected üyelerine erişebilir. Ancak, Inner class'ın private üyelerine erişim yalnızca dış sınıfın üyeleri tarafından gerçekleştirilebilir.
+
+- Inner class, sınıf hiyerarşisindeki bazı problemleri çözmek için kullanılabilir. Örneğin, bir sınıfın bir örneği oluşturulduğunda, iç sınıfın da otomatik olarak oluşturulması mümkündür. İç sınıflar ayrıca, dış sınıfın üyelerine erişimi sınırlamak ve kapsüllemeyi artırmak için de kullanılabilir.
+
+- Özetle, inner class, bir sınıfın üyesi olarak tanımlanan ve ayrı bir bağımsız sınıf olarak tanımlanabilen bir yapıdır. Inner class, dış sınıfın private veya protected üyelerine erişebilir ve ayrıca kendi private, protected veya public üyelerine de sahip olabilir. Inner class, sınıf hiyerarşisindeki bazı problemleri çözmek için kullanılabilir ve dış sınıfın üyelerine erişimi sınırlamak ve kapsüllemeyi artırmak için de kullanılabilir.
+
+- Inner class'ın bir diğer avantajı, kodun okunabilirliğini artırmasıdır. Inner class'lar, bir sınıfın kullanılmasının anlamlı olmadığı durumlarda kullanılabilir ve ayrıca bir sınıfın birden fazla parçasını bir arada gruplandırmak için de kullanılabilir.
+
+- Inner class'lar, STL kütüphanesinde sıkça kullanılır. Örneğin, std::list sınıfı, std::list::iterator adında bir iç sınıf kullanır. Bu iç sınıf, std::list sınıfının öğelerine erişmek ve onları dolaşmak için kullanılır.
+
+- Inner class'lar, C++ dilindeki diğer özelliklerle birlikte kullanılabildiği gibi, template'ler, inheritance (miras) ve generic programming (genel programlama) gibi diğer programlama teknikleriyle de birlikte kullanılabilir.
+
+- Özetle, inner class, bir sınıfın üyesi olarak tanımlanan ve ayrı bir bağımsız sınıf olarak tanımlanabilen bir yapıdır. Inner class, dış sınıfın private veya protected üyelerine erişebilir ve ayrıca kendi private, protected veya public üyelerine de sahip olabilir. Inner class, sınıf hiyerarşisindeki problemleri çözmek için kullanılabilir ve kodun okunabilirliğini artırır.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
