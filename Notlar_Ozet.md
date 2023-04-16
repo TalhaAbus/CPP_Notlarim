@@ -2324,6 +2324,106 @@ Raw işaretçiler, C++ dilinin temel özelliklerinden biridir ve C dilinden mira
 
 - Smart işaretçiler ise, modern C++ uygulamalarında bellek yönetimi için önerilen ve daha güvenli olan işaretçi türüdür. Otomatik bellek yönetimi sağlar ve potansiyel bellek sorunlarını önler. Smart işaretçilerin kullanımı, kodun daha güvenli, modüler ve anlaşılır olmasına yardımcı olur.
 
+# Memory - Resource Leak
+
+- Memory leak (bellek sızıntısı) ve resource leak (kaynak sızıntısı) terimleri, bir programın çalışması sırasında kaynakların doğru şekilde serbest bırakılmamasından kaynaklanan sorunları ifade eder. Bu tür sorunlar, programın performansını düşürebilir, sistem kaynaklarının tükenmesine yol açabilir ve hatta programın beklenmedik şekilde çökmesine neden olabilir.
+
+**Memory Leak (Bellek Sızıntısı):**
+- Bellek sızıntısı, bir programın dinamik olarak tahsis ettiği belleği (örneğin, C++'da new veya malloc kullanarak) serbest bırakmaması durumunda meydana gelen bir problemdir. Bu durumda, tahsis edilen bellek alanı işe yaramaz hale gelir ve programın çalışması sırasında bellek kullanımı giderek artar. Bellek sızıntıları, uzun süre çalışan uygulamalar için özellikle ciddi sorunlara yol açabilir.
+- Bellek sızıntılarından kaçınmak için, dinamik olarak tahsis edilen belleğin uygun şekilde serbest bırakılması gereklidir. C++ dilinde, bu genellikle delete veya free operatörlerini kullanarak yapılır. Modern C++ uygulamalarında, bellek yönetimini kolaylaştırmak ve bellek sızıntılarını önlemek için smart işaretçiler (örneğin, std::unique_ptr ve std::shared_ptr) kullanmak önerilir.
+
+**Resource Leak (Kaynak Sızıntısı):**
+- Kaynak sızıntısı, bellek dışındaki sistem kaynaklarının (örneğin, dosya tanıtıcıları, soketler, mutex'ler, veritabanı bağlantıları) doğru şekilde serbest bırakılmaması durumunda meydana gelen bir problemdir. Kaynak sızıntıları, bellek sızıntılarına benzer şekilde, programın performansını düşürebilir, sistem kaynaklarının tükenmesine yol açabilir ve beklenmedik çökmelere neden olabilir.
+
+- Kaynak sızıntılarından kaçınmak için, kullanılan kaynakların uygun şekilde serbest bırakılması ve kapatılması önemlidir. C++ dilinde, bu genellikle kullanılan kaynakları kapatmak veya serbest bırakmak için gerekli fonksiyonları çağırarak yapılır (örneğin, fclose dosya tanıtıcılarını kapatmak için). Modern C++ uygulamalarında, kaynak yönetimini kolaylaştırmak ve kaynak sızıntılarını önlemek için RAII (Resource Acquisition Is Initialization) yöntemi kullanılabilir. Bu yöntemde, kaynakların yaşam süreleri nesnelerin yaşam süreleriyle eşleştirilir ve nesnelerin yıkıcıları kaynakları serbest bırakmak için kullanılır. Bu şekilde, kaynaklar otomatik olarak yönetilir ve kaynak sızıntıları önlenir.
+
+- Özetle, memory leak (bellek sızıntısı) ve resource leak (kaynak sızıntısı), bir programın çalışması sırasında kaynakların doğru şekilde serbest bırakılmamasından kaynaklanan sorunlardır. Bu tür sorunlar, performans düşüşü, sistem kaynaklarının tükenmesi ve beklenmedik çökmelere neden olabilir.
+
+- Bellek sızıntılarından ve kaynak sızıntılarından kaçınmak için, uygun şekilde serbest bırakma ve kapatma işlemleri gerçekleştirilmeli ve modern C++ uygulamalarında yöntemler ve teknikler kullanılmalıdır. Smart işaretçiler ve RAII yöntemi gibi teknikler, bellek ve kaynak yönetimini otomatikleştirerek, bellek sızıntıları ve kaynak sızıntıları riskini azaltır ve daha güvenli, sağlam ve etkili programlar geliştirmeye yardımcı olur.
+
+# Final Keyword
+
+- C++ dilinde final anahtar kelimesi, sınıf hiyerarşisi ve sanal fonksiyonların üzerine yazılmasını (override) kısıtlayarak nesne yönelimli programlama prensipleriyle ilgili kontrolleri sağlamak için kullanılır. final anahtar kelimesi, iki farklı bağlamda kullanılabilir: sınıflar ve sanal fonksiyonlar.
+
+**Sınıflar için final:**
+
+- Bir sınıfın son sınıf (final class) olarak tanımlanması, o sınıftan başka sınıfların türetilmesini önler. Başka bir deyişle, bir sınıfın son sınıf olarak belirtilmesi, o sınıfın miras alınmasını yasaklar. Bu, sınıf hiyerarşisinin belirli bir noktada sonlandırılması gerektiğinde kullanışlıdır. Bir sınıfı final olarak işaretlemek için, sınıf bildiriminin ardından final anahtar kelimesi kullanılır:
+
+```CPP
+class MyBaseClass final {
+    // ...
+};
+
+```
+> Bu durumda, MyBaseClass adlı sınıf finaldir ve başka sınıfların bu sınıftan türetilmesine izin verilmez.
+
+**Sanal fonksiyonlar için final:**
+
+- Bir sanal fonksiyonun son fonksiyon (final function) olarak tanımlanması, o fonksiyonun alt sınıflar tarafından üzerine yazılmasını (override) engeller. Böylece, belirli bir sınıfta sanal fonksiyonun davranışını kilitleyebilir ve daha fazla değiştirilmesini önleyebilirsiniz. Bir sanal fonksiyonu final olarak işaretlemek için, fonksiyon bildiriminin ardından final anahtar kelimesi kullanılır:
+
+```CPP
+class MyBaseClass {
+public:
+    virtual void myFunction() final {
+        // ...
+    }
+};
+
+```
+> Bu durumda, MyBaseClass adlı sınıftaki myFunction adlı sanal fonksiyon finaldir ve alt sınıflar tarafından üzerine yazılamaz.
+
+- Özetle, C++'daki final anahtar kelimesi, sınıf hiyerarşisi ve sanal fonksiyonların üzerine yazılmasını kısıtlayarak nesne yönelimli programlama prensipleriyle ilgili kontroller sağlar. final anahtar kelimesi, sınıfın son sınıf olarak belirtilmesine ve sanal fonksiyonların daha fazla değiştirilmesini engelleyerek istenmeyen durumların önlenmesine yardımcı olur.
+
+# Diamond Formation
+
+- Diamond problem" ya da "Diamond formation", nesne yönelimli programlama dillerinde, özellikle çoklu kalıtım (multiple inheritance) özelliği bulunan dillerde (örneğin C++) karşılaşılan bir sorundur. Diamond problemi, aynı sınıfın iki veya daha fazla kez bir sınıf hiyerarşisinde ortaya çıktığı durumlarda, türetilen sınıfların hangi temel sınıfın üyesini kullanacağıyla ilgili bir belirsizlik oluşmasıdır.
+
+- Diamond problemi için tipik bir örnek aşağıdaki gibi bir sınıf hiyerarşisi kullanılabilir:
+
+```CPP
+       A
+      / \
+     B   C
+      \ /
+       D
+
+```
+> Bu durumda, sınıflar B ve C, sınıf A'dan türetilmiştir ve sınıf D, hem sınıf B hem de sınıf C'den türetilmiştir. Bu hiyerarşi nedeniyle, sınıf D'nin bir sınıf A nesnesine iki kez sahip olduğu ortaya çıkar. Bu, sınıf D içinde sınıf A üyelerine erişimle ilgili belirsizliklere neden olabilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
