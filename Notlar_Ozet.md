@@ -2993,7 +2993,17 @@ int main() {
 ```
 - Özetle, non-type parametreler, C++ şablonlarında derleme süresinde sabit olan değerler için kullanılır. Non-type parametreler, kodun daha genel ve esnek hale gelmesine ve kod tekrarının azalmasına yardımcı olur.
 
+# Template Instantation
 
+- C++ programlama dilinde, "template" özelliği, aynı kodu farklı veri türleri üzerinde kullanmamıza olanak tanıyan bir yapıdır. Template'ler, bir veri türünden bağımsız olarak, kodun yeniden kullanılmasını ve özelleştirilmesini sağlar.
+
+- **"Template instantiation"**, bir template'in gerçek veri türüne dönüştürülmesi işlemidir. Bu işlem, bir programcı bir template'i kullanırken gerçekleşir. Bu işlem, template'in kodunun, veri türüne özgü bir sürümünün oluşturulması anlamına gelir. Bu süreçte, template'in veri türüne özgü sürümü oluşturulur ve ardından bu sürüm kullanılır.
+
+- Template instantiation, iki şekilde gerçekleşebilir: "explicit" (açık) ve "implicit" (örtük). Açık template instantiation, bir programcının açıkça bir template'in gerçek veri türünü belirtmesiyle gerçekleşir. Örtük template instantiation ise, bir programcının bir template'i kullanırken, derleyicinin veri türünü otomatik olarak belirlemesiyle gerçekleşir.
+
+- Template instantiation, C++ programlama dilinde "lazy" (tembel) bir şekilde gerçekleştirilir. Bu, bir template'in kullanıldığı yerde, yalnızca gerçek veri türüne dönüştürülmesi gereken kısım derlenir ve çalıştırılır. Bu, gereksiz kodun derleme ve çalışma zamanında oluşmasını önler ve kodun daha hızlı çalışmasını sağlar.
+
+- Özetle, "template instantiation", bir template'in gerçek veri türüne dönüştürülmesi işlemidir. Bu işlem, bir programcının bir template'i kullanırken gerçekleşir. Template instantiation, açık veya örtük olabilir ve C++ programlama dilinde "lazy" (tembel) bir şekilde gerçekleştirilir.
 
 
 
