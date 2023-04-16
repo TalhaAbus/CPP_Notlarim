@@ -2942,22 +2942,56 @@ int main() {
 }
 
 ```
-- Bu örnekte, <int> ve <double> şablon açık argümanlarıyla, derleyiciye doğru türlerle şablonu örneklemesi için talimat veriyoruz.
+- Bu örnekte, int ve double şablon açık argümanlarıyla, derleyiciye doğru türlerle şablonu örneklemesi için talimat veriyoruz.
 
 - Özetle, şablon açık argümanları, şablonlu fonksiyon veya sınıflar kullanırken şablon parametrelerini açıkça belirtmek için kullanılır. Bu, şablon argüman çıkarımının işe yaramadığı veya istenilen şekilde çalışmadığı durumlarda kullanılabilir.
 
+# non - type parameter
+- C++ dilinde, şablon parametreleri iki kategoriye ayrılır: tip parametreleri ve değer parametreleri. Non-type parametreler (değer parametreleri) olarak da bilinen değer parametreleri, sabit tamsayılar, enum sabitleri, referanslar ve işaretçiler gibi derleme süresinde sabit olan değerlerdir. Non-type parametreler, şablonları daha genel ve esnek hale getirerek kod tekrarını azaltmaya yardımcı olur.
 
+- Bir non-type parametrenin kullanıldığı bir sınıf şablonu örneği aşağıda verilmiştir:
 
+```CPP
+template <typename T, int SIZE>
+class FixedArray {
+public:
+    T& operator[](int index) {
+        return data_[index];
+    }
 
+    int size() const {
+        return SIZE;
+    }
 
+private:
+    T data_[SIZE];
+};
 
+```
+- Bu sınıf şablonu, sabit boyutlu bir dizi sağlar. T tip parametresi ve SIZE non-type parametresi kullanılarak, farklı veri türleri ve boyutlarla dizi sınıfları oluşturabilirsiniz:
+```CPP
+int main() {
+    FixedArray<int, 5> int_array; // int türünde ve boyutu 5 olan dizi
+    FixedArray<double, 10> double_array; // double türünde ve boyutu 10 olan dizi
 
+    return 0;
+}
 
+```
+- Bu şablonlu fonksiyon, sabit boyutlu bir dizinin elemanlarını toplar. T tip parametresi ve SIZE non-type parametresi kullanarak, farklı türlerde ve boyutlardaki dizilerin toplamlarını hesaplayabilirsiniz:
+```CPP
+int main() {
+    int int_array[] = {1, 2, 3, 4, 5};
+    int int_sum = array_sum(int_array); // int türünde dizi toplamı
 
+    double double_array[] = {1.1, 2.2, 3.3, 4.4, 5.5};
+    double double_sum = array_sum(double_array); // double türünde dizi toplamı
 
+    return 0;
+}
 
-
-
+```
+- Özetle, non-type parametreler, C++ şablonlarında derleme süresinde sabit olan değerler için kullanılır. Non-type parametreler, kodun daha genel ve esnek hale gelmesine ve kod tekrarının azalmasına yardımcı olur.
 
 
 
