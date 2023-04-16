@@ -2100,5 +2100,236 @@ public:
 
 - Override, nesne yönelimli programlamada temel bir kavramdır ve çalışma zamanı polimorfizminin gerçekleştirilmesine yardımcı olur. Bu sayede, farklı nesne türlerinin aynı arayüz üzerinden çalışma zamanında dinamik olarak kullanılabilmesi sağlanır.
 
+# V-Table
+
+- v-table (sanal fonksiyon tablosu), C++ dilinde çalışma zamanında polimorfizm sağlamak için kullanılan bir mekanizmadır. v-table, sanal fonksiyonlar (virtual functions) için kullanılan bir araçtır ve her sınıfın sanal fonksiyonlarının adreslerini içeren bir tablodur. v-table, çalışma zamanında doğru sanal fonksiyonun çağrılması için kullanılır.
+
+- v-table nasıl çalışır?
+
+1. Derleyici, her sınıf için sanal fonksiyonlarını içeren bir v-table oluşturur. Bu tablo, sanal fonksiyonların adreslerini içerir ve sınıfın tüm nesneleri tarafından paylaşılır.
+
+2. Bir sınıfın nesnesi oluşturulduğunda, nesnenin içinde bir işaretçi (_vptr) bulunur ve bu işaretçi sınıfın v-table'ına işaret eder.
+
+3. Sanal bir fonksiyon çağrıldığında, v-table kullanılarak fonksiyonun adresine erişilir ve fonksiyon çalıştırılır.
+
+```CPP
+class Hayvan {
+public:
+    virtual void sesCikar() {
+        // ...
+    }
+};
+
+class Kopek : public Hayvan {
+public:
+    void sesCikar() override {
+        // ...
+    }
+};
+
+```
+
+- Yukarıdaki örnekte, Hayvan sınıfında bir sanal fonksiyon olan sesCikar tanımlanmıştır ve Kopek sınıfı bu fonksiyonu geçersiz kılar (override). Derleyici, Hayvan ve Kopek için iki ayrı v-table oluşturur:
+
+```
+Hayvan sınıfının v-table'ında, Hayvan::sesCikar fonksiyonunun adresi bulunur.
+Kopek sınıfının v-table'ında ise, Kopek::sesCikar fonksiyonunun adresi bulunur.
+```
+- Eğer bir Hayvan işaretçisi veya referansı üzerinden sesCikar fonksiyonu çağrılırsa, v-table kullanılarak doğru fonksiyonun (örneğin, Hayvan::sesCikar veya Kopek::sesCikar) adresine gidilir ve fonksiyon çalıştırılır.
+
+- v-table, çalışma zamanında polimorfizm sağlamak için kullanılan önemli bir mekanizmadır. Bu mekanizma, temel sınıfın işaretçi veya referansları üzerinden doğru türetilmiş sınıfın sanal fonksiyonlarının çağrılmasını sağlar. Bununla birlikte, v-table kullanımı, bir miktar performans maliyetine sahiptir, çünkü sanal fonksiyon çağrıları sırasında ekstra işaretçi dereferanslamaları gerçekleştirilir. Ancak bu maliyet, genellikle polimorfizmin sağladığı avantajlar ile dengelenir ve kodun modülerlik, esneklik ve anlaşılabilirlik sağlamasına yardımcı olur.
+
+- Daha detaylı olarak inceleyelim:
+
+```CPP
+#include <iostream>
+
+class Hayvan {
+public:
+    virtual void sesCikar() const {
+        std::cout << "Bir hayvan sesi çıkarıyor." << std::endl;
+    }
+};
+
+class Kopek : public Hayvan {
+public:
+    void sesCikar() const override {
+        std::cout << "Hav! Hav!" << std::endl;
+    }
+};
+
+int main() {
+    Hayvan* hayvan = new Kopek(); // 'hayvan' işaretçisi, 'Kopek' nesnesini işaret ediyor
+    hayvan->sesCikar(); // v-table kullanılarak doğru fonksiyon çağrılır, çıktı: "Hav! Hav!"
+    delete hayvan;
+}
+
+```
+> Yukarıdaki örnekte, Hayvan temel sınıfından türetilmiş olan Kopek sınıfının bir nesnesi oluşturuluyor ve hayvan adlı bir Hayvan işaretçisi bu nesneyi işaret ediyor. Bu durumda, hayvan->sesCikar() ifadesi çalıştırıldığında, v-table kullanılarak işaret edilen nesnenin gerçek türüne (Kopek) göre doğru sesCikar fonksiyonu çağrılır.
+
+**Bu örnekte v-table nasıl çalışır:**
+1. Hayvan ve Kopek sınıfları için iki ayrı v-table oluşturulur. Hayvan v-table'ında Hayvan::sesCikar fonksiyonunun adresi, Kopek v-table'ında ise Kopek::sesCikar fonksiyonunun adresi bulunur.
+
+2. Kopek nesnesi oluşturulduğunda, nesnenin içindeki _vptr işaretçisi Kopek sınıfının v-table'ına işaret eder.
+
+3. hayvan->sesCikar() ifadesi çalıştırıldığında, _vptr işaretçisi üzerinden Kopek v-table'ına gidilir ve Kopek::sesCikar fonksiyonunun adresine erişilir. Ardından bu fonksiyon çağrılır ve "Hav! Hav!" çıktısı elde edilir.
+
+- v-table, çalışma zamanında polimorfizm sağlamak için kullanılan temel bir mekanizmadır ve C++ dilinde önemli bir rol oynar. Bu mekanizma, sanal fonksiyonları doğru şekilde çağırmak için temel sınıfın işaretçi veya referansları üzerinden gerçekleştirilen işlemleri destekler. V-table kullanımı, kodun daha modüler, esnek ve anlaşılır olmasına yardımcı olur ve nesne yönelimli programlama paradigmalarının avantajlarından yararlanmayı sağlar.
+
+# Clone Idiom
+
+- Clone idiom, C++ dilinde kopyalama işlemlerini gerçekleştirmek için kullanılan bir programlama modelidir. Clone idiom, temelde bir sınıfın nesnelerini kopyalamak için özelleştirilmiş bir kopyalama mekanizması sağlar. Bu mekanizma, genellikle sanal bir kopyalama fonksiyonu (örneğin, clone()) ile gerçekleştirilir ve çalışma zamanında polimorfizm sayesinde doğru türetilmiş sınıfın kopyalama işlemi yapılabilir.
+
+- Clone idiom, özellikle temel sınıfın işaretçi veya referansları üzerinden kopyalama işlemi yapılması gereken durumlarda kullanılır. Bu durum, temel sınıfın destrüktörünün sanal olduğu ve temel sınıfın işaretçi veya referansları üzerinden doğru türetilmiş sınıfın destrüktörlerinin çağrılması gerektiği nesne yönelimli programlama senaryolarında sıkça karşılaşılan bir ihtiyaçtır.
+
+**Clone idiom'un uygulanması için genellikle aşağıdaki adımlar izlenir:**
+
+1. Temel sınıfta, clone() adlı sanal bir fonksiyon tanımlanır. Bu fonksiyon, temel sınıfın nesnesinin kopyasını oluşturmak için kullanılacaktır.
+
+2. Türetilmiş sınıflarda, clone() fonksiyonu geçersiz kılınarak (override) sınıfa özgü kopyalama işlemi sağlanır. Bu fonksiyonlar, genellikle türetilmiş sınıfın kopya yapıcılarını kullanarak kopya nesneler oluşturur.
+
+3. Temel sınıfın işaretçi veya referansları üzerinden kopyalama işlemi yapılırken, clone() fonksiyonu kullanılarak çalışma zamanında doğru türetilmiş sınıfın kopyalama işlemi gerçekleştirilir.
+
+- İşte bir örnek:
+
+```CPP
+#include <iostream>
+
+class Hayvan {
+public:
+    virtual ~Hayvan() = default; // Sanal destrüktör
+
+    virtual Hayvan* clone() const = 0; // Sanal clone fonksiyonu
+};
+
+class Kopek : public Hayvan {
+public:
+    Kopek* clone() const override { // Kopek sınıfı için clone fonksiyonu geçersiz kılma
+        return new Kopek(*this); // Kopya yapıcı kullanarak yeni bir Kopek nesnesi oluşturma
+    }
+};
+
+int main() {
+    Hayvan* hayvan = new Kopek();
+    Hayvan* hayvanKopya = hayvan->clone(); // 'clone()' fonksiyonu kullanarak doğru kopyalama işlemi yapılır
+
+    delete hayvan;
+    delete hayvanKopya;
+}
+
+```
+> Yukarıdaki örnekte, Hayvan temel sınıfında clone() adlı sanal bir fonksiyon tanımlanmıştır. Bu fonksiyon, çalışma zamanında polimorfizm sayesinde türetilmiş sınıfların kopyalama işlemlerini gerçekleştirmek için kullanılacaktır. Kopek sınıfı, clone() fonksiyonunu geçersiz kılarak kendi kopyalama işlemini sağlar. Bu örnekte, Kopek sınıfının kopya yapıcısı kullanılarak yeni bir Kopek nesnesi oluşturulur.
+
+- main() fonksiyonunda, Hayvan temel sınıfından türetilmiş olan Kopek sınıfının bir nesnesi oluşturuluyor ve hayvan adlı bir Hayvan işaretçisi bu nesneyi işaret ediyor. Hayvan* hayvanKopya = hayvan->clone(); ifadesi çalıştırıldığında, clone() fonksiyonu kullanılarak işaret edilen nesnenin gerçek türüne (Kopek) göre doğru kopyalama işlemi gerçekleştirilir ve hayvanKopya işaretçisi bu kopya nesneyi işaret eder.
+
+- Clone idiom, nesne yönelimli programlama paradigmalarında sıkça kullanılan bir kopyalama modelidir. Bu idiom, temel sınıfın işaretçi veya referansları üzerinden kopyalama işlemlerini gerçekleştirmek için çalışma zamanında polimorfizmi kullanır ve böylece kodun daha modüler, esnek ve anlaşılır olmasına yardımcı olur. Clone idiom, temel sınıfın destrüktörünün sanal olduğu ve doğru türetilmiş sınıfın destrüktörlerinin çağrılması gerektiği senaryolarda özellikle kullanışlıdır.
+
+# Virtual Destructor
+- Virtual destructor (sanal yıkıcı), C++ dilinde nesne yönelimli programlamada kullanılan önemli bir kavramdır. Virtual destructor, bir temel sınıfın işaretçi veya referansları üzerinden doğru türetilmiş sınıfın destrüktörlerinin çağrılması için kullanılır. Bu durum, çalışma zamanında polimorfizm sayesinde gerçekleştirilir ve böylece kodun daha modüler, esnek ve anlaşılır olmasına yardımcı olur.
+
+- Sanal yıkıcıların kullanılması gereken durumlar, genellikle temel sınıfın işaretçi veya referansları üzerinden dinamik olarak türetilmiş sınıf nesnelerinin yaşam sürelerinin yönetildiği nesne yönelimli programlama senaryolarında ortaya çıkar. Sanal yıkıcı kullanılmazsa, temel sınıfın işaretçi veya referansları üzerinden türetilmiş sınıf nesneleri silindiğinde sadece temel sınıfın destrüktörü çağrılır ve türetilmiş sınıfın destrüktörü çağrılmaz. Bu durum, kaynak sızıntılarına ve bellek bozulmalarına neden olabilir.
+
+- Sanal yıkıcılar kullanılarak bu sorun çözülür. İşte bir örnek:
+
+```CPP
+#include <iostream>
+
+class Hayvan {
+public:
+    Hayvan() {
+        std::cout << "Hayvan oluşturuldu." << std::endl;
+    }
+
+    virtual ~Hayvan() {
+        std::cout << "Hayvan silindi." << std::endl;
+    }
+};
+
+class Kopek : public Hayvan {
+public:
+    Kopek() {
+        std::cout << "Kopek oluşturuldu." << std::endl;
+    }
+
+    ~Kopek() {
+        std::cout << "Kopek silindi." << std::endl;
+    }
+};
+
+int main() {
+    Hayvan* hayvan = new Kopek();
+    delete hayvan;
+}
+
+```
+> Yukarıdaki örnekte, Hayvan sınıfında sanal bir yıkıcı tanımlanmıştır. Kopek sınıfı ise Hayvan sınıfından türetilmiştir ve kendi yıkıcısını içerir. main() fonksiyonunda, Hayvan işaretçisi üzerinden bir Kopek nesnesi oluşturulur ve silinir. Sanal yıkıcı kullanıldığı için, işaretçinin nesnesini silerken hem Kopek hem de Hayvan sınıflarının yıkıcıları doğru sırada çağrılır. Çıktı şu şekildedir:
+
+```
+Hayvan oluşturuldu.
+Kopek oluşturuldu.
+Kopek silindi.
+Hayvan silindi.
+
+```
+
+- Sanal yıkıcılar, temel sınıfın işaretçi veya referansları üzerinden doğru türetilmiş sınıfın yıkıcılarını çağırmak için kullanılır. Bu sayede, nesne yönelimli programlama senaryolarında kaynakların doğru bir şekilde temizlenmesi ve bellek yönetiminin daha güvenli olması sağlanır.
+
+Sanal yıkıcılar, çalışma zamanında polimorfizmi kullanarak doğru türetilmiş sınıfın yıkıcısını çağırır. Bu, türetilmiş sınıfların yıkıcıları temel sınıfın yıkıcısından önce çağrılacağı anlamına gelir, bu da kaynakların doğru sırayla serbest bırakılmasına ve potansiyel bellek sorunlarının önlenmesine yardımcı olur.
+
+- Sanal yıkıcılar kullanılırken dikkat edilmesi gereken bazı hususlar vardır:
+
+1. Sanal yıkıcılar, temel sınıfın işaretçi veya referansları üzerinden nesnelerin yaşam sürelerinin yönetildiği durumlarda kullanılmalıdır. Eğer bu tür bir durum yoksa, sanal yıkıcı kullanmaya gerek yoktur.
+
+2. Sanal yıkıcılar, performans açısından bir maliyete sahiptir. Sanal yıkıcılar, sanal fonksiyon tablosu (vtable) üzerinden çağrıldığı için, normal yıkıcılara göre biraz daha yavaş çalışabilirler. Bu nedenle, performans kritik uygulamalarında bu maliyeti göz önünde bulundurarak karar verilmelidir.
+
+3. Sanal yıkıcılar, sadece temel sınıflarda tanımlanmalıdır. Türetilmiş sınıflar, temel sınıfın sanal yıkıcısını otomatik olarak devralır ve geçersiz kılma işlemi yapılmasına gerek yoktur.
+
+- Sanal yıkıcılar, C++ dilinde nesne yönelimli programlamada kullanılan önemli bir kavramdır. Doğru kullanımı, kodun daha modüler, esnek ve anlaşılır olmasına yardımcı olurken, aynı zamanda kaynakların doğru bir şekilde yönetilmesini ve bellek sorunlarının önlenmesini sağlar.
+
+# Smart - Raw Pointers
+
+- C++'da, işaretçi türleri genellikle iki kategoriye ayrılır: raw (ham) işaretçiler ve smart (akıllı) işaretçiler. İkisi arasındaki temel fark, bellek yönetimi ve özellikleri açısından nasıl çalıştıklarıdır. Şimdi her birini ayrı ayrı inceleyelim.
+- **Raw İşaretçiler:**
+Raw işaretçiler, C++ dilinin temel özelliklerinden biridir ve C dilinden miras alınmıştır. Raw işaretçiler, bellek adreslerini saklayan ve nesnelere erişmek için kullanılan basit ve düşük seviyeli işaretçilerdir. Raw işaretçiler ile yapılan bellek yönetimi manuel olarak yapılır ve kullanıcının new ve delete operatörlerini kullanarak dinamik bellek tahsis etmesi ve serbest bırakması gerekir.
+
+**Raw işaretçilerin avantajları:**
+1. Düşük seviyeli sistem programlaması için uygunluk.
+2. Performans açısından düşük maliyet.
+
+**Raw işaretçilerin dezavantajları:**
+1. Manuel bellek yönetimi gerekir (new ve delete operatörleri ile).
+2. Dangling (sallanan) işaretçi ve bellek sızıntısı gibi potansiyel sorunlara yol açabilir.
+
+**Smart İşaretçiler:**
+- Smart işaretçiler, C++ dilinde modern bellek yönetimi için kullanılan daha güvenli ve otomatik bir işaretçi türüdür. C++11 standardı ile birlikte gelen smart işaretçiler, bellek yönetimini otomatikleştirir ve böylece bellek sızıntısı ve dangling işaretçi gibi potansiyel sorunların önüne geçer. Smart işaretçiler, nesnelerin yaşam sürelerini yönetir ve kullanılmayan nesnelerin belleğini otomatik olarak serbest bırakır.
+
+- C++ dilinde üç ana smart işaretçi türü vardır:
+
+1. **std::unique_ptr:** Bir nesnenin belleğini yalnızca bir unique_ptr tarafından yönetilir ve otomatik olarak serbest bırakılır. Nesnelerin sahipliği, bir unique_ptr'dan diğerine taşınabilir (move) ancak kopyalanamaz.
+
+2. **std::shared_ptr:** Bir nesnenin belleği birden fazla shared_ptr tarafından paylaşılabilir ve nesne, son referansın ortadan kalkmasıyla otomatik olarak serbest bırakılır. shared_ptr'lar kopyalanabilir ve taşınabilir.
+
+3. **std::weak_ptr:** shared_ptr ile birlikte kullanılan ve döngülü referans problemini önlemeye yardımcı olan bir işaretçi türüdür. weak_ptr'lar nesnelerin yaşam sürelerini yönetmez ve kendi başlarına bir nesneye erişemez.
+
+- **Smart işaretçilerin avantajları:**
+
+1. Otomatik bellek yönetimi sağlar, böylece bellek sızıntısı ve dangling işaretçi gibi potansiyel sorunları önler.
+2. Nesnelerin yaşam sürelerini yönetir ve kullanılmayan nesnelerin belleğini otomatik olarak serbest bırakır.
+3. Modern C++ uygulamalarında bellek yönetimi için önerilen ve kabul gören yöntemdir.
+
+**Smart işaretçilerin dezavantajları:**
+1. Raw işaretçilere göre biraz daha fazla maliyete sahiptir, çünkü otomatik bellek yönetimi ve referans sayma işlemleri gerçekleştirirler.
+2. Düşük seviyeli sistem programlaması için raw işaretçilere kıyasla daha az uygun olabilirler.
+- Özetle, raw işaretçiler ve smart işaretçiler, C++ dilinde farklı amaçlar için kullanılan iki işaretçi türüdür. Raw işaretçiler, düşük seviyeli sistem programlaması ve performans açısından düşük maliyete ihtiyaç duyulan durumlarda kullanılabilir. Ancak, manuel bellek yönetimi gerektirir ve potansiyel bellek sorunlarına neden olabilir.
+
+- Smart işaretçiler ise, modern C++ uygulamalarında bellek yönetimi için önerilen ve daha güvenli olan işaretçi türüdür. Otomatik bellek yönetimi sağlar ve potansiyel bellek sorunlarını önler. Smart işaretçilerin kullanımı, kodun daha güvenli, modüler ve anlaşılır olmasına yardımcı olur.
+
+
+
+
+
+
+
+
 
 
