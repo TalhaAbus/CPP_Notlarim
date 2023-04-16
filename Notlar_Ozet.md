@@ -1528,23 +1528,43 @@ namespace {
 
 6. **Kod organizasyonu ve bakımı:** Translation unit kavramı, C++ kodunun düzenli ve modüler bir şekilde organize edilmesine yardımcı olur. Her translation unit, belirli bir işlevsellik veya modülle ilgili kodları içerebilir, bu da projenin genel bakımını ve yönetimini kolaylaştırır.
 
+# Nested Namespace 
 
+- C++'da, nested namespace (iç içe geçmiş ad alanları), bir ad alanı içinde başka bir ad alanı tanımlamak anlamına gelir. Bu yapı, kodun daha düzenli ve modüler hale getirilmesine yardımcı olarak, kod organizasyonu ve okunabilirliği açısından avantaj sağlar. C++17 ve sonrası sürümlerde, nested namespace'ler için daha kısa ve daha okunabilir bir sözdizimi kullanılabilir.
 
+- Öncelikle, iç içe geçmiş ad alanlarının eski sözdizimine bakalım:
 
+```CPP
+namespace Outer {
+  namespace Inner {
+    void someFunction();
+  }
+}
 
+```
 
+- Yukarıdaki örnekte, Outer ad alanı içinde Inner ad alanı tanımlanmıştır ve bu iki ad alanı iç içe geçmiştir. someFunction() fonksiyonuna erişmek için şu şekilde kullanılabilir:
 
+```CPP
+Outer::Inner::someFunction();
 
+```
 
+- C++17 ile gelen yeni sözdizimi sayesinde, iç içe geçmiş ad alanlarını daha kısa ve daha okunabilir bir şekilde tanımlayabiliriz:
 
+```CPP
+namespace Outer::Inner {
+  void someFunction();
+}
 
+```
+- Bu yeni sözdizimi, aynı iç içe geçmiş ad alanları için daha az kod yazmanızı sağlar ve okunabilirliği artırır. Fonksiyon çağrısı için önceki örnekle aynı şekilde kullanılır:
 
+```CPP
+Outer::Inner::someFunction();
 
-
-
-
-
-
+```
+- Nested namespace'ler, daha büyük projelerde kod organizasyonunu iyileştirmeye ve modülerleştirmeye yardımcı olarak, kodun okunabilirliğini ve bakımını kolaylaştırır. Ayrıca, farklı ad alanlarındaki isim çakışmalarını önlemeye yardımcı olur.
 
 
 
