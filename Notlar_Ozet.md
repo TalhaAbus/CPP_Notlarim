@@ -1659,20 +1659,446 @@ private:
 
 - Özetle, inner class, bir sınıfın üyesi olarak tanımlanan ve ayrı bir bağımsız sınıf olarak tanımlanabilen bir yapıdır. Inner class, dış sınıfın private veya protected üyelerine erişebilir ve ayrıca kendi private, protected veya public üyelerine de sahip olabilir. Inner class, sınıf hiyerarşisindeki problemleri çözmek için kullanılabilir ve kodun okunabilirliğini artırır.
 
+# Pimple Idiom
+
+- Pimple idiom, C++ dilinde kullanılan ve "pointer to implementation" (uçtan uca uygulama) olarak da bilinen bir teknik olup, sınıf uygulamasını saklamak için kullanılır. Bu teknik, sınıfın dışa dönük API'sini ve iç uygulamasını ayırmaya yardımcı olur. Bu sayede, kullanıcılar sınıfın kullanımına odaklanabilir ve iç uygulama detaylarından kaçınabilirler. Pimple idiom, aşağıdaki avantajlara sahiptir:
 
 
+1. **Gizlilik:** Pimple idiom, sınıfın iç yapısını ve uygulamasını gizleyerek kullanıcının sınıfın dışa dönük API'sine odaklanmasını sağlar. Bu, daha temiz ve anlaşılabilir bir kullanıcı deneyimi sunar.
+2. **Kütüphane Bağımsızlığı:** Sınıfın iç uygulamasının gizlenmesi, kütüphane bağımlılıklarını sınırlar ve kodu daha taşınabilir hale getirir.
+3. **Derleme Sürelerini Azaltma:** İç uygulama detaylarını gizlemek, derleme sürelerini azaltarak daha hızlı geliştirme süreçleri sağlar.
+4. **Sürdürülebilirlik:** Sınıfın iç yapısını ve uygulamasını gizleyerek, geliştiriciler sınıfın iç yapısını değiştirebilir ve dışa dönük API'sini etkilemeden iyileştirmeler yapabilirler.
 
+- Pimple idiom'un uygulanması, genellikle iki sınıf kullanarak gerçekleştirilir: dış sınıf (sınıfın dışa dönük API'sini sağlayan) ve iç sınıf (sınıfın gerçek uygulamasını içeren). İç sınıf, dış sınıfta bir özel alan (unique_ptr gibi) ile saklanır. İşte bir örnek:
 
+```CPP
+// Örnek sınıfın ön tanımı
+class OrnekSinif {
+public:
+    OrnekSinif(); // Kurucu
+    ~OrnekSinif(); // Yıkıcı
 
+    void islemYap(); // Sınıfın dışa dönük API'sini temsil eden bir işlev
 
+private:
+    class OrnekSinifImpl; // İç sınıfın ön tanımı
+    std::unique_ptr<OrnekSinifImpl> pimpl; // İç sınıfın örneklemesi
+};
 
+// OrnekSinifImpl sınıfının uygulanması
+class OrnekSinif::OrnekSinifImpl {
+public:
+    void islemYap() {
+        // Gerçek işlem kodu burada olacak
+    }
+};
 
+// OrnekSinif sınıfının uygulanması
+OrnekSinif::OrnekSinif() : pimpl(std::make_unique<OrnekSinifImpl>()) {}
 
+OrnekSinif::~OrnekSinif() = default;
 
+void OrnekSinif::islemY
 
+```
 
+# Association - Aggregation - Composition
+- Association, Aggregation ve Composition, nesne yönelimli programlamada kullanılan üç temel ilişki türüdür. Bu ilişkiler, sınıflar arasındaki bağlantıları ve etkileşimleri temsil eder. İşte her biri hakkında detaylı bilgi:
 
+1. **Association (İlişkilendirme):**
+Association, iki sınıf arasındaki genel bir bağlantıyı temsil eder. İki sınıfın birbirine bağlı olduğunu, ancak bir sınıfın diğerinin yaşam döngüsünden bağımsız olduğunu belirtir. Bu tür bir ilişki, genellikle iki sınıfın birbiriyle etkileşime girdiği, ancak birbirlerinin varlığından tamamen bağımsız olduğu durumlar için kullanılır.
 
+> Örnek olarak, bir "Öğrenci" sınıfı ve bir "Ders" sınıfı düşünelim. Bir öğrenci, bir veya birden fazla derse kaydolabilir ve bir dersin de birden fazla öğrencisi olabilir. Bu durumda, Öğrenci ve Ders arasında bir association ilişkisi vardır.
+
+2. **Aggregation (Toplulaştırma):**
+Aggregation, "whole/part" (bütün/parça) ilişkisini temsil eden özel bir association türüdür. Aggregation, bir sınıfın diğer sınıfların örneklerini içerdiğini, ancak bu örneklerin yaşam döngülerinin bağımsız olduğunu belirtir. Başka bir deyişle, ana nesnenin yok olması, içerdiği nesnelerin yok olmasına neden olmaz.
+
+> Örnek olarak, "Üniversite" ve "Öğrenci" sınıflarını düşünelim. Üniversite, Öğrenci nesnelerinden oluşan bir koleksiyona sahip olabilir, ancak Üniversite nesnesi ortadan kalktığında Öğrenci nesneleri hala var olabilir. Bu durumda, Üniversite ve Öğrenci arasında bir aggregation ilişkisi vardır.
+
+3. **Composition (Bileşim):**
+Composition, aggregation'dan daha güçlü bir "whole/part" ilişkisini temsil eder. Composition, bir sınıfın diğer sınıfların örneklerini içerdiğini ve bu örneklerin yaşam döngülerinin ana nesneye bağlı olduğunu belirtir. Başka bir deyişle, ana nesnenin yok olması, içerdiği nesnelerin de yok olmasına neden olur.
+
+> Örnek olarak, "Araba" ve "Motor" sınıflarını düşünelim. Bir arabanın bir motoru vardır ve motorun yaşam döngüsü arabanın yaşam döngüsüne bağlıdır.
+
+# Copy on Write
+
+- Copy-on-Write (CoW) tekniği, nesne yönelimli programlama, veri yapıları ve bellek yönetimi gibi bilgisayar bilimlerinin çeşitli alanlarında kullanılan bir optimizasyon stratejisidir. CoW, bir veri öğesinin birden fazla kullanıcı tarafından paylaşılmasına izin verir ve bu öğeye yazma işlemi yapılmadan önce, verinin bir kopyasını oluşturarak güvenli bir şekilde yazılmasını sağlar. Bu teknik, bellek kullanımını ve gereksiz veri kopyalama işlemlerini azaltmaya yardımcı olur.
+
+- **Copy-on-Write, aşağıdaki avantajlara sahiptir:**
+
+1. Bellek Kullanımını Optimize Etme: CoW, verinin sadece yazma işlemi yapılırken kopyalandığı için bellek kullanımını önemli ölçüde azaltır. Bu sayede, daha fazla bellek, diğer işlemler ve veri yapıları için kullanılabilir.
+2. Performans Artışı: CoW, yazma işlemlerini sadece gerçekten gerekli olduğunda gerçekleştirerek gereksiz veri kopyalama işlemlerini önler. Bu, performansı artırır ve daha hızlı işlem süreleri sağlar.
+3. Güvenli Paylaşılan Veri: CoW, birden fazla kullanıcının veriyi güvenli bir şekilde paylaşmasına olanak tanır. Bir kullanıcı veriyi değiştirmeye çalıştığında, verinin bir kopyası oluşturulur ve değişiklikler bu kopyada yapılır. Bu, diğer kullanıcıların etkilenmemesini sağlar ve veri bütünlüğünü korur.
+
+- İşte Copy-on-Write tekniğinin uygulandığı basit bir örnek:
+```CPP
+class CowString {
+public:
+    CowString(const std::string& str) : data_(std::make_shared<std::string>(str)) {}
+
+    // Yazma işlemi gerçekleştirilmeden önce verinin kopyasını oluşturan fonksiyon
+    void Write(size_t pos, char c) {
+        if (!data_.unique()) {
+            data_ = std::make_shared<std::string>(*data_);
+        }
+        (*data_)[pos] = c;
+    }
+
+    const std::string& Read() const {
+        return *data_;
+    }
+
+private:
+    std::shared_ptr<std::string> data_;
+};
+
+```
+> Bu örnekte, CowString sınıfı, std::string verisini std::shared_ptr kullanarak paylaşır. Write fonksiyonu, veriye yazma işlemi yapılırken verinin kopyasını oluşturarak, diğer kullanıcıların etkilenmemesini sağlar. Bu şekilde, veri yazma işlemlerinde güvenli bir şekilde paylaşılır ve bellek kullanımı optimize edilir.
+
+# Data Constructor
+
+- Data constructor terimi, genellikle bir veri yapısının veya sınıfın, belirli bir veri ile başlatılması için kullanılan yapılandırıcıları ifade eder. Bu tür yapılandırıcılar, veri yapısını veya sınıfı oluştururken veri alır ve bu veriyi nesnenin başlangıç durumu olarak kullanır. Örneğin, std::string için data constructor:
+
+```CPP
+std::string s1("data");
+
+```
+# Range Constructor
+- Range constructor, bir aralık (başlangıç ve bitiş değerleri) kullanarak veri yapısı veya sınıfı başlatan yapılandırıcıları ifade eder. Bu tür yapılandırıcılar, genellikle başlangıç ve bitiş yineleyicileri (iterators) arasındaki değerlerle veri yapısını doldurur. Örneğin, std::vector için range constructor:
+```CPP
+std::vector<int> vec1 = {1, 2, 3, 4};
+std::vector<int> vec2(vec1.begin(), vec1.end());
+
+```
+# Initializer List Constructor
+- Initializer list constructor, C++11'de tanıtılan bir özellik olan initializer list (başlatıcı liste) kullanarak veri yapısı veya sınıfı başlatan yapılandırıcıları ifade eder. Bu tür yapılandırıcılar, C++'daki liste başlatma sözdizimi ile uyumlu olup, nesnenin başlangıç durumunu belirlemek için bir liste kullanır. Örneğin, std::vector için initializer list constructor:
+```CPP
+std::vector<int> vec3 = {1, 2, 3, 4, 5};
+
+```
+
+# Few Constructor
+- Bu terim, genellikle belirli bir sayıda parametre alan yapılandırıcıları ifade eder. "Few" kelimesi, parametre sayısının az veya sınırlı olduğunu vurgular. Ancak, bu terim yaygın bir C++ terimi değildir ve burada verilen tanım, genel anlamda verilmiştir.
+# Substring Constructor
+- Substring constructor, bir dizenin (string) bir alt dizgesini (substring) kullanarak başka bir dizeyi oluşturan yapılandırıcıları ifade eder. Bu tür yapılandırıcılar, bir dizenin belirli bir bölümünü başka bir dizeye kopyalamak için kullanılır. Örneğin, std::string için substring constructor:
+```CPP
+std::string s2("hello, world!");
+std::string s3(s2, 0, 5); // "hello" ile başlatır
+```
+# If with Initializer
+
+- "If with initializer" (başlatıcı ile if) C++11 standardıyla birlikte eklenen bir özelliktir. Bu özellik, if bloğuna bir başlatıcı eklemeyi mümkün kılar. Bu şekilde, if bloğuna başlamadan önce bir değişken tanımlayabilir ve bu değişkeni if bloğu içinde kullanabilirsiniz.
+**Örneğin:**
+
+```CPP
+if (int x = foo(); x > 0) {
+    // x, foo() fonksiyonunun değerini tutar
+    // x, sadece bu if bloğu içinde görülebilir
+    // ...
+}
+
+```
+> Bu kodda, "x" adında bir değişken tanımlanır ve "foo()" fonksiyonunun değeri, "x" değişkenine atanır. Daha sonra, if bloğu içinde "x" değişkeni kullanılabilir. Bu yapı, kodun okunabilirliğini artırır ve kodun daha kısa ve anlaşılır olmasını sağlar.
+
+- "If with initializer", özellikle küçük bloklarda kullanışlıdır. Ayrıca, bazı durumlarda, kodun performansını da artırabilir. Örneğin, bir dizi üzerinde işlem yaparken, her seferinde bir dizi elemanını kontrol etmek yerine, bir değişkende dizinin uzunluğunu saklayabilir ve bu değişkeni if bloğunda kullanabilirsiniz.
+
+- Özetle, "if with initializer", C++11 standardıyla birlikte gelen bir özelliktir ve if bloğuna başlatıcı eklemeyi mümkün kılar. Bu yapı, kodun okunabilirliğini artırır ve kodun daha kısa ve anlaşılır olmasını sağlar.
+
+# Inheritance 
+- Inheritance (kalıtım), nesne yönelimli programlama (OOP) konseptlerinden biridir ve bir sınıfın başka bir sınıftan özellikler (değişkenler ve metotlar) ve davranışlar devralmasına olanak tanır. Kalıtım, kodun yeniden kullanılabilirliğini artırır ve sınıflar arasındaki ilişkileri düzenler. Ayrıca, hiyerarşik yapılar oluşturarak, genel ve özelleştirilmiş sınıflar arasındaki soyutlamayı geliştirir.
+- Inheritance, ana sınıflardan (üst sınıflar veya temel sınıflar olarak da adlandırılır) türetilen sınıflara (alt sınıflar veya türetilmiş sınıflar olarak da adlandırılır) özelliklerin aktarılmasıyla gerçekleşir. Türetilen sınıflar, temel sınıfın özelliklerini ve davranışlarını devralır ve bunlara ek özellikler veya davranışlar ekleyerek özelleştirilebilir.
+- C++ dilinde, kalıtım şu şekilde gerçekleştirilir:
+
+```CPP
+class TemelSinif {
+public:
+    void genelFonksiyon() {
+        // Temel sınıfta tanımlanan genel bir fonksiyon
+    }
+};
+
+class TuretilmisSinif : public TemelSinif {
+public:
+    void ozelFonksiyon() {
+        // Türetilmiş sınıfta tanımlanan özel bir fonksiyon
+    }
+};
+
+```
+
+> Bu örnekte, TuretilmisSinif, TemelSinif sınıfından türetilmiştir ve public erişim belirleyicisi ile kalıtım gerçekleştirilmiştir. Bu durumda, TuretilmisSinif hem genelFonksiyon() hem de ozelFonksiyon() fonksiyonlarına sahip olacaktır.
+- **Inheritance türleri:**
+
+1. Tek (Single) Inheritance: Bir alt sınıfın yalnızca bir temel sınıftan özellikler devraldığı durumdur. Bu, C++'da en yaygın kullanılan kalıtım türüdür.
+2. Çoklu (Multiple) Inheritance: Bir alt sınıfın birden fazla temel sınıftan özellikler devraldığı durumdur. C++ bu tür kalıtımı destekler, ancak dikkatli kullanılması gerekir çünkü bazı karmaşıklıklar ve elmas problemi gibi sorunlar ortaya çıkabilir.
+
+- Inheritance, nesne yönelimli programlamadaki diğer önemli kavramlarla (ör. soyutlama, enkapsülasyon ve polimorfizm) birlikte çalışarak, kodun daha modüler, düzenli ve yeniden kullanılabilir olmasını sağlar.
+
+# Upcasting - Downcasting
+- Upcasting ve downcasting, nesne yönelimli programlama (OOP) dillerinde, özellikle kalıtım ve polimorfizm kullanıldığında sıklıkla karşılaşılan iki işlemdir. Bu işlemler, temel ve türetilmiş sınıflar arasındaki nesnelerin tür dönüşümlerini ifade eder.
+
+1. **Upcasting:**
+- Upcasting, bir alt sınıf nesnesinin temel sınıf türüne dönüştürülmesi işlemidir. Bu işlem, genellikle hiyerarşik yapılar arasındaki nesnelerin türlerini değiştirmek için kullanılır. Upcasting, C++ ve diğer nesne yönelimli dillerde güvenli ve otomatik olarak gerçekleştirilir.
+
+**Upcasting örneği:**
+
+```CPP
+class TemelSinif { /* ... */ };
+
+class TuretilmisSinif : public TemelSinif { /* ... */ };
+
+int main() {
+    TuretilmisSinif* turetilmisPtr = new TuretilmisSinif();
+
+    // Upcasting: Türetilmiş sınıfın işaretçisi temel sınıfın işaretçisine atanır
+    TemelSinif* temelPtr = turetilmisPtr;
+}
+
+```
+
+2. **Downcasting:**
+- Downcasting, bir temel sınıf nesnesinin türetilmiş sınıf türüne dönüştürülmesi işlemidir. Downcasting işlemi, upcasting işlemine kıyasla daha risklidir ve dikkatli kullanılmalıdır. C++'da, downcasting işlemi, dynamic_cast veya static_cast gibi döküm (casting) operatörleri kullanılarak gerçekleştirilir.
+
+**Downcasting örneği:**
+
+```CPP
+class TemelSinif { /* ... */ };
+
+class TuretilmisSinif : public TemelSinif { /* ... */ };
+
+int main() {
+    TemelSinif* temelPtr = new TuretilmisSinif();
+
+    // Downcasting: Temel sınıfın işaretçisi türetilmiş sınıfın işaretçisine atanır (dynamic_cast kullanarak)
+    TuretilmisSinif* turetilmisPtr = dynamic_cast<TuretilmisSinif*>(temelPtr);
+
+    // Eğer dönüşüm başarılı olmazsa, turetilmisPtr NULL olacaktır
+    if (turetilmisPtr) {
+        // Downcasting başarılı, turetilmisPtr kullanılabilir
+    } else {
+        // Downcasting başarısız
+    }
+}
+
+```
+- Downcasting işlemi, tür dönüşümünün geçerli olup olmadığını kontrol etmek için dynamic_cast kullanılması önerilir. Eğer dönüşüm geçerli değilse, dynamic_cast başarısız olur ve NULL işaretçisi döndürür.
+
+# Access Control
+- C++ dilinde "access control" (erişim kontrolü), sınıfların ve yapıların içindeki öğelerin (değişkenler, fonksiyonlar ve iç sınıflar) erişilebilirliğini düzenleyen bir mekanizmadır. Erişim kontrolü, nesne yönelimli programlamada enkapsülasyon ilkesinin bir parçasıdır ve programın farklı bölümlerinde kullanılacak üye öğelerin görünürlüğünü sınırlandırmaya yardımcı olur.
+- C++ dilinde erişim kontrolü, üç ana erişim belirleyici (access specifier) ile gerçekleştirilir:
+
+1. **public:** Public erişim belirleyici, üye öğelerin sınıfın dışından erişilebilir olduğunu belirtir. Bu, herhangi bir nesne veya fonksiyon tarafından bu üye öğelere erişilebileceği anlamına gelir. Genellikle, sınıfın dış dünya ile etkileşimde bulunması gereken üye fonksiyonlar public olarak tanımlanır.
+
+2. **private:** Private erişim belirleyici, üye öğelerin yalnızca sınıfın içinden erişilebilir olduğunu belirtir. Bu, sınıfın dışından bu öğelere doğrudan erişilemeyeceği anlamına gelir. Private üye öğeler, sınıfın iç işleyişinde kullanılır ve dış dünya ile etkileşime girmeden sınıfın iç durumunu yönetir.
+
+3. **protected:** Protected erişim belirleyici, üye öğelerin sınıfın içinden ve türetilmiş sınıflardan erişilebilir olduğunu belirtir. Bu, temel sınıftan türetilen sınıfların, temel sınıfın protected üye öğelerine erişebileceği anlamına gelir. Protected üye öğeler, genellikle alt sınıflar tarafından kullanılması amaçlanan özellikler ve işlemler için kullanılır.
+
+- Erişim belirleyicileri kullanma örneği:
+
+```CPP
+class OrnekSinif {
+public:
+    // Public üye fonksiyon
+    void publicFonksiyon() {
+        // ...
+    }
+
+private:
+    // Private üye değişken
+    int privateDegisken;
+
+    // Private üye fonksiyon
+    void privateFonksiyon() {
+        // ...
+    }
+
+protected:
+    // Protected üye değişken
+    int protectedDegisken;
+
+    // Protected üye fonksiyon
+    void protectedFonksiyon() {
+        // ...
+    }
+};
+
+```
+- Erişim kontrolü, C++ programlarının modülerliğini ve güvenliğini artırarak, sınıf üyelerinin uygun şekilde kullanılmasını sağlar. Bu sayede, kodun daha düzenli ve anlaşılır olması sağlanır ve hataların önlenmesine yardımcı olur.
+
+# Runtime Polimorphism
+
+- Çalışma zamanı polimorfizmi (runtime polymorphism), nesne yönelimli programlama (OOP) dillerinde, farklı sınıf nesnelerinin aynı arayüz veya temel sınıf işaretçisi aracılığıyla çalışma zamanında çağrılabilen farklı uygulamalarını ifade eder. Runtime polimorfizmi, genellikle soyut sınıflar ve sanal fonksiyonlar kullanılarak gerçekleştirilir.
+
+- Çalışma zamanı polimorfizmi, kodun daha genişletilebilir ve esnek olmasına yardımcı olur. Ayrıca, kodu daha modüler ve düzenli hale getirir, çünkü çalışma zamanında nesnelerin gerçek türlerine göre doğru fonksiyonun çağrılmasını sağlar.
+
+- C++ dilinde, çalışma zamanı polimorfizmini kullanmak için genellikle şu adımlar izlenir:
+
+1. Temel sınıfta, sanal fonksiyonlar tanımlayarak ortak bir arayüz oluşturun.
+2. Türetilmiş sınıflarda, temel sınıftaki sanal fonksiyonları uygulayarak ve gerektiğinde özelleştirin.
+3. Temel sınıf işaretçileri veya referansları kullanarak, çalışma zamanında gerçek nesne türlerine göre doğru fonksiyonları çağırın.
+
+- Aşağıda, çalışma zamanı polimorfizminin bir örneği verilmiştir:
+
+```CPP
+#include <iostream>
+
+// Temel sınıf
+class Hayvan {
+public:
+    virtual void sesCikar() const {
+        std::cout << "Bir hayvan sesi çıkarıyor." << std::endl;
+    }
+};
+
+// Türetilmiş sınıf 1
+class Kopek : public Hayvan {
+public:
+    void sesCikar() const override {
+        std::cout << "Hav! Hav!" << std::endl;
+    }
+};
+
+// Türetilmiş sınıf 2
+class Kedi : public Hayvan {
+public:
+    void sesCikar() const override {
+        std::cout << "Miyav! Miyav!" << std::endl;
+    }
+};
+
+// Hayvanların ses çıkarma fonksiyonunu çağıran işlev
+void hayvanSesCikar(const Hayvan& hayvan) {
+    hayvan.sesCikar();
+}
+
+int main() {
+    Kopek kopek;
+    Kedi kedi;
+
+    // Hayvan türüne göre doğru ses çıkarma fonksiyonunu çağırır
+    hayvanSesCikar(kopek); // Çıktı: "Hav! Hav!"
+    hayvanSesCikar(kedi);  // Çıktı: "Miyav! Miyav!"
+}
+
+```
+
+- Bu örnekte, Hayvan temel sınıfında sesCikar adlı sanal bir fonksiyon tanımlanmıştır. Kopek ve Kedi türetilmiş sınıfları, bu fonksiyonu kendi özel uygulamalarıyla geçersiz kılar (override). Bu durum, farklı Hayvan türlerinin kendi seslerini çıkarmasına izin verir.
+- hayvanSesCikar işlevi, Hayvan temel sınıfının bir referansını alır ve bu referans üzerinden sesCikar fonksiyonunu çağırır. Bu işlevi kullanarak, çalışma zamanında geçirilen gerçek nesne türüne göre doğru sesCikar fonksiyonunun çağrılması sağlanır. Bu, çalışma zamanı polimorfizminin temelidir.
+
+- Yukarıdaki örnekte, main fonksiyonunda Kopek ve Kedi nesneleri oluşturulur ve hayvanSesCikar işlevine gönderilir. İşlev, çalışma zamanında geçirilen nesnenin gerçek türünü belirleyerek doğru sesCikar fonksiyonunu çağırır.
+
+- Çalışma zamanı polimorfizmi, OOP dillerindeki temel bir kavramdır ve kodun daha düzenli, anlaşılır ve esnek olmasına yardımcı olur. Bu sayede, farklı nesne türlerinin aynı arayüz üzerinden çalışma zamanında dinamik olarak kullanılabilmesi sağlanır.
+
+# Abstract Class
+- Abstract class (soyut sınıf), nesne yönelimli programlama dillerinde, doğrudan örneklenemeyen ve türetilmiş sınıflar için temel olarak kullanılan bir sınıf türüdür. Soyut sınıflar, genellikle ortak işlevselliği ve yapıyı paylaşan türetilmiş sınıflar arasında bir şablon sağlar.
+
+- Soyut sınıfların temel amacı, ortak arayüzler ve işlevselliği tanımlamak ve paylaşmaktır. Soyut sınıflar, bir veya birden fazla soyut metod (sanal fonksiyon) içerebilir ve bu metodlar, türetilmiş sınıflarda uygulanmalıdır. Soyut sınıflar aynı zamanda uygulanmış (non-abstract) metodlar da içerebilir, bu sayede türetilmiş sınıfların bu metodları doğrudan kullanmalarına veya geçersiz kılmalarına (override) olanak sağlar.
+
+- C++ dilinde soyut sınıf tanımlamak için, en az bir sanal fonksiyonun "= 0" ile işaretlenmesi gerekir. Bu, fonksiyonun soyut olduğunu ve türetilmiş sınıflarda uygulanması gerektiğini belirtir. İşte bir soyut sınıf örneği:
+
+```CPP
+class Sekil {
+public:
+    virtual double alan() const = 0; // Soyut metod
+    virtual double cevre() const = 0; // Soyut metod
+
+    void sekilBilgisi() const { // Uygulanmış metod
+        std::cout << "Alan: " << alan() << ", Cevre: " << cevre() << std::endl;
+    }
+};
+
+```
+- Yukarıdaki örnekte, Sekil adlı soyut bir sınıf tanımlanmıştır. Bu sınıf, alan ve cevre adlı iki soyut metod içerir. Türetilmiş sınıfların bu metodları uygulaması beklenir. Ayrıca, sekilBilgisi adlı uygulanmış bir metod da içerir ve bu metod türetilmiş sınıflar tarafından doğrudan kullanılabilir.
+
+- Soyut sınıflar, nesne yönelimli programlamada temel bir kavramdır ve kodun daha düzenli, anlaşılır ve esnek olmasına yardımcı olur. Soyut sınıflar sayesinde, ortak işlevsellik ve yapıyı paylaşan sınıflar arasında modülerlik ve yeniden kullanılabilirlik sağlanır.
+
+# Virtual Dispatch
+- Virtual dispatch (sanal gönderim), çalışma zamanında nesnelerin türlerine göre doğru fonksiyonun çağrılmasını sağlayan bir mekanizmadır. Bu mekanizma, nesne yönelimli programlama dillerinde, özellikle de C++ dilinde, polimorfizmi gerçekleştirmek için kullanılır.
+
+- Sanal fonksiyonlar (virtual functions) ve virtual dispatch arasında doğrudan bir ilişki vardır. Sanal fonksiyonlar, temel sınıf ve türetilmiş sınıflar arasında aynı imzaya sahip, ancak farklı uygulamaları olan fonksiyonlardır. Virtual dispatch, çalışma zamanında gerçek nesne türlerine göre doğru sanal fonksiyonların çağrılmasını sağlar.
+- C++ dilinde, sanal fonksiyonlar virtual anahtar kelimesi ile tanımlanır ve türetilmiş sınıflarda bu fonksiyonlar geçersiz kılınabilir (override). Virtual dispatch, çalışma zamanında türetilmiş sınıflardan doğru sanal fonksiyonu çağırmak için işaretçi veya referanslar kullanarak gerçekleştirilir.
+
+- İşte virtual dispatch kullanarak polimorfizmi gösteren bir örnek:
+
+```CPP
+#include <iostream>
+
+class Hayvan {
+public:
+    virtual void sesCikar() const {
+        std::cout << "Bir hayvan sesi çıkarıyor." << std::endl;
+    }
+};
+
+class Kopek : public Hayvan {
+public:
+    void sesCikar() const override {
+        std::cout << "Hav! Hav!" << std::endl;
+    }
+};
+
+class Kedi : public Hayvan {
+public:
+    void sesCikar() const override {
+        std::cout << "Miyav! Miyav!" << std::endl;
+    }
+};
+
+void hayvanSesCikar(const Hayvan& hayvan) {
+    hayvan.sesCikar(); // Virtual dispatch kullanılıyor
+}
+
+int main() {
+    Kopek kopek;
+    Kedi kedi;
+
+    hayvanSesCikar(kopek); // Çıktı: "Hav! Hav!"
+    hayvanSesCikar(kedi);  // Çıktı: "Miyav! Miyav!"
+}
+
+```
+> Bu örnekte, Hayvan temel sınıfında sesCikar adlı bir sanal fonksiyon tanımlanmıştır. Kopek ve Kedi türetilmiş sınıfları, bu fonksiyonu geçersiz kılarak kendi uygulamalarını sağlar. hayvanSesCikar işlevi, Hayvan temel sınıfının referansını alarak çalışma zamanında geçirilen nesnenin türüne göre doğru sesCikar fonksiyonunu çağırır. Bu işlem, virtual dispatch ile gerçekleştirilir.
+
+- Virtual dispatch, nesne yönelimli programlamada önemli bir kavramdır ve çalışma zamanı polimorfizminin temelidir. Bu sayede, farklı nesne türlerinin aynı arayüz üzerinden çalışma zamanında dinamik olarak kullanılabilmesi sağlanır. Virtual dispatch, kodun daha düzenli, anlaşılır ve esnek olmasına yardımcı olur.
+- Virtual dispatch, C++'ta sanal fonksiyon tablosu (vtable) aracılığıyla gerçekleştirilir. Vtable, her sınıf için derleyici tarafından oluşturulan bir tablodur ve sınıftaki sanal fonksiyonların adreslerini içerir. Bir nesnenin işaretçisi veya referansı üzerinden sanal bir fonksiyon çağrıldığında, vtable'daki ilgili fonksiyon adresine gidilir ve çalışma zamanında doğru fonksiyon çağrılır.
+- Virtual dispatch, biraz performans maliyetine sahiptir, çünkü işlem sırasında ekstra işaretçi dereferanslamaları gerçekleştirilir ve bu durum fonksiyon çağrılarını doğrudan çağırmaktan daha yavaş hale getirir. Ancak bu maliyet, genellikle kodun modülerlik, esneklik ve anlaşılabilirlik avantajlarıyla dengelenir.
+
+- Sonuç olarak, virtual dispatch ve sanal fonksiyonlar, çalışma zamanı polimorfizmini sağlayarak nesne yönelimli programlama dillerinde, özellikle C++ dilinde, kodun daha düzenli, esnek ve anlaşılır olmasına yardımcı olur. Bu mekanizma, ortak arayüzler ve işlevselliği paylaşan sınıflar arasında modülerlik ve yeniden kullanılabilirlik sağlar.
+
+# Override
+- Override (geçersiz kılma), nesne yönelimli programlama dillerinde kullanılan bir terimdir. Temel sınıfta tanımlanan bir fonksiyonun, türetilmiş sınıflarda yeniden tanımlanarak değiştirilmesi işlemine denir. Bu sayede, türetilmiş sınıflar temel sınıfın fonksiyonlarını kendi ihtiyaçlarına göre özelleştirebilir ve genişletebilir.
+
+- Override işlemi, genellikle sanal fonksiyonlar ile birlikte kullanılır. Sanal fonksiyonlar, temel sınıfta virtual anahtar kelimesi ile tanımlanır ve türetilmiş sınıflar bu fonksiyonları geçersiz kılabilir. C++ dilinde, override anahtar kelimesi kullanarak türetilmiş sınıflarda bir fonksiyonun temel sınıftaki sanal fonksiyonu geçersiz kıldığını belirtebiliriz. Bu, hem kodun okunabilirliğini artırır, hem de derleyici tarafından doğru şekilde geçersiz kılma işleminin kontrol edilmesini sağlar.
+
+- İşte bir örnek:
+```CPP
+#include <iostream>
+
+class Hayvan {
+public:
+    virtual void sesCikar() const {
+        std::cout << "Bir hayvan sesi çıkarıyor." << std::endl;
+    }
+};
+
+class Kopek : public Hayvan {
+public:
+    void sesCikar() const override { // temel sınıftaki 'sesCikar' fonksiyonunu geçersiz kılma
+        std::cout << "Hav! Hav!" << std::endl;
+    }
+};
+
+class Kedi : public Hayvan {
+public:
+    void sesCikar() const override { // temel sınıftaki 'sesCikar' fonksiyonunu geçersiz kılma
+        std::cout << "Miyav! Miyav!" << std::endl;
+    }
+};
+
+```
+> Yukarıdaki örnekte, Hayvan adlı temel sınıfta sesCikar adlı bir sanal fonksiyon tanımlanmıştır. Kopek ve Kedi adlı türetilmiş sınıflar, bu fonksiyonu override anahtar kelimesi ile geçersiz kılarak kendi uygulamalarını sağlar. Bu şekilde, her türetilmiş sınıf kendi özelleştirilmiş sesCikar fonksiyonunu kullanabilir.
+
+- Override, nesne yönelimli programlamada temel bir kavramdır ve çalışma zamanı polimorfizminin gerçekleştirilmesine yardımcı olur. Bu sayede, farklı nesne türlerinin aynı arayüz üzerinden çalışma zamanında dinamik olarak kullanılabilmesi sağlanır.
 
 
 
