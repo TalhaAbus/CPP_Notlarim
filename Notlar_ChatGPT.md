@@ -3988,36 +3988,73 @@ int main() {
 
 - Spaceship operatörü, sınıf ve yapılar için karşılaştırma operatörlerini yazmayı kolaylaştıran ve kodun okunabilirliğini artıran güçlü bir özelliktir. C++20 ile birlikte kullanılabilir hale gelmiştir ve karşılaştırma işlemlerini basitleştirmeye yardımcı olur.
 
+# Heapify
 
+- Heapify, bir dizi veriyi, özellikle tam (complete) bir ikili ağaç şeklinde düzenleyerek, bir ikili yığın (binary heap) veri yapısına dönüştürme işlemidir. İkili yığınlar, en büyük elemanın (max-heap) veya en küçük elemanın (min-heap) kökte bulunduğu ve her düğümün değerinin alt düğümlerinden daha büyük veya daha küçük olduğu özel ikili ağaçlardır. Heapify algoritması, O(n) zaman karmaşıklığıyla çalışır.
 
+- Heapify işlemi iki ana adımdan oluşur:
 
+1. İçerideki veriyi tam bir ikili ağaç şeklinde düzenlemek.
+2. Bu tam ikili ağacı ikili yığın özelliklerine göre düzenlemek.
 
+- Heapify işlemi, genellikle Heapsort algoritması gibi ikili yığın temelli algoritmaların önemli bir bileşenidir ve ikili yığın veri yapısının kullanıldığı birçok farklı durumda kullanılabilir.
 
+**Heapify algoritması, aşağıdaki şekilde çalışır:**
+1. Diziyi tam bir ikili ağaç olarak düşünün. Dizideki her elemanın sol ve sağ çocukları ve ebeveyni, indisler arasındaki ilişki ile belirlenebilir.
+2. Dizideki en alt seviyede olmayan her düğüm için (yani, n/2 ... 1 indisli düğümler, burada n dizinin uzunluğudur), başlangıçtan sona doğru geriye doğru hareket ederek heapify işlemi uygulayın.
+3. Her düğüm için, eğer düğüm, alt düğümlerinden herhangi birinden daha küçükse (max-heap için) veya daha büyükse (min-heap için), en büyük veya en küçük alt düğümle yer değiştirin.
+4. Yer değiştirme işlemi sonucunda alt ağaçların ikili yığın özelliklerini bozduysa, yer değiştirilen düğüm için de heapify işlemini uygulayarak ikili yığın özelliklerini yeniden sağlayın.
+5. Tüm düğümler için bu işlemi gerçekleştirin.
 
+- Heapify işlemi, özellikle ikili yığın veri yapısını kullanarak sıralama, öncelikli kuyruk ve diğer benzer uygulamalar için temel bir adımdır. Heapify algoritması, dizi içerisinde yerinde çalışarak veri yapısını düzenler ve O(n) zaman karmaşıklığı ile oldukça verimlidir.
 
+# Remove - Erase Idiom
+- C++ dilinde, remove-erase idiomu, bir konteynerden belirli bir koşula göre uygun olan elemanları kaldırmak için kullanılan yaygın bir tasarım kalıbıdır. Bu idiom, çoğunlukla C++ Standard Template Library (STL) tarafından sağlanan konteynerler ve algoritmalarla birlikte kullanılır.
 
+**Remove-erase idiomu, iki aşamalı bir süreçtir:**
 
+1. **Remove:** İlk adımda, konteynerdeki belirli elemanları "kaldırmak" için std::remove (veya std::remove_if), std::remove_copy gibi STL algoritmalarından biri kullanılır. Bu aşamada elemanlar, konteynerin sonuna taşınır ve mantıksal olarak "kaldırılır". Ancak fiziksel olarak hala konteynerin içindedirler ve konteynerin boyutu değişmez.
 
+2. **Erase:** İkinci adımda, konteynerin erase fonksiyonu kullanılarak fiziksel olarak kaldırılan elemanlar silinir ve konteynerin boyutu güncellenir. Bu işlem, "kaldırılan" elemanların başladığı iteratör ve konteynerin sonunu gösteren iteratör arasındaki aralığı silerek gerçekleştirilir.
 
+- Örnek olarak, bir std::vector int  içindeki tüm 0 değerlerini kaldırmak için remove-erase idiomu şu şekilde kullanılabilir:
 
+```CPP
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
+int main() {
+    std::vector<int> vec = {1, 0, 3, 0, 5};
 
+    vec.erase(std::remove(vec.begin(), vec.end(), 0), vec.end());
 
+    for (int x : vec) {
+        std::cout << x << " ";
+    }
+    // Çıktı: 1 3 5
 
+    return 0;
+}
 
+```
+> Bu örnekte, std::remove algoritmasıyla 0 değerlerini "kaldırdık" ve ardından erase fonksiyonuyla bu değerleri fiziksel olarak sildik. Remove-erase idiomu, C++ programlamada verimli ve okunabilir bir şekilde konteynerlerden belirli elemanları kaldırmak için yaygın olarak kullanılır.
 
+# Container Adapters
 
+- C++ Standard Template Library (STL) içinde, Container Adapters, temel konteynerlerin üzerinde çalışarak daha özel amaçlar için tasarlanmış konteynerlerdir. Container Adapters, altta yatan temel konteynerlerin işlevlerini kullanarak yeni bir arayüz sağlarlar ve bu sayede belirli veri yapıları ve algoritmalar için uygun hale gelirler.
 
+**STL, üç ana Container Adapter sunar:**
 
+1. **Stack:** LIFO (Last-In-First-Out) politikasını uygulayan ve verilerin sadece bir uçtan eklenip çıkarılmasına izin veren bir veri yapısıdır. Stack, varsayılan olarak std::deque kullanarak uygulanır, ancak std::vector veya std::list gibi diğer konteynerlerle de kullanılabilir. Stack'in temel işlemleri push, pop, top ve empty'dir.
 
+2. **Queue:** FIFO (First-In-First-Out) politikasını uygulayan ve verilerin bir uçtan eklenip diğer uçtan çıkarılmasına izin veren bir veri yapısıdır. Queue, varsayılan olarak std::deque kullanarak uygulanır, ancak std::list gibi diğer konteynerlerle de kullanılabilir. Queue'nun temel işlemleri push, pop, front, back ve empty'dir.
 
+3. **Priority Queue:** Elemanların önceliklerine göre saklandığı ve her zaman en yüksek (veya en düşük) öncelikli elemana erişime izin veren bir veri yapısıdır. Priority Queue, varsayılan olarak std::vector ve std::make_heap, std::push_heap ve std::pop_heap işlemleri kullanılarak uygulanır. Priority Queue'nun temel işlemleri push, pop, top ve empty'dir.
 
+- Container Adapters, temel konteynerlerin işlevlerini sınırlayarak ve yeni arayüzler sağlayarak belirli algoritmalar ve veri yapıları için daha uygun ve kullanışlı hale gelirler. Bu, kodun daha okunabilir ve anlaşılır olmasına katkıda bulunur.
 
-
-
-
-
-
+- Container Adapter'ları kullanırken, uygun temel konteyneri seçmeye dikkat etmek önemlidir. Performans ve bellek kullanımı açısından en uygun konteyneri seçmek, uygulamanızın verimliliği üzerinde büyük bir etkiye sahip olabilir.
 
 
 
