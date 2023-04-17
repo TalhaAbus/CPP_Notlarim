@@ -4056,5 +4056,177 @@ int main() {
 
 - Container Adapter'ları kullanırken, uygun temel konteyneri seçmeye dikkat etmek önemlidir. Performans ve bellek kullanımı açısından en uygun konteyneri seçmek, uygulamanızın verimliliği üzerinde büyük bir etkiye sahip olabilir.
 
+# Tuple Interface
+- C++ dilinde, tuple interface, birden fazla değeri bir arada saklayabilen ve her bir değerin farklı türde olabileceği heterojen bir koleksiyon olan std::tuple sınıfını tanımlar. Tuple, sabit boyutlu ve bellekte ardışık olmayan bir veri yapısıdır. C++11 ve sonrasında, std::tuple kullanarak birden fazla değeri tek bir değişkende saklayabilir ve daha sonra bu değerleri kullanabilirsiniz.
+
+- std::tuple'ın temel özellikleri ve işlevleri şunlardır:
+
+1. **Oluşturma:** std::tuple nesnesi, birden fazla değeri parantez içinde virgülle ayrılarak oluşturulabilir. Örneğin: std::tuple<int, std::string, float> my_tuple(42, "hello", 3.14f);
+
+2. **Erişim:** std::getN(tuple) işlevi kullanarak, bir tuple'daki belirli bir indeksteki değere erişebilirsiniz. İndeksler 0'dan başlar. Örneğin: int my_int = std::get<0>(my_tuple);
+
+3. **Boyut:** std::tuple_size<tuple_type>::value kullanarak, tuple'ın boyutunu (eleman sayısını) öğrenebilirsiniz. Örneğin: constexpr size_t tuple_size = std::tuple_size<decltype(my_tuple)>::value;
+
+4. **Eleman Türleri:** std::tuple_element<N, tuple_type>::type kullanarak, tuple'daki belirli bir indeksteki elemanın türünü öğrenebilirsiniz. Örneğin: using string_type = std::tuple_element<1, decltype(my_tuple)>::type; // string_type is std::string
+
+5. **Yapısal bağlama (Structured Binding):** C++17 ve sonrasında, yapısal bağlama kullanarak tuple'daki değerleri birden fazla değişkene otomatik olarak atayabilirsiniz. Örneğin: auto [my_int, my_string, my_float] = my_tuple;
+
+- std::tuple kullanarak, farklı türdeki değerleri bir arada saklayabilir ve bu değerleri kullanarak karmaşık veri yapıları ve algoritmalar oluşturabilirsiniz. Tuple interface, programlamanın pek çok alanında faydalıdır, özellikle birden fazla değeri döndürmek veya karmaşık veri yapıları oluşturmak istediğinizde.
+
+# Reference Wrapper
+
+- C++ dilinde, std::reference_wrapper sınıfı, bir nesnenin referansını temsil etmek için kullanılır. std::reference_wrapper, temel olarak, bir referansın değer semantiği gibi davranmasına izin veren bir sınıftır. Bu özellik, özellikle referansları değer olarak saklamak veya kopyalamak istediğinizde faydalıdır.
+
+- std::reference_wrapper'ın temel özellikleri ve kullanımı şunlardır:
+
+1. **Oluşturma:** std::reference_wrapper oluşturmak için, başlangıçta verilen nesneye referans sağlamalısınız. Örneğin: std::reference_wrapperint int_ref(my_int); veya auto int_ref = std::ref(my_int);
+
+2. **Atama:** std::reference_wrapper ile bir nesneye referans sağladığınızda, referansı başka bir nesneye yeniden atayabilirsiniz. Örneğin: int_ref = std::ref(another_int);
+
+3. **Erişim:** std::reference_wrapper üzerinden orijinal nesneye erişmek için get() işlevini kullanabilirsiniz. Örneğin: int &original_int = int_ref.get();
+
+4. **Fonksiyon çağrısı:** std::reference_wrapper, temsil ettiği nesneyi çağırabilir (ör. fonksiyon nesneleri için). Örneğin: std::reference_wrapper<std::functionvoid() func_ref(my_function); ve sonra func_ref(); şeklinde çağırabilirsiniz.
+
+- std::reference_wrapper'ın temel amacı, referansları değer semantiği ile kullanmayı sağlamaktır. Bu, konteynerlerde referans saklamak gibi durumlar için özellikle faydalıdır, çünkü C++ dilinde, konteynerlerde doğrudan referans saklamak mümkün değildir. std::reference_wrapper sayesinde, referanslarınızı std::vector, std::list gibi konteynerlere ekleyebilir ve bu sayede nesnelerin referanslarını yönetebilirsiniz.
+
+- Özetle, std::reference_wrapper, C++'da referansları değer semantiği ile kullanmak için güçlü ve esnek bir araçtır. Konteynerlerde referans saklamak, fonksiyon nesnelerini yönetmek ve nesnelerin referanslarını kopyalamak gibi işlemler için kullanışlıdır.
+
+# Smart Pointer
+
+- C++ dilinde, akıllı işaretçiler (smart pointers) nesnelerin yaşam sürelerini otomatik olarak yönetmeye yardımcı olan sınıflardır. Akıllı işaretçiler, temel işaretçilere güvenli ve otomatik bir alternatif sunarak, bellek sızıntısı ve diğer kaynak yönetimi sorunlarını önlemeye yardımcı olur. C++11 ve sonrasında, shared_ptr, unique_ptr ve weak_ptr gibi akıllı işaretçiler standart kütüphaneye dahil edilmiştir.
+
+- Akıllı işaretçilerin temel özellikleri ve kullanımı şunlardır:
+
+1. **unique_ptr:** std::unique_ptr sınıfı, nesnelerin tek bir sahibi olduğunu ve bu nesnelere sadece bir unique_ptr tarafından erişilebileceğini garanti eder. std::unique_ptr ile yönetilen nesneler, unique_ptr'ın ömrü sona erdiğinde otomatik olarak yok edilir. Örneğin:
+
+```CPP
+std::unique_ptr<MyClass> my_unique_ptr(new MyClass());
+// veya C++14 ve sonrası için
+auto my_unique_ptr = std::make_unique<MyClass>();
+
+```
+2. **shared_ptr:** std::shared_ptr sınıfı, birden fazla sahip tarafından paylaşılan nesneleri yönetir. İçinde bir referans sayacı barındırır ve nesnenin son sahibi olduğunda (referans sayacı sıfıra düştüğünde) nesneyi otomatik olarak yok eder. Örneğin:
+
+```CPP
+std::shared_ptr<MyClass> my_shared_ptr(new MyClass());
+// veya C++11 ve sonrası için
+auto my_shared_ptr = std::make_shared<MyClass>();
+
+```
+
+3. **weak_ptr:** std::weak_ptr sınıfı, shared_ptr'larla ilişkilendirilmiş zayıf bir referans sağlar. Bu, bir nesneye erişimi paylaşan shared_ptr'ları gözlemlemek için kullanılabilir. weak_ptr'ın ömrü sona erdiğinde, nesneyi yok etmez ve dolayısıyla döngüsel referans problemini önlemeye yardımcı olur. Örneğin:
+
+```CPP
+std::weak_ptr<MyClass> my_weak_ptr = my_shared_ptr;
+
+```
+- Akıllı işaretçiler, nesnelerin yaşam süresini ve kaynak yönetimini otomatikleştirerek hataları önlemeye yardımcı olur. unique_ptr, shared_ptr ve weak_ptr gibi akıllı işaretçilerin kullanılması, C++ programlamada güvenli ve etkili bir yöntemdir. Geliştiricilerin bellek yönetimi ve kaynak yönetimi sorunlarıyla uğraşmak zorunda kalmadan, nesnelerin yaşam süresini ve sahipliğini yönetmesine olanak tanır.
+
+# Random Library
+
+- C++ dilinde, random kütüphanesi, rastgele sayılar üretmek ve olasılık dağılımlarıyla çalışmak için kullanılan bir dizi sınıf ve işleve sahiptir. random kütüphanesinin temel bileşenleri şunlardır:
+
+1. **Rastgele Sayı Üreteçleri (Random Number Engines):** Bu, rastgele sayıların üretimini sağlayan temel bileşendir. Üreteçler, deterministik algoritmalar kullanarak rastgele sayı dizileri üretir. C++ standart kütüphanesinde bulunan bazı üreteçler şunlardır: std::mt19937, std::linear_congruential_engine, std::xor_shift_engine.
+
+**Örnek:**
+
+```CPP
+std::mt19937 rng(std::random_device{}());
+
+```
+
+2. **Dağılımlar (Distributions):** Bu, üretilen rastgele sayıları belirli bir olasılık dağılımına göre dönüştürmeye yarar. C++ standart kütüphanesinde bulunan bazı dağılımlar şunlardır: std::uniform_int_distribution, std::uniform_real_distribution, std::normal_distribution, std::bernoulli_distribution.
+
+**Örnek:**
+
+```CPP
+std::uniform_int_distribution<int> dist(1, 6); // 1 ile 6 arasında (dahil) tam sayılar üretir.
+```
+3. **Rastgele Sayı Üretimi:** Rastgele sayı üreteci ve dağılımı birleştirerek, belirtilen dağılıma uygun rastgele sayılar elde edebilirsiniz.
+
+**Örnek:**
+```CPP
+std::mt19937 rng(std::random_device{}());
+std::uniform_int_distribution<int> dist(1, 6);
+int random_number = dist(rng); // 1 ile 6 arasında (dahil) rastgele bir tam sayı üretir.
+
+```
+- random kütüphanesi, eski C dilinde bulunan rand() ve srand() işlevlerine kıyasla daha güvenilir ve esnek rastgele sayı üretimini mümkün kılar. Bu kütüphane, istatistiksel özellikleri güçlü ve doğru rastgele sayılar üretmek için kullanılabilir ve çeşitli uygulamalar ve simülasyonlar için uygun olan farklı olasılık dağılımlarını destekler.
+
+# Most Vexing Parse
+
+- C++ dilinde "most vexing parse" (MVP), dilin sözdizimi kurallarından kaynaklanan ve sıklıkla istenmeyen davranışlara yol açan bir aşırı yüklemenin çözümleme kavramıdır. Bu durum, dilin fonksiyon bildirimlerini ve nesne tanımlamalarını nasıl çözümlediğine bağlıdır.
+
+- MVP ile ilgili temel kural şudur: Eğer bir ifade hem bir fonksiyon bildirimi hem de bir nesne tanımı olarak geçerli ise, C++ derleyicisi bunu bir fonksiyon bildirimi olarak değerlendirir. Bu, bazı durumlarda beklenmeyen davranışlara yol açabilir.
+
+- Örnek olarak, aşağıdaki kodu ele alalım:
+
+```CPP
+class MyClass {
+public:
+    MyClass() {}
+};
+
+class Widget {
+public:
+    Widget(MyClass x) {}
+};
+
+int main() {
+    Widget w(MyClass());
+}
+
+```
+
+> Burada, main() fonksiyonunda bir Widget nesnesi oluşturmak istiyoruz ve MyClass'ın bir örneğini parametre olarak veriyoruz. Ancak, MVP kuralı nedeniyle, derleyici MyClass() ifadesini bir fonksiyon bildirimi olarak değerlendirir ve bu durumda w'yi, adı "w" olan ve MyClass türünde bir parametre alan bir fonksiyon olarak kabul eder. Bu nedenle, istediğimiz nesne oluşturma işlemi gerçekleşmez.
+
+- Bu tür istenmeyen durumları önlemek için, kodun yazılış şeklini değiştirerek veya C++11'den itibaren kullanılabilen "uniform initialization" (tek tip başlatma) sözdizimini kullanarak MVP'yi çözebiliriz:
+
+```CPP
+// Parantezleri kaldırarak
+Widget w1 = Widget(MyClass);
+
+// veya
+
+// Uniform initialization kullanarak
+Widget w2{MyClass()};
+
+```
+
+> Bu örneklerde, derleyici artık ifadeleri fonksiyon bildirimleri olarak değerlendirmeyecek ve istenen nesne oluşturma işlemi gerçekleşecektir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
