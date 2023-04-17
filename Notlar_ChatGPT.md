@@ -3254,6 +3254,439 @@ int main() {
 
 - Bu örnek, kısmi sıralama kurallarının nasıl çalıştığını gösterir. Derleyici, şablonların ne kadar özelleştirildiğini değerlendirmek için deduced türleri kullanarak şablonları karşılaştırır ve daha spesifik olan şablonu seçer. Bu süreç, şablon özel durumlarının ve aşırı yüklemelerinin doğru şekilde yönetilmesini sağlar.
 
+# Pair Class
+- Pair sınıfı, C++ Standard Template Library (STL) içinde yer alan ve iki değeri bir arada tutmak için kullanılan bir yardımcı sınıftır. std::pair adını taşıyan bu sınıf, genellikle farklı türlerde iki değeri birleştirmek için kullanılır. Bu, veri yapılarında veya algoritmalarında ilişkilendirilmiş verileri temsil etmek için kullanışlıdır.
+
+- std::pair sınıfı şablonlu bir yapıya sahiptir ve iki tipi kabul eder: first ve second. Bu türler, sınıfın içinde iki veri üyesi olarak saklanır.
+
+- Örnek olarak, std::pair kullanarak bir int ve bir std::string veri tipini birleştirebilirsiniz:
+
+```CPP
+#include <iostream>
+#include <utility>  // std::pair için gerekli olan kütüphane
+#include <string>
+
+int main() {
+    std::pair<int, std::string> my_pair(42, "hello");
+    
+    // Erişim
+    std::cout << "First: " << my_pair.first << std::endl;
+    std::cout << "Second: " << my_pair.second << std::endl;
+    
+    return 0;
+}
+
+```
+> Bu örnekte, my_pair adında bir std::pair nesnesi oluşturduk. Bu nesne, int türündeki first ve std::string türündeki second üyelerini içerir. Bu değerlere doğrudan erişebilir ve onları kullanabilirsiniz.
+
+- std::pair sınıfı ayrıca, iki std::pair nesnesini karşılaştırmak için operatör aşırı yüklemeleri sağlar. Karşılaştırma, lexicographical (sözlük sırası) düzenine göre yapılır: önce first üyeleri karşılaştırılır ve eşitse second üyeleri karşılaştırılır.
+
+- std::pair tipik olarak ilişkilendirilmiş verileri depolamak için kullanılır. Özellikle, STL'deki std::map ve std::unordered_map gibi ilişkilendirilmiş konteynerlerde anahtar-değer çiftlerini temsil etmek için kullanılır.
+
+- Özetle, std::pair sınıfı, iki değeri birleştirmek için kullanışlı ve esnek bir yapı sunar. İki farklı türde değeri bir arada tutmak ve işlemek için tasarlanmıştır. C++ Standard Template Library'nin önemli bir bileşeni olarak, ilişkilendirilmiş veri yapıları ve algoritmalar için önemli bir rol oynar.
+
+# Typedef
+
+- typedef, C++ dilinde, mevcut bir tür için alternatif bir isim tanımlamanıza olanak sağlayan bir anahtar sözcüktür. Bu, karmaşık tür bildirimlerini basitleştirmek ve daha okunabilir hale getirmek için kullanışlıdır. typedef ayrıca, kodun taşınabilirliğini artırmaya ve türlerin daha kolay değiştirilmesine yardımcı olabilir.
+
+- typedef kullanımına bir örnek:
+```CPP
+#include <iostream>
+#include <vector>
+
+// Karmaşık tür adlarını basitleştirmek için typedef kullanımı
+typedef std::vector<int> IntVector;
+typedef std::vector<double> DoubleVector;
+
+int main() {
+    IntVector int_vec;
+    DoubleVector double_vec;
+
+    int_vec.push_back(42);
+    double_vec.push_back(3.14);
+
+    std::cout << "int_vec[0]: " << int_vec[0] << std::endl;
+    std::cout << "double_vec[0]: " << double_vec[0] << std::endl;
+
+    return 0;
+}
+
+```
+> Bu örnekte, std::vector int  ve std::vector double  için IntVector ve DoubleVector adında iki yeni tür tanımladık. Bu, karmaşık tür adlarını yazarken daha az hata yapmamıza ve kodun daha okunabilir olmasına yardımcı olur.
+
+- typedef ayrıca kodun taşınabilirliğini artırabilir. Örneğin, aşağıdaki gibi bir typedef kullanırsanız:
+
+```CPP
+typedef long int64;
+
+```
+- Daha sonra, bu türü kullanan tüm yerlerde long türünün yerine başka bir tür kullanmak isterseniz (örneğin long long), sadece typedef satırını değiştirmeniz yeterlidir. Bu, kodun daha kolay bakımını ve platformlar arası uyumluluğu sağlar.
+
+- C++11'den itibaren, typedef yerine using anahtar kelimesiyle tip tanımlamaları yapabilirsiniz. İşlevsellik açısından typedef ile aynıdır, ancak bazı durumlarda daha esnek ve okunabilir olabilir:
+
+```CPP
+using IntVector = std::vector<int>;
+
+```
+- Özetle, typedef, C++ programlarında tür adlarını basitleştirmek, kodun okunabilirliğini artırmak ve taşınabilirliği desteklemek için kullanılan bir anahtar sözcüktür. C++11 ve sonrasında, using anahtar kelimesi, benzer işlevsellikle daha esnek bir alternatif olarak kullanılabilir.
+
+# Explicit Specialization
+
+- Explicit specialization (açık özelleştirme), C++ şablonlarında, belirli bir tür veya tür kombinasyonu için şablonun nasıl işleneceğini özel olarak belirtme yöntemidir. Genel bir şablon tanımı yapıldığında, bu şablonun tüm türler için uygulanabilir olması amaçlanır. Ancak bazı durumlarda, belirli türler için farklı bir uygulama veya davranış gerekebilir. İşte bu noktada explicit specialization devreye girer.
+
+- Açık özelleştirme, şablonun belirli türler için nasıl işleneceğini özel olarak tanımlar ve derleyici, bu türlerle karşılaştığında özelleştirilmiş sürümü kullanır. Bu, performansı artırmak, hata mesajlarını geliştirmek veya özel türler için farklı uygulamalar sağlamak için kullanılabilir.
+
+- Bir örnek üzerinden explicit specialization'ı gösterelim:
+```CPP
+#include <iostream>
+
+template <typename T>
+void print_type_info() {
+    std::cout << "Genel şablon: " << typeid(T).name() << std::endl;
+}
+
+// int türü için explicit specialization
+template <>
+void print_type_info<int>() {
+    std::cout << "int türü özelleştirilmiş şablon: int" << std::endl;
+}
+
+int main() {
+    print_type_info<int>();        // int türü için özelleştirilmiş şablonu kullanır
+    print_type_info<double>();     // genel şablonu kullanır
+    print_type_info<std::string>(); // genel şablonu kullanır
+    return 0;
+}
+
+```
+
+> Bu örnekte, print_type_info adında bir şablon fonksiyon tanımladık. Bu fonksiyon, verilen türün adını yazdırır. Ayrıca, int türü için açık bir özelleştirme tanımladık. Bu özelleştirme, int türü kullanıldığında farklı bir çıktı verir.
+
+- main fonksiyonunda, print_type_info fonksiyonunu çeşitli türlerle çağırdık. int türü için, özelleştirilmiş sürümü kullandı, diğer türler için ise genel şablonu kullandı.
+
+- Özetle, explicit specialization, şablonların belirli türler için nasıl işleneceğini özel olarak tanımlamanıza olanak sağlayan bir C++ özelliğidir. Bu, performansı artırmak, hata mesajlarını geliştirmek veya özel türler için farklı uygulamalar sağlamak için kullanılabilir.
+
+# Template Partial Specialization
+
+- Template partial specialization (şablon kısmi özelleştirme), C++ şablonlarında, şablon parametrelerinden bazıları için özel bir durumu işlemek amacıyla şablonun nasıl işleneceğini özelleştirmenin bir yoludur. Genel şablonlara ek olarak, belirli durumlar için daha spesifik şablon tanımlamaları yaparak, daha etkili veya uygun uygulamalar sağlayabilirsiniz. Kısmi özelleştirme, temel olarak sınıf şablonları ve sınıf şablonlarından türetilen fonksiyon şablonları için kullanılır.
+
+- Bir örnek üzerinden template partial specialization'ı açıklayalım:
+```CPP
+#include <iostream>
+#include <vector>
+
+template <typename T, typename U>
+struct MyPair {
+    T first;
+    U second;
+
+    void print() {
+        std::cout << "Genel şablon: (" << first << ", " << second << ")" << std::endl;
+    }
+};
+
+// T türü için kısmi özelleştirme
+template <typename T>
+struct MyPair<T, int> {
+    T first;
+    int second;
+
+    void print() {
+        std::cout << "T, int kısmi özelleştirme: (" << first << ", " << second << ")" << std::endl;
+    }
+};
+
+int main() {
+    MyPair<double, std::string> genel_pair{3.14, "hello"};
+    MyPair<double, int> kismi_ozellestirme_pair{42.0, 42};
+
+    genel_pair.print(); // Genel şablonu kullanır
+    kismi_ozellestirme_pair.print(); // Kısmi özelleştirme şablonunu kullanır
+
+    return 0;
+}
+
+```
+# Template Partial Specialization
+
+- Template partial specialization (şablon kısmi özelleştirme), C++ şablonlarında, şablon parametrelerinden bazıları için özel bir durumu işlemek amacıyla şablonun nasıl işleneceğini özelleştirmenin bir yoludur. Genel şablonlara ek olarak, belirli durumlar için daha spesifik şablon tanımlamaları yaparak, daha etkili veya uygun uygulamalar sağlayabilirsiniz. Kısmi özelleştirme, temel olarak sınıf şablonları ve sınıf şablonlarından türetilen fonksiyon şablonları için kullanılır.
+
+- Bir örnek üzerinden template partial specialization'ı açıklayalım:
+
+```CPP
+#include <iostream>
+#include <vector>
+
+template <typename T, typename U>
+struct MyPair {
+    T first;
+    U second;
+
+    void print() {
+        std::cout << "Genel şablon: (" << first << ", " << second << ")" << std::endl;
+    }
+};
+
+// T türü için kısmi özelleştirme
+template <typename T>
+struct MyPair<T, int> {
+    T first;
+    int second;
+
+    void print() {
+        std::cout << "T, int kısmi özelleştirme: (" << first << ", " << second << ")" << std::endl;
+    }
+};
+
+int main() {
+    MyPair<double, std::string> genel_pair{3.14, "hello"};
+    MyPair<double, int> kismi_ozellestirme_pair{42.0, 42};
+
+    genel_pair.print(); // Genel şablonu kullanır
+    kismi_ozellestirme_pair.print(); // Kısmi özelleştirme şablonunu kullanır
+
+    return 0;
+}
+
+```
+
+- Bu örnekte, MyPair adında iki tür parametresi olan bir şablon yapı tanımladık. Ayrıca, ikinci tür parametresi int olduğunda kısmi bir özelleştirme tanımladık. Bu durumda, print fonksiyonu farklı bir çıktı üretir.
+
+- main fonksiyonunda, MyPair şablonunu iki farklı tür kombinasyonuyla kullandık. İkinci tür int olduğunda, kısmi özelleştirme şablonu kullanılır. Diğer durumlar için, genel şablon kullanılır.
+
+- Özetle, template partial specialization, C++ şablonlarında şablon parametrelerinden bazıları için özel durumları işlemek amacıyla şablonun nasıl işleneceğini özelleştirmenin bir yoludur. Bu, daha spesifik şablon tanımlamaları yaparak, daha etkili veya uygun uygulamalar sağlar. Kısmi özelleştirme, temel olarak sınıf şablonları ve sınıf şablonlarından türetilen fonksiyon şablonları için kullanılır.
+
+# Default Template Arguments
+
+- Default template arguments (varsayılan şablon argümanları), C++ şablonlarında, şablon parametrelerine varsayılan değerler sağlayarak, kullanıcıların daha az parametre belirtmelerine olanak tanıyan bir özelliktir. Böylece, kullanıcılar şablonu kullanırken belirli bir türü veya değeri belirtmezlerse, derleyici varsayılan değeri kullanır. Bu, daha esnek ve kullanıcı dostu API'ler oluşturmanıza olanak tanır.
+
+- Bir örnek üzerinden default template arguments'i açıklayalım:
+
+```CPP
+#include <iostream>
+#include <vector>
+
+// T ve Allocator türleri için varsayılan şablon argümanları
+template <typename T, typename Allocator = std::allocator<T>>
+class MyVector {
+public:
+    void print_type_info() {
+        std::cout << "MyVector şablonu: " << typeid(T).name() << ", " << typeid(Allocator).name() << std::endl;
+    }
+};
+
+int main() {
+    MyVector<int> vec1; // Varsayılan Allocator'u kullanır
+    MyVector<int, std::allocator<int>> vec2; // Açıkça belirtilen Allocator'u kullanır
+
+    vec1.print_type_info(); // MyVector şablonu: int, std::allocator<int>
+    vec2.print_type_info(); // MyVector şablonu: int, std::allocator<int>
+
+    return 0;
+}
+```
+> Bu örnekte, MyVector adında iki tür parametresi olan bir şablon sınıf tanımladık. İkinci tür parametresi olan Allocator için varsayılan bir değer sağladık: std::allocatorT. Bu sayede, kullanıcılar MyVector şablonunu kullanırken, Allocator türünü belirtmek zorunda kalmazlar ve şablon varsayılan std::allocatorT değerini kullanır.
+
+- main fonksiyonunda, MyVector şablonunu iki farklı şekilde kullandık. İlk durumda, Allocator türünü belirtmedik ve varsayılan değer kullanıldı. İkinci durumda, Allocator türünü açıkça belirttik ve bu değer kullanıldı. Her iki durumda da, print_type_info fonksiyonu çalıştırıldığında aynı çıktıyı verir.
+
+- Özetle, default template arguments, şablon parametrelerine varsayılan değerler sağlayarak, kullanıcıların daha az parametre belirtmelerine olanak tanıyan bir C++ özelliktir. Bu, daha esnek ve kullanıcı dostu API'ler oluşturmanıza olanak tanır.
+
+# Variadic Template
+
+- Variadic template, C++11 ve sonrası dillerde, değişken sayıda şablon argümanı alabilen ve böylece daha genel ve esnek API'ler oluşturmanıza olanak tanıyan bir özelliktir. Variadic template, bir dizi şablon parametresini tek bir parametreyle temsil etmek için kullanılır ve bu sayede farklı sayıda tür veya değerle çalışan şablonlar oluşturabilirsiniz.
+
+Bir örnek üzerinden variadic template'i açıklayalım:
+
+```CPP
+#include <iostream>
+#include <tuple>
+
+// Variadic template sınıfı
+template <typename... Ts>
+class MyTuple : public std::tuple<Ts...> {
+public:
+    void print_size() {
+        std::cout << "MyTuple boyutu: " << sizeof...(Ts) << std::endl;
+    }
+};
+
+int main() {
+    MyTuple<> empty_tuple; // Hiçbir tür içermeyen bir tuple
+    MyTuple<int> single_tuple; // Sadece int içeren bir tuple
+    MyTuple<int, double, std::string> triple_tuple; // int, double ve std::string içeren bir tuple
+
+    empty_tuple.print_size(); // MyTuple boyutu: 0
+    single_tuple.print_size(); // MyTuple boyutu: 1
+    triple_tuple.print_size(); // MyTuple boyutu: 3
+
+    return 0;
+}
+
+```
+> Bu örnekte, MyTuple adında, değişken sayıda tür parametresi olan bir şablon sınıf tanımladık. MyTuple sınıfı, std::tuple sınıfından türetilmiştir ve değişken sayıda tür içeren tuple nesneleri oluşturabilir. print_size fonksiyonu, tuple'ın içindeki tür sayısını yazdırır.
+
+- main fonksiyonunda, MyTuple şablonunu farklı sayıda tür parametresiyle kullandık. Bu özellik sayesinde, değişken sayıda türle çalışabilen genel ve esnek API'ler oluşturabilirsiniz.
+
+- Variadic template'ler, fonksiyon şablonları için de kullanılabilir. Özellikle, yinelemeli bir yapıyla (recursive) veya C++17'den itibaren kullanılabilen katlanmış ifadeler (fold expressions) ile birlikte kullanarak, değişken sayıda şablon argümanı üzerinde işlemler gerçekleştirilebilir.
+
+- Özetle, variadic template, C++11 ve sonrası dillerde, değişken sayıda şablon argümanı alabilen ve böylece daha genel ve esnek API'ler oluşturmanıza olanak tanıyan bir özelliktir. Bu özellik, farklı sayıda tür veya değerle çalışan şablonlar oluşturmanıza olanak sağlar.
+
+# Allocator
+
+- Allocator, C++ dilinde, bellek yönetimi ve nesne ömrü için özelleştirilmiş bir arayüz sağlayan bir sınıf şablonudur. Allocator'lar, bellek tahsis etme (allocate), belleği geri verme (deallocate), nesneleri yerinde oluşturma (construct) ve nesneleri yıkma (destroy) gibi işlemleri gerçekleştirir. Standart C++ kütüphanesindeki konteyner sınıflarının (ör. std::vector, std::list, std::map gibi) bellek yönetimi için allocator'ları kullanarak, özelleştirilmiş bellek yönetimi sağlama imkanı bulunmaktadır.
+
+- Allocator'ların temel amacı, bellek tahsisi stratejilerini özelleştirebilme ve farklı bellek kaynaklarını kullanabilme yeteneği sağlamaktır. Örneğin, hızlı bellek alanına (cache) veya paylaşılan belleğe (shared memory) erişim sağlayan özel bir allocator tasarlayarak performansı artırabilir veya belirli bellek kısıtlamalarına uyan bir allocator oluşturabilirsiniz.
+
+- C++ dilinde, std::allocator şablonu, en yaygın olarak kullanılan ve varsayılan bellek yönetim arayüzünü sağlar. std::allocator sınıf şablonu aşağıdaki gibi tanımlanmıştır:
+```CPP
+template <class T> class allocator;
+
+```
+- T tipindeki nesneler için bellek tahsisi ve nesne yaşam döngüsü yönetimi sağlar. std::allocator sınıfı, allocate, deallocate, construct ve destroy gibi temel fonksiyonları içerir.
+
+- Bir örnek üzerinden allocator kullanımını açıklayalım:
+```CPP
+#include <iostream>
+#include <memory>
+#include <vector>
+
+int main() {
+    // Özel bir allocator ile vector oluşturma
+    std::allocator<int> my_allocator;
+    std::vector<int, std::allocator<int>> my_vector(5, 0, my_allocator);
+
+    for (size_t i = 0; i < my_vector.size(); ++i) {
+        my_vector[i] = static_cast<int>(i);
+    }
+
+    for (const auto& elem : my_vector) {
+        std::cout << elem << ' ';
+    }
+
+    return 0;
+}
+
+```
+> Bu örnekte, std::allocatorint tipinde bir allocator oluşturduk ve bu allocator'ı kullanarak, int tipinde elemanlar içeren bir std::vector nesnesi yarattık. Bu şekilde, özel bir bellek yönetim stratejisi kullanarak std::vector nesnesi oluşturabilirdik.
+
+- Özetle, allocator, C++ dilinde bellek yönetimi ve nesne ömrü için özelleştirilmiş bir arayüz sağlayan bir sınıf şablonudur. 
+
+# Pack Expension
+
+- Pack expansion, C++11 ve sonrası dillerde, variadic template'lerle çalışırken, parametre paketlerini (parameter packs) genişletmek için kullanılan bir mekanizmadır. Parametre paketleri, değişken sayıda şablon parametresi veya fonksiyon parametresi içeren ve "typename... Args" veya "auto... args" gibi gösterimlerle tanımlanan gruplardır. Pack expansion, bu parametre paketlerini kullanarak, değişken sayıda parametre veya türle çalışan şablonlar ve fonksiyonlar oluşturmanıza olanak sağlar.
+
+- Pack expansion'ın kullanıldığı tipik bir örnek, değişken sayıda parametre alan bir fonksiyon şablonu yazmaktır:
+```CPP
+#include <iostream>
+
+// Temel durum
+void print() {}
+
+// Variadic fonksiyon şablonu ve pack expansion
+template<typename T, typename... Args>
+void print(const T& first, const Args&... rest) {
+    std::cout << first << " ";
+    print(rest...); // pack expansion kullanarak geri kalan parametreleri gönder
+}
+
+int main() {
+    print(1, 2.0, "three", 4.0f);
+    return 0;
+}
+
+```
+> Bu örnekte, print adında, değişken sayıda parametre alan ve bu parametreleri ekrana yazdıran bir fonksiyon şablonu tanımladık. T ve Args parametre paketlerini kullanarak, farklı türde ve sayıda parametre ile çalışabilen bir fonksiyon şablonu yazdık. print fonksiyonunun içinde, parametre paketini "rest..." ifadesiyle genişlettik ve böylece geri kalan parametreleri tekrar print fonksiyonuna gönderdik. Bu şekilde, her seferinde bir parametre işlendi ve geri kalan parametreler tekrar print fonksiyonuna gönderildi.
+
+- C++17 ile gelen katlanmış ifadeler (fold expressions) sayesinde, pack expansion daha sade bir şekilde kullanılabilir:
+```CPP
+template<typename... Args>
+auto sum(Args... args) {
+    return (... + args); // unary right fold
+}
+
+int main() {
+    std::cout << sum(1, 2, 3, 4, 5) << std::endl;
+    return 0;
+}
+
+```
+
+> Bu örnekte, sum adında, değişken sayıda parametre alan ve bu parametreleri toplayarak sonucu döndüren bir fonksiyon şablonu tanımladık. Parametre paketini "args..." ifadesiyle genişlettik ve katlanmış ifadelerle toplama işlemini gerçekleştirdik.
+
+- Özetle, pack expansion, C++11 ve sonrası dillerde, parametre paketlerini genişletmek için kullanılan bir mekanizmadır. 
+
+# Wrapping
+
+- C++ bağlamında "wrapping" terimi, genellikle bir sınıf veya işlevin, başka bir sınıf, işlev veya kaynağı kapsüllemek (encapsulate) ve daha kullanıcı dostu veya güvenli bir arayüz sunmak amacıyla kullanılmasını ifade eder. Wrapping, soyutlama düzeyini artırarak, kodun okunabilirliğini ve bakımını iyileştiren bir tekniktir.
+
+- Wrapping iki temel durumda gerçekleştirilir:
+
+1. **Sınıf (Class) Wrapping:** Bir sınıfın, başka bir sınıfı veya kütüphaneyi kapsüllemesi durumunu ifade eder. Burada amaç, mevcut sınıfın karmaşıklığını veya düşük seviyeli işlemleri gizleyerek, daha kullanıcı dostu ve güvenli bir arayüz sağlamaktır. Bu yöntem, uyumlu olmayan veya eski bir API'yi, yeni ve daha güvenli bir API ile değiştirmek için kullanılabilir.
+
+```CPP
+class LowLevelClass {
+public:
+    void complexOperation() { /* ... */ }
+};
+
+class HighLevelClass {
+public:
+    void simpleOperation() {
+        low_level_class_.complexOperation();
+    }
+
+private:
+    LowLevelClass low_level_class_;
+};
+
+```
+
+2. **İşlev (Function) Wrapping:** Bir işlevin, başka bir işlevi veya API'yi kapsüllemesi durumunu ifade eder. Burada amaç, mevcut işlevin karmaşıklığını veya düşük seviyeli işlemleri gizleyerek, daha kullanıcı dostu ve güvenli bir arayüz sağlamaktır. Bu yöntem, sistem çağrılarını (system calls) veya kütüphane işlevlerini güvenli veya kullanıcı dostu hale getirmek için kullanılabilir.
+
+```CPP
+#include <cstdio>
+
+void low_level_function(const char* filename) {
+    // Düşük seviyeli dosya işlemi
+    FILE* file = fopen(filename, "r");
+    // ...
+    fclose(file);
+}
+
+void high_level_function(const std::string& filename) {
+    low_level_function(filename.c_str());
+}
+
+```
+- Özetle, wrapping, C++ dilinde, başka bir sınıf, işlev veya kaynağı kapsüllemek (encapsulate) ve daha kullanıcı dostu veya güvenli bir arayüz sunmak amacıyla kullanılır. Sınıf ve işlev wrapping olmak üzere iki ana kategoriye ayrılır ve her ikisi de soyutlama düzeyini artırarak, kodun okunabilirliğini ve bakımını iyileştirmeye yönelik çalışır.
+
+# Iterator Categories
+
++ C++ Standard Kütüphanesi'nde, iteratorlerin kullanımını ve algoritmalarla etkileşimini tanımlayan beş iterator kategorisi bulunmaktadır. Bu kategoriler, iteratorlerin desteklediği işlemleri ve performans özelliklerini belirler. Iterator kategorileri şunlardır:
+
+1. **Input Iterator:** İleri yönde tek yönlü hareket eden ve veri okuma işlemleri yapabilen iteratorlerdir. Bir input iterator, okunan veriyi sadece bir kez kullanabilir ve sadece bir kez ilerletebilir. Tipik olarak, input streamlerle çalışırken kullanılırlar.
+
+2. **Output Iterator:** İleri yönde tek yönlü hareket eden ve veri yazma işlemleri yapabilen iteratorlerdir. Bir output iterator, yazılan veriyi sadece bir kez kullanabilir ve sadece bir kez ilerletebilir. Tipik olarak, output streamlerle çalışırken kullanılırlar.
+3. **Forward Iterator:** Input ve output iteratorlerin tüm özelliklerini destekleyen, ancak çift yönlü hareket etmeyen iteratorlerdir. İleri yönde hareket edebilir ve birden fazla kez kullanılabilirler. Forward iteratorler, en az düzeyde işlevsellik sağlayan veri yapıları için kullanılır (örneğin, tek yönlü bağlı listeler).
+
+4. **Bidirectional Iterator:** İleri ve geri yönde hareket edebilen iteratorlerdir. Bidirectional iteratorler, veri okuma ve yazma işlemlerini destekler ve çift yönlü hareket etmelerine olanak tanır. Bu tür iteratorler, çift yönlü veri yapılarında kullanılır (örneğin, çift yönlü bağlı listeler ve setler).
+
+5. **Random Access Iterator:** Hızlı ve rastgele erişim sağlayan iteratorlerdir. Random access iteratorler, bidirectional iteratorlerin tüm özelliklerini destekler ve ek olarak, belirli bir indekse veya konuma hızlı bir şekilde erişebilirler. Bu tür iteratorler, rastgele erişimli veri yapılarında kullanılır (örneğin, diziler ve vektörler).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
