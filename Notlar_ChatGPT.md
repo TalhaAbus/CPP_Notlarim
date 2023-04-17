@@ -3041,11 +3041,224 @@ void forwarder(T&& arg) {
 }
 
 ```
-> Burada, "arg" fonksiyon parametresi bir "universal reference" olarak tanımlanmıştır. "std::forward<T>(arg)" ifadesi, argümanın orijinal türünü koruyarak "some_other_func()" fonksiyonuna iletilmesini sağlar. Eğer argüman bir lvalue ise "std::forward" işlevi, lvalue referansı olarak, bir rvalue ise rvalue referansı olarak iletilir.
+> Burada, "arg" fonksiyon parametresi bir "universal reference" olarak tanımlanmıştır. "std::forwardT(arg)" ifadesi, argümanın orijinal türünü koruyarak "some_other_func()" fonksiyonuna iletilmesini sağlar. Eğer argüman bir lvalue ise "std::forward" işlevi, lvalue referansı olarak, bir rvalue ise rvalue referansı olarak iletilir.
 
 - "Perfect forwarding" teknikleri, performans açısından da faydalıdır. Bu teknikler, bir argümanın gereksiz yere kopyalanmasını veya taşınmasını önler ve işlemlerin daha hızlı çalışmasını sağlar.
 
 - Özetle, "perfect forwarding", bir fonksiyonun aldığı argümanı aynı şekilde bir başka fonksiyona iletmek için kullanılan bir tekniktir. Bu teknik, argümanın türünün korunmasını sağlar ve "rvalue reference" ve "universal reference" özellikleriyle birlikte kullanılır. "Perfect forwarding" teknikleri, şablon fonksiyonlarında yaygın olarak kullanılır ve performans açısından faydalıdır.
+
+# CTAD (Class Template Argument Deduction)
+
+- C++17 ile tanıtılan Class Template Argument Deduction (CTAD) özelliği, şablonlu sınıf türleri için şablon parametrelerinin otomatik olarak çıkarılmasına olanak tanır. Bu, şablonlu sınıflar için şablon parametrelerini açıkça belirtmenin zorunlu olmadığı anlamına gelir. CTAD, derleyicinin şablonlu sınıf nesneleri oluşturulurken kullanılan türleri ve ifadeleri analiz ederek şablon parametrelerini çıkarmasına olanak tanır. Bu özellik, kodun daha okunabilir ve kısa olmasına yardımcı olur.
+
+- CTAD özelliğinin bir örneği olarak, şu önceki C++ sürümlerinde kullanılabilen bir std::pair sınıfı örneğini düşünelim:
+```CPP
+std::pair<int, double> p1(1, 2.5);
+
+```
+> Burada, std::pair için şablon parametrelerini açıkça belirttik (int ve double). C++17 ve CTAD ile birlikte, şablon parametrelerini açıkça belirtmeye gerek kalmaz:
+
+```CPP
+std::pair p1(1, 2.5); // CTAD sayesinde şablon parametreleri otomatik olarak çıkarılır
+
+```
+> Derleyici, p1 nesnesinin inşa edilmesi sırasında kullanılan türleri analiz eder ve şablon parametrelerini otomatik olarak çıkarır (int ve double). Bu kodun daha okunabilir ve kısa olmasına yardımcı olur.
+
+- CTAD özelliği kullanıcı tanımlı şablonlu sınıflar için de geçerlidir. Örneğin, aşağıdaki şablonlu bir sınıfı düşünün:
+
+```CPP
+template <typename T>
+class Wrapper {
+public:
+    Wrapper(T value) : value_(value) {}
+
+private:
+    T value_;
+};
+
+```
+- C++17 ve CTAD ile birlikte, şablon parametresini açıkça belirtmeye gerek kalmadan bu sınıfı kullanabilirsiniz:
+
+```CPP
+int main() {
+    Wrapper w(42); // CTAD sayesinde, T şablon parametresi otomatik olarak 'int' olarak çıkarılır
+    return 0;
+}
+
+```
+
+> Derleyici, w nesnesinin inşa edilmesi sırasında kullanılan türleri analiz eder ve şablon parametrelerini otomatik olarak çıkarır (int).
+
+- Ancak, CTAD bazı durumlarda yanıltıcı veya eksik olabilir ve derleyici uygun türleri çıkaramazsa hatalar verebilir. Bu durumda, şablon parametrelerini elle belirtmeniz gerekebilir.
+
+# RTTI (Runtime type information)
+
+- Runtime Type Information (RTTI), C++ programlarında çalışma zamanında nesnelerin tür bilgilerine erişmeye olanak tanıyan bir özelliktir. RTTI, nesnelerin türlerini belirleme ve işlem yapma ihtiyacı duyulan durumlar için önemlidir. Özellikle, RTTI, polymorfik sınıflar ve nesnelerin kullanıldığı yerlerde kullanışlıdır.
+
+- C++ dilinde, RTTI şu işlemleri desteklemektedir:
+
+1. **dynamic_cast:** Bu işlem, bir nesnenin işaretçisi veya referansını başka bir türün işaretçisine veya referansına güvenli bir şekilde dönüştürmek için kullanılır. Eğer dönüşüm geçerli değilse, dynamic_cast hata verecektir. Özellikle, bu işlem nesnelerin türünün çalışma zamanında belirlenmesi gereken durumlarda kullanılır.
+```CPP
+class Base {
+    virtual void dummy() {}
+};
+
+class Derived : public Base {
+    int a;
+};
+
+int main() {
+    Base* base_ptr = new Derived;
+    Derived* derived_ptr = dynamic_cast<Derived*>(base_ptr); // Başarılı dönüşüm
+    if (derived_ptr) {
+        // base_ptr, Derived türünde bir nesneyi işaret ediyor
+    } else {
+        // Dönüşüm başarısız oldu, base_ptr Derived türünde bir nesneyi işaret etmiyor
+    }
+    return 0;
+}
+
+```
+
+2. **typeid:** Bu işlem, çalışma zamanında bir nesnenin türünü belirlemek için kullanılır. typeid operatörü, bir nesnenin std::type_info türünden bir referans döndürür. std::type_info sınıfı, nesnenin türü hakkında bilgi sağlar ve türlerin karşılaştırılması için işlemleri destekler.
+
+```CPP
+#include <iostream>
+#include <typeinfo>
+
+class Base {
+    virtual void dummy() {}
+};
+
+class Derived : public Base {
+    int a;
+};
+
+int main() {
+    Base* base_ptr = new Derived;
+    const std::type_info& type_info = typeid(*base_ptr);
+    std::cout << "base_ptr is pointing to an object of type: " << type_info.name() << std::endl;
+
+    if (type_info == typeid(Derived)) {
+        // base_ptr, Derived türünde bir nesneyi işaret ediyor
+    } else {
+        // base_ptr, Derived türünde bir nesneyi işaret etmiyor
+    }
+    return 0;
+}
+
+```
+
+- İki RTTI mekanizması (dynamic_cast ve typeid) sayesinde, çalışma zamanında nesnelerin türlerini belirlemek, güvenli dönüşümler yapmak ve farklı türlerle ilgili özel işlemler gerçekleştirmek mümkündür. Bu özellikle, hiyerarşi içindeki nesneler arasında güvenli dönüşümler yapmak ve nesnelerin türlerini belirlemek için önemlidir.
+
+# Explicit Template Argument
+- Explicit template argument (açık şablon argümanı), C++ şablonlarında şablon parametrelerini manuel olarak belirtmek için kullanılan bir tekniktir. Genellikle, derleyici template parametrelerini otomatik olarak çıkarabilir. Ancak bazı durumlarda, derleyicinin otomatik çıkarım yapması güç olabilir veya yanlış sonuçlar doğurabilir. Bu gibi durumlarda, explicit template argument kullanarak şablon parametrelerini açıkça belirtmek gerekebilir.
+
+- Şablonlu bir fonksiyon örneği düşünelim:
+
+```CPP
+template <typename T>
+T max(T a, T b) {
+    return (a > b) ? a : b;
+}
+
+```
+> Bu max fonksiyonu, iki değeri karşılaştırarak büyük olanını döndürür. Fonksiyonun tipi otomatik olarak çıkarılabilir:
+
+```CPP
+int main() {
+    int a = 5;
+    int b = 10;
+    int result = max(a, b); // T şablon parametresi 'int' olarak çıkarılır
+    return 0;
+}
+
+```
+- Ancak, bazı durumlarda şablon parametrelerini açıkça belirtmeniz gerekebilir. Örneğin:
+
+```CPP
+int main() {
+    double a = 5.5;
+    int b = 10;
+    int result = max<int>(a, b); // T şablon parametresi 'int' olarak belirtilir
+    return 0;
+}
+
+```
+
+- Burada, a ve b değişkenlerinin farklı türleri olduğu için, derleyici T parametresini otomatik olarak çıkaramaz. Bu durumda, T şablon parametresini açıkça int olarak belirtiyoruz. Bu, derleyicinin fonksiyonu doğru şekilde örneklemesini sağlar ve beklenen sonuçları elde etmemize yardımcı olur.
+
+- Aynı şekilde, şablonlu sınıflar için de explicit template argument kullanılabilir:
+```CPP
+template <typename T>
+class Wrapper {
+public:
+    Wrapper(T value) : value_(value) {}
+
+private:
+    T value_;
+};
+
+int main() {
+    Wrapper<int> w(42); // T şablon parametresi 'int' olarak belirtilir
+    return 0;
+}
+
+```
+> Özetle, explicit template argument, şablon parametrelerini manuel olarak belirtmek için kullanılır. Derleyici tarafından yapılan otomatik şablon argüman çıkarımının güvenilir olmadığı durumlarda, bu teknik kullanılabilir.
+
+# Partial Ordering Rules
+
+- C++ şablonlarında, özellikle fonksiyon şablonları söz konusu olduğunda, derleyicinin birden fazla şablonun özel bir durumunu seçmek için uygun şablonu belirlemesi gerekebilir. Bu süreçte, derleyicinin daha spesifik olan özel durumu seçmesi gerekir. Bu seçimi yaparken kullanılan kurallara "Partial Ordering Rules" (Kısmi Sıralama Kuralları) denir.
+- Kısmi sıralama kuralları, derleyicinin bir şablonun diğerine göre daha özelleştirilmiş olduğunu belirlemesine yardımcı olur. Bu süreç, şablonlar arasında daha az kısıtlayıcı olanın daha genel olduğunu belirlemeye dayanır.
+
+- İşte bu kuralların bazı temel yönleri:
+
+1. Derleyici, her iki şablonun da deduced (çıkarılan) türleri karşılaştırarak şablonları değerlendirir.
+2. Eğer her iki şablon da başarılı bir şekilde çıkarılırsa, derleyici her iki şablonu karşılaştırır ve daha özelleştirilmiş olanı seçer.
+3. Eğer herhangi bir şablonun deduced türü diğer şablondaki türden daha özelleştirilmişse, derleyici bu şablonu seçer.
+4. Eğer her iki şablonun deduced türleri eşit derecede özelleştirilmişse, derleyici hata bildirir ve programcının daha özelleştirilmiş bir şablon sağlaması gerektiğini belirtir.
+
+- Kısmi sıralama kurallarını anlamanın en iyi yolu, bir örnek üzerinden geçmektir:
+
+```CPP
+template <typename T>
+void foo(T, T) {
+    std::cout << "1. Generic template" << std::endl;
+}
+
+template <typename T>
+void foo(T*, T*) {
+    std::cout << "2. Partial specialization for pointers" << std::endl;
+}
+
+template <>
+void foo(int*, int*) {
+    std::cout << "3. Full specialization for int pointers" << std::endl;
+}
+
+int main() {
+    int a = 5;
+    int* pa = &a;
+    foo(a, a);    // 1. Generic template is called
+    foo(pa, pa);  // 3. Full specialization for int pointers is called
+}
+
+```
+
+> Bu örnekte, üç farklı foo fonksiyon şablonu bulunmaktadır. İlk şablon, en genel şablondur ve her türlü parametre için çalışır. İkinci şablon, işaretçiler için kısmi bir özelleştirmedir ve üçüncü şablon, int işaretçileri için tam bir özelleştirmedir.
+
+- main fonksiyonunda, farklı türlerle foo fonksiyonunu çağırıyoruz. İlk çağrıda, a değişkeni `int türünde olduğu için derleyici en genel şablon olan 1. şablonu seçer. İkinci çağrıda,padeğişkeniint*türünde olduğu için derleyici 3. şablonu seçer, çünkü bu şablon,int*` türü için tam bir özelleştirmedir ve en spesifik olanıdır.
+
+- Eğer ikinci çağrıda int* yerine başka bir tür işaretçisi (örneğin double*) kullanılsaydı, derleyici 2. şablonu seçecekti, çünkü bu şablon, işaretçiler için kısmi bir özelleştirmedir ve bu durumda daha spesifik olanıdır.
+
+- Bu örnek, kısmi sıralama kurallarının nasıl çalıştığını gösterir. Derleyici, şablonların ne kadar özelleştirildiğini değerlendirmek için deduced türleri kullanarak şablonları karşılaştırır ve daha spesifik olan şablonu seçer. Bu süreç, şablon özel durumlarının ve aşırı yüklemelerinin doğru şekilde yönetilmesini sağlar.
+
+
+
+
+
+
 
 
 
