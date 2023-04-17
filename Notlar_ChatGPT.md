@@ -3673,6 +3673,322 @@ void high_level_function(const std::string& filename) {
 
 5. **Random Access Iterator:** Hızlı ve rastgele erişim sağlayan iteratorlerdir. Random access iteratorler, bidirectional iteratorlerin tüm özelliklerini destekler ve ek olarak, belirli bir indekse veya konuma hızlı bir şekilde erişebilirler. Bu tür iteratorler, rastgele erişimli veri yapılarında kullanılır (örneğin, diziler ve vektörler).
 
+# Reverse Iterator
+
+- Reverse iterator, C++ Standard Kütüphanesi'nde kullanılan ve temel iteratorün tersine hareket etme özelliği sağlayan bir iterator adaptörüdür. Reverse iteratorler, temelde veri yapısının sonundan başlayarak başına doğru ilerler. Bu nedenle, bir reverse iterator kullanıldığında, ++ işlemi temel iteratorü geriye doğru hareket ettirir ve -- işlemi temel iteratorü ileriye doğru hareket ettirir.
+
+- Reverse iteratorler, tipik olarak temel iterator türlerinin (input, output, forward, bidirectional ve random access) tersine işlemelerini desteklemek için kullanılır. Özellikle, reverse iteratorler çoğunlukla bidirectional ve random access iteratorleri destekler.
+
+- Reverse iterator adaptörü, std::reverse_iterator sınıfı ile temsil edilir. Bu sınıf, temel iterator türünü bir template parametresi olarak alır ve yeni bir iterator türü oluşturur. Örneğin, std::vector int ::iterator türündeki bir iterator için bir reverse iterator oluşturmak istiyorsanız, aşağıdaki gibi std::reverse_iterator kullanabilirsiniz:
+
+```CPP
+std::vector<int>::iterator it; // Temel iterator
+std::reverse_iterator<std::vector<int>::iterator> rit(it); // Reverse iterator
+
+```
+- C++11'den itibaren, std::vector, std::list, std::deque ve diğer konteyner sınıfları, rbegin() ve rend() işlevlerini sağlar. Bu işlevler, doğrudan reverse iteratorleri elde etmek için kullanılır:
+```CPP
+std::vector<int> vec = {1, 2, 3, 4, 5};
+
+// Reverse iteratorları kullanarak vektörün elemanlarını ters sırada yazdırma
+for (auto rit = vec.rbegin(); rit != vec.rend(); ++rit) {
+    std::cout << *rit << " ";
+}
+
+```
+
+- Özetle, reverse iterator, temel iteratorün tersine hareket etme özelliği sağlayan bir iterator adaptörüdür. Reverse iteratorler, veri yapılarını ters sırada işlemek için kullanılır ve std::reverse_iterator sınıfı ile temsil edilir. Bidirectional ve random access iteratorleri destekler ve modern C++ konteyner sınıfları doğrudan reverse iterator elde etmek için rbegin() ve rend() işlevlerini sunar.
+
+# Lambda Expression
+
+- Lambda ifadeleri, C++11'den itibaren dilin bir parçası olan ve fonksiyon nesnelerini tanımlamanın kısa ve kullanışlı bir yolunu sağlayan anonim fonksiyonlar olarak düşünülebilir. Lambda ifadeleri, kodu daha okunaklı ve esnek hale getirmeye yardımcı olur ve genellikle algoritmalarla çalışırken veya fonksiyonlara geri çağırma (callback) olarak geçirilirken kullanılır.
+
+Lambda ifadelerinin temel sözdizimi şu şekildedir:
+
+```CPP
+[capture_list](parameter_list) -> return_type { function_body }
+
+```
+1. **Capture list:** Lambda ifadesinin dışındaki değişkenleri yakalamak için kullanılır. Bu, değişkenleri değer veya referans olarak yakalayabilir. Eğer hiçbir şey yakalanmayacaksa, capture list boş bırakılabilir ([]).
+
+2. **Parameter list:** Lambda ifadesine geçirilecek parametrelerin listesidir. Normal bir fonksiyondaki parametre listesi gibi kullanılır. Eğer parametre almayacaksa, boş parantezler kullanılabilir (()).
+
+3. **Return type:** Lambda ifadesinin döndürdüğü değerin türüdür. Bu, -> işaretinden sonra belirtilir. Eğer lambda ifadesinin dönüş türü doğrudan belirtilmezse, derleyici lambda ifadesinin dönüş türünü otomatik olarak çıkarabilir.
+
+4. **Function body:** Lambda ifadesinin yapması gereken işlemleri tanımlayan kod bloğudur. Bu, süslü parantezler {} içinde yazılır.
+
+- İşte bir lambda ifadesi örneği:
+```CPP
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+
+    // Lambda ifadesini kullanarak çift sayıları yazdırma
+    std::for_each(numbers.begin(), numbers.end(), [](int num) {
+        if (num % 2 == 0) {
+            std::cout << num << " ";
+        }
+    });
+
+    return 0;
+}
+
+```
+> Bu örnekte, lambda ifadesi bir parametre alır (int num) ve eğer sayı çift ise sayıyı yazdırır. Bu lambda ifadesi, std::for_each algoritması içinde bir fonksiyon olarak kullanılır.
+
+- Lambda ifadeleri, kodun okunabilirliğini artırır ve karmaşık kodları daha basit hale getirir. İşlevleri kısa ve yerinde tanımlayarak, dışarıdan gelen fonksiyonlarla çalışmaktan kaçınır ve kodun daha anlaşılır olmasına yardımcı olur.
+
+# Transform Algorithm
+
+- std::transform algoritması, C++ Standard Kütüphanesi'nde yer alan ve bir dizi veya konteyner üzerindeki her bir elemanı belirtilen bir işleme tabi tutarak, sonuçları başka bir dizi veya konteynerde saklayan bir algoritmadır. Bu algoritma, iki sıralı dizi üzerinde ikili işlemler gerçekleştirmek için de kullanılabilir. std::transform algoritması, algorithm başlık dosyası içerisinde tanımlanmıştır.
+
+- std::transform algoritması, iki farklı şekilde kullanılabilir:
+
+1. **Tek dizili dönüşüm:** Bir dizi veya konteyner üzerindeki her elemana belirtilen işlemi uygular ve sonuçları başka bir dizi veya konteynerde saklar. İşlem, bir fonksiyon, fonksiyon nesnesi veya lambda ifadesi olabilir.
+
+```CPP
+template <class InputIt, class OutputIt, class UnaryOperation>
+OutputIt transform(InputIt first1, InputIt last1, OutputIt d_first, UnaryOperation op);
+
+```
+2. **İkili dönüşüm:** İki diziyi veya konteyneri birleştirerek her elemana belirtilen ikili işlemi uygular ve sonuçları başka bir dizi veya konteynerde saklar. İşlem, bir fonksiyon, fonksiyon nesnesi veya lambda ifadesi olabilir.
+
+```CPP
+template <class InputIt1, class InputIt2, class OutputIt, class BinaryOperation>
+OutputIt transform(InputIt1 first1, InputIt1 last1, InputIt2 first2, OutputIt d_first, BinaryOperation op);
+
+```
+
+- Aşağıda, std::transform algoritmasının bir örneği verilmiştir:
+```CPP
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5};
+    std::vector<int> squared_numbers(numbers.size());
+
+    // Lambda ifadesini kullanarak her elemanın karesini hesaplayın ve squared_numbers vektörüne yazın.
+    std::transform(numbers.begin(), numbers.end(), squared_numbers.begin(), [](int num) {
+        return num * num;
+    });
+
+    // squared_numbers vektörünü yazdırma
+    for (int num : squared_numbers) {
+        std::cout << num << " ";
+    }
+
+    return 0;
+}
+```
+> Bu örnek, std::transform algoritması ile numbers vektöründeki her elemanın karesini hesaplar ve sonuçları squared_numbers vektöründe saklar.
+
+- std::transform algoritması, C++'daki işlemleri hızlı ve esnek bir şekilde gerçekleştirmek için kullanışlı bir araçtır. Bu algoritma, dizi ve konteynerlerde yapılan dönüşümleri kolaylaştırarak, manuel döngüler ve karmaşık kod yapılarından kaçınmaya yardımcı olur.
+
+# IIFE (Immediately Invoked Function Expression)
+- IIFE (Immediately Invoked Function Expression) idiyomu, öncelikle JavaScript gibi dillerde yaygın olarak kullanılan bir idiyom olup, bir fonksiyonun tanımlandıktan hemen sonra çağrılmasını ifade eder. IIFE, kodun yerel kapsamlı ve daha düzenli olmasını sağlayarak, değişkenlerin ve fonksiyonların ana kapsamla çakışmasını önler.
+
+- C++ dilinde, IIFE benzeri bir yapı kullanarak, sınırlı bir kapsamda tanımlanan ve hemen çağrılan lambda ifadeleri ile benzer bir amaç gerçekleştirilebilir. Böylece, bu ifadeler, kodun daha düzenli ve daha az yan etkiye sahip olmasına yardımcı olur.
+
+- C++'da bir IIFE örneği şu şekilde olabilir:
+
+```CPP
+#include <iostream>
+
+int main() {
+    int result = ([](int a, int b) {
+        return a * b;
+    })(3, 4);
+
+    std::cout << "Result: " << result << std::endl;
+
+    return 0;
+}
+
+```
+
+> Bu örnekte, bir lambda ifadesi tanımlanmakta ve hemen çağrılmaktadır. Lambda ifadesi, iki sayının çarpımını hesaplayıp sonucu döndürmektedir. IIFE'nin sonucu, result adlı değişkene atanır ve daha sonra ekrana yazdırılır.
+
+**C++'da IIFE kullanmanın avantajları şunlardır:**
+
+1. **Yerel kapsam:** IIFE, yerel değişkenlerin ve fonksiyonların ana kapsamla çakışmasını önleyerek, kodun daha düzenli ve okunabilir olmasını sağlar.
+2. **Sınırlı yaşam süresi:** IIFE'de tanımlanan değişkenler ve fonksiyonlar, yalnızca ifadenin kapsamında yaşar ve hemen sonrasında temizlenir. Bu, hafıza yönetimini kolaylaştırır ve olası hafıza sızıntılarını önler.
+3. **Kod organizasyonu:** IIFE ile ilgili kodlar, doğrudan ilgili olduğu yerde tanımlanarak, kodun daha düzenli ve anlaşılır olmasına yardımcı olur.
+
+- Ancak, C++'da IIFE kullanımı her zaman gerekli veya uygun olmayabilir. Özellikle karmaşık ve uzun süreçler için, normal fonksiyonlar veya sınıflar daha iyi bir yapı sunabilir. IIFE'nin kullanılması, belirli durumlarda kodun daha düzenli ve okunabilir olmasını sağlamak için tercih edilir.
+
+# Cache Hit - Cache Miss
+
+- Önbellekleme (caching), verilerin veya sonuçların daha hızlı erişim için önceden hesaplanmış veya saklanmış hallerinin korunduğu bir performans optimizasyon teknikleridir. Bu teknik, veriye veya sonuçlara tekrar tekrar erişilmesi gereken durumlarda, tekrarlı hesaplamaların önlenmesine veya daha yavaş depolama alanlarından tekrar okumanın engellenmesine yardımcı olur. Önbellekleme, CPU önbellikleri, veritabanı önbellekleme ve web tarayıcı önbellekleme gibi çeşitli alanlarda kullanılır.
+
+- Önbellekleme mekanizmaları ile ilgili iki temel kavram vardır: cache hit ve cache miss.
+
+**Cache Hit:**
+
+- Cache hit, bir önbellekte istenen verinin veya sonucun başarılı bir şekilde bulunduğu durumu ifade eder. Başka bir deyişle, önbellekte bulunan veri veya sonuç, işlemi hızlandırmak için kullanılabilir. Cache hit durumunda, süreç genellikle daha hızlı çalışır, çünkü önbellekten veri okumak veya sonuçları tekrar hesaplamak daha hızlıdır. Cache hit oranı, sistem performansını değerlendirmek için kullanılan önemli bir metriktir. Yüksek bir cache hit oranı, önbelleğin etkili bir şekilde kullanıldığını ve performansın iyileştirildiğini gösterir.
+
+**Cache Miss:**
+
+- Cache miss, istenen verinin veya sonucun önbellekte bulunamadığı durumu ifade eder. Cache miss durumunda, işlem daha yavaş gerçekleşir, çünkü veri tekrar hesaplanmalı veya daha yavaş bir depolama alanından okunmalıdır. Cache miss durumlarından sonra, önbelleğe alınan veriler veya sonuçlar genellikle önbellekte saklanır, böylece gelecekteki isteklerde daha hızlı erişim sağlanır. Cache miss oranı, sistem performansını değerlendirmek için kullanılan diğer bir önemli metriktir. Yüksek bir cache miss oranı, önbelleğin etkisiz bir şekilde kullanıldığını ve performansın iyileştirilebileceğini gösterir.
+
+- Özetle, cache hit ve cache miss, önbellekleme performansını değerlendirmek için kullanılan kavramlardır. Cache hit, önbelleğin etkili bir şekilde kullanıldığını ve veriye veya sonuçlara hızlı bir şekilde erişildiğini gösterirken, cache miss, önbellekte istenen veri veya sonuç bulunamadığı ve işlemin daha yavaş gerçekleştiği durumu ifade eder. 
+
+# Deep Copy 
+
+- Deep copy, bir nesnenin tüm içeriğinin, başka bir nesneye tamamen bağımsız bir kopya olarak kopyalandığı bir işlemdir. Nesnenin üye değişkenleri ve içinde bulunan tüm nesnelerin (eğer nesne iç içe yapıya sahipse) tam ve bağımsız kopyaları oluşturulur. Bu sayede, kopyalanan nesne ve orijinal nesne arasında hiçbir bağlantı kalmaz ve birinin değeri değiştirilirse diğerine hiçbir etkisi olmaz.
+
+- Deep copy, özellikle dinamik olarak ayrılan bellek alanlarını ve karmaşık nesne yapılarını içeren durumlarda önemlidir. İşte bir C++ örneği:
+```CPP
+#include <iostream>
+
+class DeepCopyExample {
+public:
+    DeepCopyExample(int data) {
+        this->data = new int(data);
+    }
+
+    DeepCopyExample(const DeepCopyExample& other) {
+        this->data = new int(*other.data);
+    }
+
+    ~DeepCopyExample() {
+        delete data;
+    }
+
+    int getData() const {
+        return *data;
+    }
+
+private:
+    int* data;
+};
+
+int main() {
+    DeepCopyExample obj1(42);
+    DeepCopyExample obj2(obj1);
+
+    std::cout << "Data in obj1: " << obj1.getData() << std::endl;
+    std::cout << "Data in obj2: " << obj2.getData() << std::endl;
+
+    return 0;
+}
+
+```
+- Bu örnekte, DeepCopyExample adlı bir sınıf tanımlanmıştır. Bu sınıf, dinamik olarak ayrılan bir int değeri içerir. Sınıfın kopya yapıcı fonksiyonu (DeepCopyExample(const DeepCopyExample& other)), diğer nesnenin içeriğini derin bir kopya olarak kopyalar. Bu sayede, obj1 ve obj2 nesneleri birbirinden bağımsız olacak ve data üye değişkenlerinin değerleri ayrı ayrı yönetilecektir.
+
+- Deep copy, özellikle nesneler ve bellek yönetimi söz konusu olduğunda, nesnelerin bağımsız olmasını ve yan etkilerin önlenmesini sağlar. Ancak, deep copy işlemi daha fazla bellek ve işlem gücü gerektirebilir, bu nedenle performans açısından dikkatli kullanılmalıdır.
+
+# Swap
+
+- Swap, iki değişken veya nesnenin değerlerini birbirleriyle değiştirmek için kullanılan bir işlemdir. Swap işlemi, veri yapıları ve algoritmaların uygulanmasında, sıralama ve permütasyonlar oluşturmada önemli bir rol oynar. Swap, iki değişkenin değerlerini değiştirmek için bir geçici değişken kullanarak veya kullanmadan gerçekleştirilebilir.
+
+- C++'da, swap işlemi için std::swap fonksiyonu sağlanmaktadır. Bu fonksiyon, iki değişkenin değerlerini değiştirmeyi optimize eder ve herhangi bir veri türü için kullanılabilir. std::swap fonksiyonunun kullanımına bir örnek:
+
+```CPP
+#include <iostream>
+#include <algorithm>
+
+int main() {
+    int a = 5;
+    int b = 10;
+
+    std::cout << "Before swap: a = " << a << ", b = " << b << std::endl;
+
+    std::swap(a, b);
+
+    std::cout << "After swap: a = " << a << ", b = " << b << std::endl;
+
+    return 0;
+}
+
+```
+
+- Bu örnekte, iki tamsayı değişkeni a ve b tanımlanmıştır. std::swap(a, b) ifadesiyle iki değişkenin değerleri birbirleriyle değiştirilir. Sonuç olarak, a değişkeninin değeri 10 ve b değişkeninin değeri 5 olacaktır.
+
+- C++'da, sınıf ve yapılar için de swap işlemini gerçekleştirmek mümkündür. Sınıflarınızda veya yapılarınızda özel bir swap işlemi gerçekleştirmek istiyorsanız, kendi swap üye fonksiyonunuzu veya global swap fonksiyonunu tanımlayabilirsiniz.
+
+- Swap işlemi, performansı optimize etmek ve veri yapısı ve algoritma uygulamalarında kullanmak için önemli bir araçtır. C++'da, std::swap fonksiyonu bu işlemi kolay ve verimli bir şekilde gerçekleştirmenizi sağlar.
+
+# Iterator Invalidation
+
+- Iterator invalidation, bir veri yapısında yapılan değişikliklerin sonucunda, bir veya birden fazla iteratörün geçersiz hale gelmesi durumudur. Geçersiz hale gelen bir iteratör, veri yapısındaki elemanlara güvenli ve doğru bir şekilde erişemeyecektir ve bu durum, beklenmeyen davranışlara ve hatalara yol açabilir.
+
+Iterator invalidation, özellikle dinamik veri yapıları (örn. std::vector, std::list, std::map gibi) ile çalışırken karşılaşılan önemli bir sorundur. Bu veri yapılarında yapılan değişiklikler (eleman ekleme, silme, taşıma vb.), veri yapısındaki bellek düzenini ve elemanların konumunu etkileyebilir.
+
+**İşte iterator invalidation'a yol açabilecek bazı senaryolar:**
+1. std::vector'da ortadan bir eleman silmek:
+
+```CPP
+std::vector<int> numbers = {1, 2, 3, 4, 5};
+auto it = numbers.begin() + 2;
+numbers.erase(it);
+// 'it' şu anda geçersiz bir iterator.
+
+```
+> Bu örnekte, std::vector'dan bir eleman silindi ve bu işlem, iteratörün geçersiz hale gelmesine yol açtı.
+
+2. std::vector'a eleman eklemek:
+
+```CPP
+std::vector<int> numbers = {1, 2, 3};
+auto it = numbers.begin() + 1;
+numbers.push_back(4);
+// 'it' şu anda geçersiz bir iterator olabilir.
+
+```
+> Bu örnekte, std::vector'a bir eleman eklendi ve bu işlem, belleğin yeniden düzenlenmesi nedeniyle iteratörün geçersiz hale gelmesine yol açabilir.
+
+- Iterator invalidation ile başa çıkmak için, şu önlemleri alabilirsiniz:
+
+1. Veri yapısında yapılan değişikliklerden sonra iteratörleri güncelleyin.
+2. Veri yapısını değiştiren işlemleri yapmadan önce iteratörlerin kullanımını tamamlayın.
+3. İteratör invalidation'a duyarlı olmayan veri yapıları kullanarak (ör. std::list veya std::deque) sorunu önleyin.
+
+- Iterator invalidation, performansı ve doğruluğu etkileyen önemli bir sorundur ve dikkatli bir şekilde yönetilmesi gerekir. Bu konuda dikkatli olmak, hataları ve beklenmeyen davranışları önlemeye yardımcı olacaktır.
+
+# Spaceship Operator 
+
+- C++20 ile birlikte tanıtılan Spaceship operatörü (<=>), iki nesnenin üç yönlü karşılaştırmasını sağlar ve daha önce kullanılan <, >, <=, >=, == ve != karşılaştırma operatörlerini tek bir operatörle birleştirir. Bu operatör, iki nesnenin karşılaştırmasından bir std::partial_ordering, std::weak_ordering veya std::strong_ordering değeri döndürür.
+
+- Spaceship operatörünün temel faydası, kodun daha sade ve okunabilir olmasıdır. Ayrıca, sınıf ve yapıların karşılaştırılması için kullanıcı tanımlı operatör yüklemelerinin (operator overloading) sayısını azaltır.
+
+- İşte Spaceship operatörü kullanımına basit bir örnek:
+```CPP
+#include <iostream>
+#include <compare>
+
+struct Point {
+    int x, y;
+
+    auto operator<=>(const Point& other) const = default;
+};
+
+int main() {
+    Point p1 {2, 3};
+    Point p2 {2, 4};
+
+    if (p1 < p2) {
+        std::cout << "p1 is less than p2" << std::endl;
+    } else if (p1 > p2) {
+        std::cout << "p1 is greater than p2" << std::endl;
+    } else {
+        std::cout << "p1 is equal to p2" << std::endl;
+    }
+
+    return 0;
+}
+
+```
+
+> Bu örnekte, Point adlı bir yapı tanımlanmıştır ve bu yapı için Spaceship operatörü yüklenmiştir. operator<=> fonksiyonu, iki Point nesnesinin karşılaştırılması için kullanılabilir. Bu sayede, tek bir operatör yüklemesiyle tüm karşılaştırma operatörlerinin işlevselliği sağlanır.
+
+- Spaceship operatörü, sınıf ve yapılar için karşılaştırma operatörlerini yazmayı kolaylaştıran ve kodun okunabilirliğini artıran güçlü bir özelliktir. C++20 ile birlikte kullanılabilir hale gelmiştir ve karşılaştırma işlemlerini basitleştirmeye yardımcı olur.
+
+
 
 
 
