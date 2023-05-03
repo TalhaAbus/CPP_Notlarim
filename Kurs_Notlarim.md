@@ -13727,7 +13727,9 @@ int main()
 ```
 > static assert operandı false değer döndürdüğü için static_assert sentaks hatasına sebep oldu. Compile time'da doğrulama yapıyor ve tamamen derleme zamanına ilişkin.
 
-22
+# CONCURRENCY (Eşzamanlılık)
+
+- İşlerin
 
 
 
