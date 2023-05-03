@@ -13729,14 +13729,88 @@ int main()
 
 # CONCURRENCY (Eşzamanlılık)
 
-- İşlerin
+- İşlerin belirli bir zaman diliminde birlikte yapılması. İşleri birbirinden bağımsız çalışacak parçalara bölmek. Bir programın concurrent olması demek, birden fazla görevi belli zaman içinde parçalara ayırarak yönetebilmesi demektir.
+
+**At the same time:** Belirli bir zaman diliminde birden fazla işin aynı zaman diliminbde yapılması demek. Yanifarklı farklı işler yapılıyor ama bu işler aynı zaman dilimi içinde gerçekleşiyor.
+
+**Simultaneously:** Paralelizm devreye giriyor. Fiziksel olarak ta aynı anda farklı işlerin yapılması demek. Yürürken konuşmak gibi.
+
+**Bir uygulama hem concurrent hem paralel olabilir mi?**
+- Evet, farklı çekirdeklere yerleştirilip oralarda gerçekleştirilebilir. Farklı task ler farklı çekirdeklerde gerçekleştiriliyor. 
+
+- Modern C++'tan öncesinde dilde thread lere yönelik bir memory model oluşturulamıştı. Concurrency'e yönelik araçlar şuanda standart kütüphanenin birer bileşeni.
+
+## Thread
+
+- Eğer bir task'i thread olarak çalıştırmak istiyorsak bir nesneye ihtiyacımız var. Bu nesneyi default init edebiliriz. Bunun bir iş yükü yok demektir.
+
+```CPP
+#include <iostream>
+#include <thread>
+
+int main()
+{
+	std::thread t;
+
+	std::cout << std::boolalpha;
+
+	std::cout << t.joinable();
+}
+```
+- Bir iş yükü olmadığını test ettik.
+
+```CPP
+#include <iostream>
+#include <thread>
+
+void func()
+{
+	std::cout << "func\n";
+	std::this_thread::sleep_for(std::chrono::seconds(5));
+}
 
 
+int main()
+{
+	std::cout << std::boolalpha;
+	std::thread t{ func };
+	std::cout << t.joinable() << "\n";
+	t.join();
+	std::cout << t.joinable() << "\n";
+}
+```
+- Bu kez de iş yükü olmadığı için joinable false değer döndürdü.
+
+**Join ne yapıyor?**
+- Eğer bir thread nesnesine bir callable'ı iş yükü olarak verirseniz, thread nesnesinin destructor'ı çağırıldığında, eğer thread nesnesi hala joinable durumdaysa bu durumda terminate fonksiyonu çağırılıyor.
+
+```CPP
+#include <iostream>
+#include <thread>
+
+void func()
+{
+	std::cout << "func\n";
+}
 
 
+int main()
+{
+	using namespace std;
+
+	thread t{ func };
+	t.join();
+}
+```
+> Burada join fonksiyonu ile program bloke edilip t'nin işinin bitirilmesi beklenecekti. Yani join'den sonra eminiz ki o fonksiyonun kodu çalıştı ve bitti.
 
 
+- Thread nesnesinin destructor'ı çağırıldığında, eğer thread hala joinable ise std::terminate fonksiyonu çağırılıyor.
 
+**Thread detatch edilmesi:** Arka planda çalışsın, benim alakam yok demektir.
+- 2 ihtimal: birincisi join etmek. Yoksa terminate edilecek. İkincisi detach etmek. 
+- Joinable olmayan bir thrad nesnesi iiçin sınıınjoin fonksiyonu çağırılırsa bu sefer exception throw ediliyor.
+- Detach arka planda süreklli çalışacak. Eğer ınun kullandığı değişkenin ömrü biterse tanımsız davranış oluşacak. Yani hayatı bitmiş ıolan değişkeni kullanmış olacak.
 
 
 
