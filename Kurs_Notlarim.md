@@ -13812,8 +13812,18 @@ int main()
 - Joinable olmayan bir thrad nesnesi iiçin sınıınjoin fonksiyonu çağırılırsa bu sefer exception throw ediliyor.
 - Detach arka planda süreklli çalışacak. Eğer ınun kullandığı değişkenin ömrü biterse tanımsız davranış oluşacak. Yani hayatı bitmiş ıolan değişkeni kullanmış olacak.
 
+```CPP
+#include <iostream>
+#include <thread>
 
-
+int main()
+{
+	using namespace std;
+	thread tx;
+	thread ty(tx);
+}
+```
+> Burada sentaks hatası aldık thread ler kopyalamaya kapaılı taşımaya açıktır.
 
 
 
