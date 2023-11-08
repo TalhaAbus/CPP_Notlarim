@@ -1784,6 +1784,33 @@ int main()
 
 > Noktanin solundaki nesnenin adresini, foo fonksoyunun aslinda gosterilmeyen Myclass* parametresine arguman olarak gonderiyor.
 
+- Evet, C++'ta bir sınıf nesnesi üzerinden üye fonksiyona erişirken nokta operatörü (.) kullanılır. Açıklamanızda belirttiğiniz gibi, bu süreçte birkaç şey gerçekleşir:
+
+- Name Lookup (İsim Arama): Derleyici, foo ismini görünce, bu ismin tanımlı olduğu kapsamı (scope) arar. Burada foo, Myclass sınıfının bir üye fonksiyonudur.
+
+- Adresin Geçirilmesi: m.foo() ifadesi çağrıldığında, derleyici bu çağrıyı Myclass::foo() fonksiyonuna dönüştürür ve m nesnesinin adresini this işaretçisi olarak saklı bir şekilde foo fonksiyonuna geçirir.
+
+- Her üye fonksiyon aslında çağrıldığı nesnenin adresini this işaretçisi olarak alır. this işaretçisi, sınıfın üye fonksiyonları tarafından, üye değişkenlere ve diğer üye fonksiyonlara erişimde kullanılır.
+
+- Aşağıdaki foo fonksiyonu, Myclass sınıfının bir üyesi olarak this işaretçisine implicit olarak sahip olur:
+
+```CPP
+class Myclass {
+public:
+    void foo() {
+        // Burada 'this' işaretçisi, 'm' nesnesini gösterir.
+    }
+};
+
+int main() {
+    Myclass m;
+    m.foo();  // 'm' nesnesinin adresi 'foo' fonksiyonuna 'this' olarak geçirilir.
+}
+
+```
+
+Üye fonksiyonlar non-static (statik olmayan) ise, her fonksiyon çağrısında o anki nesne (m gibi) this işaretçisi ile fonksiyona bağlanır. Static (statik) üye fonksiyonlar ise this işaretçisine sahip değildir, çünkü onlar sınıfla ilişkili değil, sınıf türüyle ilişkilidir.
+
 - Once namelookup
 - Sonra context kontrolu
 - Sonra acess kontrolu.
