@@ -122,15 +122,40 @@ f(x) > g(x)
 x * x + y * y
 ```
 
+# Value Categories
+**In C Language**
+- L Value expression
+- R Value expression
+**C++ value categories:**
+- Primary value categories:
+- PR Value
+- L Value
+- X Value (Ex-pired value) related to an object that is about to end its life
+**Value Categories Notes:**
+- An expression being an L value indicates that it is an object in memory.
+- An expression being R value means it's an expression created to calculate the value of an expression, without a permanent place in memory.
+- Expressions that can appear ont both the left and right sides of the assignment operator are L value expressions.
+- Expressions that can only appear on the right side of the assignment operator (not on the left side) are R value expressions.
+- Expressions created by variables (including arrays) are L value expresions.
+- L value expressions correspond to an object (Variables)
+- PR value and X value combined are called R value.
+- L value and X value combined are called GL value.
 
+### Scope Resolution Operator
+- The :: operator is used to find and access a name within a namespace.
 
+### Namespaces:
+- A container that holds names and seperates them from those in the global namespace.
 
-
-
-
-
-
-
+## Static Lifespan Objects
+- Global Variables.
+- Local variables declared with the static keyword.
+- Character arrays created by the compiler corresponding to string literals.
+**Example:**
+```CPP
+bool b; // This globally defined variable starts with a value of false.
+int *gp; // Its value starts as nullptr.
+```
 
 
 
