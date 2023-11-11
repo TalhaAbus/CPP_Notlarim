@@ -80,7 +80,30 @@ int main{
 }
 ```
 
+# Lesson 2
 
+**Notes:**
+- In C++, comparison operators produce boolean type values (True, False)
+- While the type of character constants is int in C, it is char in C++
+- In C, the constant "akif" is an array of type char[5], including the null characterat the end.There is array decay. The same string literal in C++ is of type const char[5]. In c++, when array decay occurs, the resulting adress is not char. It becomes const char*.
+- In both languages, attempting to modify a string literal results in undefined behaviour.
+
+## Array to Pointer Conversion
+- Except for two exceptions, the array name is converted to the adress of the first element of the array in C.
+- The two exceptions are:
+> When the operand of the sizeof operator is an array.
+> When the operand of the adress operator is an array.
+
+**Example:**
+```CPP
+int a[10] = {1, 5, 7};
+- The type of int a = int[10]
+- The type of the address of a = int (*)[10]
+- The expression a is converted to the address of the first element of the array via array decay.
+- So here a = &a[0]
+- In both expressions, the type is int*
+```
+## Reference Semantics:
 
 
 
