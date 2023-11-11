@@ -15,6 +15,88 @@
 ```CPP
 static int x; //internal linkage
 ```
+### Scope LEakage
+- If a variable is visibnle outside the area where it is defined, there is a scope leakage.
+**Example:**
+```CPP
+void func()
+{
+    int i;
+    for (i = 0; i < 10; ++i)    
+}
+```
+**Some Differences Between C and C++**
+- There is a type conversion from arithmetic types to the bool type, and vice versa. The conversion will be either 1 or 0.
+- In C++, Global const objects have internal linkage. (In C, They have external Linkage.)
+- In C++, There is no implicit type conversion between adress types and arithmetic types.
+- There is no conversion from const t* type to t* type.
+- There are also no implicit type conversion between different adress types.
+
+# Lesson 1 Exercises
+**Question 1: Is the code valid?**
+
+```CPP
+#include <iostream>
+
+int* gp;
+
+int main() {
+    int x = 100;
+    int* ptr = &x;
+
+    bool b1 = ptr;
+}
+
+```
+> There is an automatic conversion from adress, pointer types to the bool type.The value of b1 will be true. The conversion to true or false depends on whether the pointer is a null pointer or not. Since gp is zero-initialized, it takes the null pointer value and will convert to false.
+
+**Question 2:**
+
+```CPP
+int main() {
+    bool flag = true;
+    bool is_on = false;
+
+    int *ptr = is_on;
+}
+```
+> There is no conversion from bool type to the pointer type. The code is incorrect. There is a conversion from pointer type to bool type, but not from bool type to pointer type.
+
+**Question 3: Is the Code Valid?**
+```CPP
+int main() {
+    const int x = 10;
+
+    int* p = x;
+}
+```
+> Syntax error. In C++, there is no conversion from const int* type to the int* type. (In C, there is)
+
+**Question 4**
+```CPP
+int main{
+    const int *p;  // Valid. This is not a const object but a pointer in question.
+    int *const p;   // Invalid. Const objects must be initialized.
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
