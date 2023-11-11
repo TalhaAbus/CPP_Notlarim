@@ -11,9 +11,11 @@
 ### Internal Linkage
 - The state of element (variable, function class) being visible only within certain source file. So, this element can only be accessed by elements in the same source file.
 - **In short:** The same name used in different sources belonging to different entities.
-- dsfg
-- 
-  
+- The **static** keyword makes the variable have internal linkage. **Example:**
+```CPP
+static int x; //internal linkage
+```
+
 
 
 
