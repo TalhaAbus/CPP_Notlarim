@@ -104,9 +104,23 @@ int a[10] = {1, 5, 7};
 - In both expressions, the type is int*
 ```
 ## Reference Semantics:
+- Units formed by constants alone, variables alone, or these with their operators. Every expression has a type and a value category. References in C++:
+1. L value reference (Left-hand reference)
+2. R value reference (Right-hand reference)
+3. Forwarding reference (Universal reference)
 
+**Note:** There is a lot of pointer usage in C. However, pointer usage in C++ is much less compared to C. This is due to the precense of reference semantics to meet the needs of situations where pointers are used. In most scenerios where we use pointers to control the lifetime of dynamically lived objects, we use **smart pointers** classes, which are not present is C but exist in C++.
 
-
+**Expression:**
+```CPP
+x
+x + 5
+f(x)
+++X
+x++
+f(x) > g(x)
+x * x + y * y
+```
 
 
 
