@@ -200,7 +200,7 @@ decltype(a) b = 20; // will be of the same type as a (int).
 ```
 **What does a static mechanism mean?**
 - If a feature or toolset is related to compile time, and compiler is generates some codes by looking at the code, such tools are called static tools. If the tool is related to the runtime of the program, the term dynamic is used.
-**Benefits of type deduction:**
+- **Benefits of type deduction:**
 - In some cases, defining a type requires using many tokens. Type deduction reduces the risk of making mistake.
 
 - 
