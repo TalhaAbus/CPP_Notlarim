@@ -17,6 +17,7 @@ static int x; //internal linkage
 ```
 ### Scope LEakage
 - If a variable is visibnle outside the area where it is defined, there is a scope leakage.
+
 **Example:**
 ```CPP
 void func()
@@ -25,6 +26,7 @@ void func()
     for (i = 0; i < 10; ++i)    
 }
 ```
+
 **Some Differences Between C and C++**
 - There is a type conversion from arithmetic types to the bool type, and vice versa. The conversion will be either 1 or 0.
 - In C++, Global const objects have internal linkage. (In C, They have external Linkage.)
@@ -33,6 +35,7 @@ void func()
 - There are also no implicit type conversion between different adress types.
 
 # Lesson 1 Exercises
+
 **Question 1: Is the code valid?**
 
 ```CPP
@@ -131,6 +134,7 @@ x * x + y * y
 - PR Value
 - L Value
 - X Value (Ex-pired value) related to an object that is about to end its life
+
 **Value Categories Notes:**
 - An expression being an L value indicates that it is an object in memory.
 - An expression being R value means it's an expression created to calculate the value of an expression, without a permanent place in memory.
@@ -151,6 +155,7 @@ x * x + y * y
 - Global Variables.
 - Local variables declared with the static keyword.
 - Character arrays created by the compiler corresponding to string literals.
+
 **Example:**
 ```CPP
 bool b; // This globally defined variable starts with a value of false.
