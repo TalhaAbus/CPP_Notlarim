@@ -265,6 +265,162 @@ int main()
 ```
 > The answer is that since that is a const char array, it is undergoes array decay to const char* type. Since there is no imlicit conversion from const char* to char* in C++, it causes a syntax error. Error code: a value of const char* type cannot be used to initialize an entity of type char *
 
+**Question 5: what is the type?**
+
+```CPP
+int main()
+{
+    short s1 = 5, s2 = 7;
+    s1 + s2 
+}
+```
+> The type of the expression s1 + s2 is not short, but int. Operations below the int type are converted to int type.
+
+**Question 6: What is the type?**
+
+```CPP
+int main()
+{
+    int x = 10;
+    x > 5 ? 3 : 4.7; 
+}
+```
+> regardless of runtime and the value of x, the type of this expression is double.
+
+**Question 7: Explain the code.**
+```CPP
+#include <iostream>
+
+int main()
+{
+    std::cout << "hello world";
+}
+```
+> The scope resolution operator is used to find and access a name within a namespace. Cout is the name of a variable, which is a global variable of the class type named ostream. Bitwise shift operator is used here as a part of mechanism **operator overloading**. When a class object becomes the operand of an operator, the compiler transforms this expression into a function call. Since the cout object is the operand of the << operator, the compiler converts it into a function call. The function called by the compiler receives the cout object and the string literal as arguments.
+
+# Lesson 3 Examples
+
+**Q1: Which function is called first?**
+```CPP
+x = f1() + (f2() * 5);
+```
+> Unspecified behaviour. There is no guarantee. It depends on the compiler.
+
+**Q2: Will it enter the true part of if statement?**
+
+```CPP
+int main()
+{
+    const char* p1 = "oytun";
+    const char* p2 = "oytun";
+
+    if(p1 == p2){
+    }
+}
+```
+> Unspecified Behaviour. Whether the same string literals are stored in the same memory location by the compiler is entirely up to the compiler. When tested with C++ visual studio, it was observed that they are stored at the same adress.
+
+**Q3: Is the code is correct?**
+```CPP
+int x;
+
+int main()
+{
+#include <stdio.h>
+
+int main(void)
+{
+    int printf = 5;
+    printf("hello \n");
+}
+```
+> There is a syntax error here, but the reason of error is not name lookup. It is undestood from name lookup that printf is a name of a variable of type int, and it becomes the operand of the function call operator. This is a syntax error.
+
+**Question 4: Is the code correct?**
+```CPP
+#include <stdio.h>
+
+int main(void)
+{
+    printf("merhaba \n");
+    int printf = 5;
+}
+```
+> There is no syntax error here. It's legal code. The name printf could not be found in the local scope, so it continued in the global scope and was found.
+
+**Question 5: Is the code valid?**
+```CPP
+int main()
+{
+    for(int i = 0; i<10; i++)
+    int i = 56;
+}
+```
+> This code is valid in C language. It's a syntax error in C++.
+
+**Question 6: Is the code valid?**
+```CPP
+void x();
+
+int main() {
+    int x = 34;
+
+    x(); // Invalid
+    ::x(); // Valid, searches the global namespace
+}
+
+```
+**Question 7: Is the code valid?**
+```CPP
+int main(){
+    
+    int printf{};
+    ::printf(_Format: "ali");
+}
+```
+> Valid. It calls printf from the global namespace.
+
+**Question 8: What is the value of y?**
+```CPP
+int main()
+{
+    int x =  0;
+    int y = 10;
+
+    int a = x && ++y;
+}
+```
+> The value of y remains 10. No operation code is generated. There is short circuit behaviour.
+
+# Lesson 5
+
+## Type Conversion
+- A situation where the compiler, to perform an operation, uses a different type of value instead of the static type of an expression in the code.
+- Generally, a temporary object is created here.
+
+1. Implicit Type Conversion
+2. Explicit Type Conversion
+
+**Implicit:** Even without a specific instruction given to the compiler by a code, the compiler performs an implicit type conversion based on the language rules.
+**Explicit:** We instruct the compiler to perform this conversion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
