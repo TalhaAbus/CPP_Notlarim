@@ -157,6 +157,70 @@ bool b; // This globally defined variable starts with a value of false.
 int *gp; // Its value starts as nullptr.
 ```
 
+### Initialization
+```CPP
+int x;          // Default initialization
+int x = 10;     // copy init
+int x(98);      // direct init
+int x{10};      // uniform init  // brace init
+```
+> Default initialization starts objects with garbage value. Using this value may cause undefined behaviour.
+
+**Why did modern C++ introduce {} as the form of initialization?**
+- Uniformity: You can use braces for any type of initial value.
+- Syntax error for narrowing conversions: If you use braces for a conversion that loses data, it will give a syntax error.
+
+```CPP
+double dval = 5.6;
+int i{dval}; // This will cause a syntax error due to data loss, whereas using normal parentheses would have been legal code.
+```
+**In C++, all these mean the same:**
+```CPP
+int a1[4] = {0};
+int a2[4] = {};
+int a3[4]{};
+```
+> They all are zero-initialized. In C, inside of the braces must be filled, but in C++ it can be empty.
+
+## Type Deduction
+- The act of the compiler automatically determining the type of a variable opr expression. Particularly after C++11 this is done with the keywords **auto** and **decltype**.
+
+**Auto type deduction**: A compile - time mechanism. The compiler automatically deduces the variable's type from the assigned value.
+**Decltype type deduction:** Determines the type of a variable or expression and can be used for other variables. It  represents an expression.
+```CPP
+decltype(expr);
+```
+> The type obtained here depends on the value category of the "expr" expression.
+
+- Type deduction is a compile - time mechanism, static mechanism. In some cases, even if we don't explicitly write the type, the language rules allow the compiler to understand the type by looking at the code.
+
+```CPP
+int a = 10;
+decltype(a) b = 20; // will be of the same type as a (int).
+```
+**What does a static mechanism mean?**
+- If a feature or toolset is related to compile time, and compiler is generates some codes by looking at the code, such tools are called static tools. If the tool is related to the runtime of the program, the term dynamic is used.
+**Benefits of type deduction:**
+- In some cases, defining a type requires using many tokens. Type deduction reduces the risk of making mistake.
+
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
