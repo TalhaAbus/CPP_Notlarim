@@ -209,14 +209,61 @@ decltype(a) b = 20; // will be of the same type as a (int).
 - **Benefits of type deduction:**
 - In some cases, defining a type requires using many tokens. Type deduction reduces the risk of making mistake.
 
-- 
+## Type Deductions
+- auto type deduction
+- decltype type deduction
+- decltype(auto)
+- lambda expression
+- template
 
+**Example**
+```CPP
+int* foo(const int*, size_t);
 
+int main()
+{
+    int* (*fp)(const int*, size_t) = &foo;  // auto fp = &foo
+}
+```
 
+**Note**
+- NULL is a macro, defined in the standart header file of C.
+```CPP
+time(NULL);
+time(0);
+```
+> Equivalent. nullptr is a keyword, a constant, and its type is nullptr_t. To use it, no header file inclusion is necessary.
 
+### Lesson 2 Exercises
 
+**Question 1: What is the type of the value produced by the sizeof operator?**
 
+> size_t type.
 
+**Question 2: Is this expression valid? What is its value?**
+```CPP
+#include <stdio.h>
+
+int main()
+{
+    int x = 10;
+    sizeof x+5;
+}
+```
+> It is valid, and the value is 9.The predence of the sizeof operator is higher than arithmetic operators.
+
+**Question 3: What will be printed on the screen when this code is run on a system where the int type is 4 bytes?**
+
+> The output will be y = 4, x = 10. No operation code is generated for theh expression that is the operand of sizeof operator. In C++, situations where no operation code is generated for an expression are called "unevaluated context." In C, the unevaluated context exist only for the sizeof operator. In C++, there are 8-9  context where no operation code is generated.
+
+**Question 4: What is the error?**
+```CPP
+int main()
+{
+	char* p = "batuhan";
+}
+```
+> The answer is that since that is a const char array, it is undergoes array decay to const char* type. Since there is no imlicit conversion from const char* to char* in C++, it causes a syntax error. Error code: a value of const char* type cannot be used to initialize an entity of type char *
 
 
 
