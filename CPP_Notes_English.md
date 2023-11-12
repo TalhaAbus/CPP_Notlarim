@@ -186,6 +186,7 @@ int a3[4]{};
 - The act of the compiler automatically determining the type of a variable opr expression. Particularly after C++11 this is done with the keywords **auto** and **decltype**.
 
 **Auto type deduction**: A compile - time mechanism. The compiler automatically deduces the variable's type from the assigned value.
+
 **Decltype type deduction:** Determines the type of a variable or expression and can be used for other variables. It  represents an expression.
 ```CPP
 decltype(expr);
