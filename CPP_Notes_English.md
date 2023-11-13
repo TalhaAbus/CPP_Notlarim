@@ -1080,8 +1080,7 @@ class Nec; // Class decleration
 - This is an incomplete type, The complete type is the opposite. The compiler is aware of all information.
 
 **Why does it matter if a type is complete or incomplete type?**
-
-
+> For some codes, it is sufficient for the type to be incomplete for the code to be compiled.
 
 
 
