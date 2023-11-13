@@ -765,12 +765,224 @@ int main() {
 ```
 > Not Overloading. Typedef doesn't mean a different type. There is no syntax error but redecleration exist.
 
+**Question 9: How many function overloads are there?**
+```CPP
+void f(char);
+void f(signed char);
+void f(unsigned char);
+
+int main() {
+
+}
+```
+> There are 3 overeloads. The char type is implementation defined. It can be either signed or unsigned. In the type system, these are different types.
+
+**Question 10: How many function overloads are there?**
+```CPP
+void f(int *);
+void f(int **);
+void f(int ***);
+
+int main()
+{
+
+}
+```
+> There are 3 overloads. Each one is a different type.
+
+**Question 11: Is there function overloading?**
+```CPP
+void f(int &);
+void f(int &&);
+
+int main() {
+
+}
+```
+> Yes. One parameter is an lvalue reference, the other is an rvalue reference.
+
+**Question 12: How many function overloads are there?**
+```CPP
+void f(int &);
+void f(const int &);
+void f(int &&);
+
+int main() {
+
+}
+
+```
+> There are 3 overloads.
+
+**Question 13: Is there function overloading?**
+
+```CPP
+void f(std::int32_t);
+void f(int);
+
+int main() {
+
+}
+
+```
+> It depends on the compiler. Implementation-defined. int32_t is an alias name for a type. If in another compiler this alias name belongs to a different type, then there is overloading here.
+
+**Question 14: How many overloads are there?**
+```CPP
+void foo(int p[]);
+void foo(int p[20]);
+void foo(int *p);
+
+int main() {
+
+}
+```
+> There is 1 overload. All these are the same declaration. There is array decay here. The parameter of the function is a pointer. They all are of type int*.
+
+**Question 14: Overloading or redeclaration?**
+```CPP
+void foo(int (int));
+void foo(int(*)(int));
+
+int main() {
+    
+}
+```
+> There is redeclaration. The type below is the type of a function's address of the type above.
+
+- Top: "function type"
+- Bottom: "function pointer type"
 
 
+> So, (int (int)) is a function type, and (int(*)(int)) is a function pointer type. Therefore, a function's parameter type cannot be a function type.
 
+**Question 15: How many overloads are there?**
+```CPP
+void foo(int (*)[5]);
+void foo(int (*)[6]);
+void foo(int (*)[7]);
+void foo(int (*)[8]);
 
+int main() {
+    
+}
+```
+> There are 4 overloads. One is a pointer type to a 5-element array, another is a pointer type to a 6-element array, and so on.
 
+**Question 16: Are these two functions viable?**
+```CPP
+void func(double *);
 
+int main() {
+    func(2);
+}
+
+```
+> Not viable. There is no conversion from int type to pointer type.
+
+**Question 17: Are these two functions viable?**
+```CPP
+void func(double *);
+
+int main() {
+    func(0);
+}
+
+```
+> Viable. There is null pointer conversion. The integer constant 0 will convert to a null pointer.
+
+**Question 18: Is the code valid?**
+```CPP
+void func(bool);
+
+int main() {
+    int x{};
+	func(&x);
+}
+
+```
+
+> Yes. This is a direct pointer type. There is a conversion from pointer types to the bool type: if it's not a null pointer it's true, if it is a null pointer it's false.
+
+**Question 19: Is the code valid?**
+```CPP
+void func(void *);
+
+int main() {
+    int x{};
+    double f{};
+
+    func(&x);
+    func(&f);
+}
+
+```
+> Both are valid because there is a conversion to void* type.
+
+**Question 20: Is the code valid?**
+
+```CPP
+void func(char *);
+
+int main() {
+    func("talha abus");
+}
+
+```
+> Invalid code. The string literal will decay to const char* type, but the function's parameter is char*.
+
+**Question 21: Is the code valid?**
+```CPP
+enum pos {on, off, hold};
+enum class color{yellow, deak_blue};
+
+void f(pos);
+void g(color);
+
+int main() {
+    f(1);
+    f(2);
+}
+
+```
+> Invalid code. There is no conversion from arithmetic types to enum types.
+
+**Question 22: Is the code valid?**
+```CPP
+enum pos {on, off, hold};
+enum class color{yellow, deak_blue};
+
+void f(int);
+
+int main() {
+    f(color::yellow);
+    f(off);
+}
+
+```
+> The second call is valid, the first call is invalid. There is no conversion from scoped enum enumerators to the int type.
+
+> Error code: "argument of type 'class' is incompatible with parameter of type 'int'"
+
+**Question 23:**
+```CPP
+void f(int *);
+void f(int, int);
+void f(int);
+void f(double);
+
+int main() {
+    double d{};
+    f(&d);
+}
+
+```
+> Received error code: "no instance of overloaded function 'f' matches the argument list"
+
+**Notes from the questions:**
+- The constness of a parameter does not create a signature difference.
+- Type aliases given to the same type do not create overloading.
+- Call by value and call by reference create overloading.
 
 
 
