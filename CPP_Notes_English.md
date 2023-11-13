@@ -644,6 +644,131 @@ int func(int, int);
 
 ## Function Overload Resolution
 - The process of the compiler trying to figure out which function to call is called function overload resolution.
+- It is a situation that does not change according to the compiler.
+
+**How is Overload Resolution Done?**
+- In the first stage, the compiler only records functions with the same name based on the function name. There are the candidate functions.
+- In the second stage, compiler answer the question "Would it be legal to call this function with argumnents in this function call if this function were only one?". If answer is yes, there functions are called "viable functions."
+
+**Note**
+- Just because function overloading exist doesn't mean that every call to a fucntion with that name is legal. The function call could also be syntax error.
+
+**User - Defined Coversion:**
+- A conversion that normally doesn't exist, Occuring throughthedecleration of a function and the compiler using this function to perform the conversion.
+
+# Lesson 7 Examples
+
+**Question 1: Examine**
+```CPP
+#include <iostream>
+#include <cstdint>
+
+
+void func(int *)
+{
+    std::cout << "int *\n";
+}
+
+void func(const int *)
+{
+    std::cout << "const int *\n";
+}
+
+int main()
+{
+    const int cx = 5;
+    func(&cx);
+}
+```
+> Here, if the second function didn't exist, this call wouldn't be legal.
+
+> If the object sent was "t*" instead of "cosnt t*", and if any one of the functions existed alone, the code would still be legal.
+
+> The benefit is, we create 2 seperate codes for const and non-const objects and let the compiler make this choice at compile time.
+
+**Question 2: Is there function overloading?**
+```CPP
+#include <iostream>
+
+int foo(int);
+
+int main()
+{
+	int foo(double);
+}
+```
+> There is no fucntion overloading because their blockscopes are different. Here namehiding occurs.
+
+**Question 3: Is there function overloading?**
+```CPP
+#include <iostream>
+
+int foo(int);
+double foo(int);
+int main()
+{
+	
+}
+```
+> There is no function overloading. Also this code is violates the language rules. This function is redeclered and it's return type is different.
+
+**Question 4: Is there function overloading?**
+```CPP
+#include <iostream>
+
+int foo(int);
+int foo(int,int);
+int main()
+{
+	
+}
+```
+> There is overloading. They are in the same scope but have different signatures.
+
+**Question 5: Is there function overloading?**
+```CPP
+#include <iostream>
+
+void f(double* const p);
+void f(double* p);
+int main()
+{
+	
+}
+```
+> Not overloading, but decleration. 
+
+**Question 7: Is there function overloading?**
+```CPP
+#include <iostream>
+
+void func(int&);
+void func(cont int&);
+int main()
+{
+	
+}
+```
+> There is overloding. Reference semantics are used instead of the pointer semantics in the previous examples. This is one of most commonly used overloading structures in the standard library.
+
+**Question 8: Is there function overloading?**
+```CPP
+typedef double flt_type;
+
+void f(double);
+void f(flt_type);
+
+int main() {
+
+}
+
+```
+> Not Overloading. Typedef doesn't mean a different type. There is no syntax error but redecleration exist.
+
+
+
+
+
 
 
 
