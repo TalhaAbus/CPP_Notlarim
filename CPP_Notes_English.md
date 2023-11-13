@@ -984,6 +984,61 @@ int main() {
 - Type aliases given to the same type do not create overloading.
 - Call by value and call by reference create overloading.
 
+# Lesson 8
+
+**Some Definitions**
+
+**Function Overloading**
+- The feature of having the same name in the same scope. Whichfunction is called is understood through function overload resolution.
+
+### User - Defined Conversion
+- A conversion not implicitly possible,but because a user defined a function for it, the compiler performs the conversion by calling this function.
+
+```CPP
+void func(int x, int y = 0);
+void func(int x);
+```
+> This is function overloading because their signatures are different.
+
+```cPP
+int x = 10;
+int &r = x;
+```
+> The value category of r is L value.
+
+**Some Definitions:**
+
+### One definition Rule
+- Some entities, even though they are external but have the same definitions across different source files, don't violate the ODR.
+
+### Inline Expension
+- One of the most frequently used optimization techniques by compilers. It is a compiler optimization.
+
+### Compiler Optimization
+- The compiler is not obliged to produce the identical assembly code. As long as the observable behaviour doesn't change, the compiler can generate any code it wants.
+
+### Dead Code Elimination
+- The compiler deletes any code that doesn't change observable behaviour.
+
+**In short:**
+- We give the compiler what we want, and it guarantees the result while generating any code it wants. And this optimization is done with 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
