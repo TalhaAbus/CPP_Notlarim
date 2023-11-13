@@ -1023,6 +1023,68 @@ int &r = x;
 **In short:**
 - We give the compiler what we want, and it guarantees the result while generating any code it wants. And this optimization is done with 
 
+**Loop Unrolling:**
+- Even though there is a loop, the compiler compiles the code as if the loop doesn't exist to eliminate additional costly operations. It can rewrite the code as many times as the loop (along with additional optimizations)
+
+**Loop reversal:**
+Reversing the direction of loop.
+
+**Generic Programming**
+- What the compiler writes at compile time, and some checks it makes at compile time, determine the code.
+- Different versions of code can be written and optimized by the compiler.
+
+**Inline Expension:**
+- The most frequently used and oldest technique. It provides the most efficiency.
+
+**Notes on these Definitions:**
+- One of biggest differences between C++ and C, C++ compilers not only translator programs. They write code for us. The paradigm used for this writing is the generic programming paradigm.
+
+```CPP
+a = func();
+```
+> Func has a return value. And there is a memory adress to be written. Let's say the compiler generates code to copy the value at that memory adress to "a".
+
+> Assuming func's definition is before this line of code. The compiler directly generates code such as "a = (function code)" But why generate such code?
+
+> There is a cost to entering and exiting a function. But when optimized, there are direct arithmetic operations in the code.
+
+> For example, if the function does 3 units of work inside, and the cost of entering and exiting the function is 10 units, the compiler calculatesthe cost to see if it's more efficient. This called **inline expension**. That is, there is a function call but the compiler-generated code has arithmetic operations.
+
+> The best candidates for this are functions that have small code and called frequently.
+
+### Inline Functions
+- They do not violate the one definition rule.
+
+```CPP
+inline int func(int x, int y)
+{
+    
+}
+```
+- If the definition of this function is the same in multiple source files, it doesn't violate the one definition rule. This means that if the inline function's definition is placed in a header file, it will not violate the ODR.
+
+**Why do we do this?**
+
+- To allow the compiler the possiblity of inline expansion. when we make a function inline, we ensure the compiler sees the function.
+
+**Note:**
+- The compiler is not obliged to inline a function just because the inline keyword is used, and it can inline expand functions that are not marked inline.
+- The purpose of writing inline is to put it in the header file; if it were not inline, it would be violation of the ODR.
+
+### Complete - Incomplete Type
+```CPP
+class Nec; // Class decleration
+```
+- The compiler is aware of the existence of a type but doesn't know its details.
+- If we make such a decleration, the compiler knows the class type when it sees this declaration but does not see its definition.
+- This is an incomplete type, The complete type is the opposite. The compiler is aware of all information.
+
+**Why does it matter if a type is complete or incomplete type?**
+
+
+
+
+
 
 
 
