@@ -1111,11 +1111,21 @@ inline int x = 10;
 > Being in multiple source files doesn't violate the ODR. Normally, placing the definition of a global variable in header file would not violate the ODR.
 
 ### Constexpr keyword
+- Constexpr is used where a velue is needs to be computed at compile time. The compiler, thakns to constexpr functions, does not leave functions whose values can be computed at compile time to runtime. This allows for faster and more efficient code production.
+```CPP
+func(x+y)
+```
+> If the compiler sees that the value of this expression can be computed at compile time, it does so. That is, the result is obtained without input-output operations in the function at runtime.
+- The purpose of the constexpr keyword is efficiency. That is, if some value can be computed at compile time, they should not be left to runtime.
 
+**Note:**
+- If a function is to be placed in a header file, it should be inline. Because when included by different source files, it should not violate the ODR. (constexpr functions are implicitly considered inline)
 
-
-
-
+```CPP
+const int x = 10;   // değiğşkenin kendisinin oluşturduğu ifade bir constant expression
+```
+- The expression X can be used where a constant expression is required.
+- However
 
 
 
