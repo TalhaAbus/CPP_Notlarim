@@ -1082,12 +1082,33 @@ class Nec; // Class decleration
 **Why does it matter if a type is complete or incomplete type?**
 > For some codes, it is sufficient for the type to be incomplete for the code to be compiled.
 
+# Lesson 9
 
+## Inline Functions
+- If the definition of an inline function requires significant processing, expending it inline will not yield a high benefit.
 
+1. Direct definition with the inline keyword
+2. Decleration with a class
 
+```CPP
+class Myclass{
+    void func();
+}
+```
+> Functions declared within a class are always considered inline.
 
+**Entities in the header file that do not violate the ODR**
+-  Inline Functions
+-  Class definitions
+-  Templates
 
+> Function templates, class templates, alias templates, variable templates.
 
+**Inline Variables:**
+```CPP
+inline int x = 10;
+```
+> 
 
 
 
