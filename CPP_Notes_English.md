@@ -1108,7 +1108,10 @@ class Myclass{
 ```CPP
 inline int x = 10;
 ```
-> 
+> Being in multiple source files doesn't violate the ODR. Normally, placing the definition of a global variable in header file would not violate the ODR.
+
+### Constexpr keyword
+
 
 
 
