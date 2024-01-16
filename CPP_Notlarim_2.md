@@ -87,6 +87,29 @@ void func(T&& arg) {
 - int a3[4]{};
 > Hepsi zero initialize edilmiş oluyor. C dilinde boşluğun içi dolu olmak zorunda ama burada boş bırakılabilir.
 
+# Type Deduction (Tür çıkarımı)
+- Tür çıkarımı derleme zamanına yönelik bir mekanizma, yani static bir mekanizma. Derleyici koda bakarak bazı türlerin ne olduğunu anlıyor ve biz türü yazmasak ta derleyici tür çıkarımı yapıyor. Yani türü yazmıyoruz ve yazmış kabul ediliyoruz. Derleyici bunun hangi tür olduğunu koda bakarak anlıyor.
+
+# Type Conversion:
+- tür dönüşümü bir veri türünün başka bir veri türüne dönüştürülmesi işlemidir. Bu işlem implicit veya explicit olarak gerçekleşebilir.
+
+**Implicit:**
+
+- Programcının açık emri olmadan derleyiciye talimat verilmeden örtülü olarak gerçekleşen dönüşümler.
+
+**Explicit:**
+
+- static_cast, dynamic_cast, const_cast, reinterpret_cast
+
+
+
+
+
+
+
+
+
+
 
 
 
