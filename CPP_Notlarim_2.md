@@ -59,15 +59,33 @@ int a = 10;
 int& ref = a;  // 'a' değişkenine bir lvalue referansı
 ```
 2. **Rvalue Reference:(&&)** C++ 11 ile gelene ve geçici değerleri referans alan türdür. Bir ifadenin Rvalue olması, bellekte kalıcı yeri olmayan  ve bir ifadenin değerini hesaplamak için oluşturulan ifade demektir. Atama işlecinin yalnızca sağ tarafında yer alabilirler.
-3. **Forwarding Reference:**
+3. **Forwarding Reference:** (Universal Reference) C++ 11'in **auto** ve **declytype** özellikleriyle birlikte gelen tür.
 
+```CPP
+template<typename T>
+void func(T&& arg) {
+    // arg, forwarding reference
+}
+```
 
+**Not:**
+- C dilinde poniter kullanımı çokça var. Fakat C++ dilinde  pointer kullanımı C diline göre çok daha az. Bunun sebebi C++ dilinde pointer ihtiyacını karşılamaya yönelik olarak reference semantiği var.
 
+## Static Ömürlü Nesneler
+- Programın başından sonuna kadar yaşam süresi olan nesnelerdir. Program çalıştığında oluşturulur ve program sonlanınca yok edilir.
+1. Global Değişkenler
+2. Static anahtar sözcüğü ile tanımlanan yerel değişkenler
+3. String Literalleri (String literalleri için oluşturulan char diziler)
 
+**Neden modern C++ ilk değer verme biçimi olarka {} getirdi?**
+- **Uniform** olması. Yani neye ilk değer verirsen ver küme parantezi kullanabiliyorsun.
+- **Daraltıcı dönüşümleri engeller.** Eğer {} kullanıp daraltıcı dönüşüm yaparsak sentaks hatası alırız.
 
-
-
-
+**C++ dilinde bunların hepsi aynı anlamda:**
+- int a1[4] = {0};
+- int a2[4] = {};
+- int a3[4]{};
+> Hepsi zero initialize edilmiş oluyor. C dilinde boşluğun içi dolu olmak zorunda ama burada boş bırakılabilir.
 
 
 
