@@ -37,9 +37,16 @@ int main()
 ```
 > Burada kullandığımız arr ifadesi otomatik olarak int* türünden bir adrese dönüşüyor ve fonksiyona dizinin başlangıç adresini geçiyor.
 
+**2 İstisna hariç bu dönüşüm otomatik gerçekleşir:**
+1. sizeof operatörünün operandının dizi olması.
+2. Adres operatörünün operandının bir dizi olması.
 
-
-
+**Örnekler:**
+```CPP
+int a[10] = { 1,5,7 };
+```
+- **a'nın türü:** int[10]
+- **a'nın adresi olan tür:** int(*)[10]
 
 
 
